@@ -1,0 +1,362 @@
+[
+  {
+    "brand_id": "B001",
+    "brand_name": "肌研研究所",
+    "industry": "美妆个护",
+    "category": "美妆",
+    "sub_category": "洗护",
+    "cooperation_count": 4,
+    "history_budget_total": 8650695.68
+  },
+  {
+    "brand_id": "B002",
+    "brand_name": "小象树",
+    "industry": "母婴亲子",
+    "category": "母婴",
+    "sub_category": "玩具早教",
+    "cooperation_count": 18,
+    "history_budget_total": 7773739.75
+  },
+  {
+    "brand_id": "B003",
+    "brand_name": "声take声",
+    "industry": "3C数码",
+    "category": "3C数码",
+    "sub_category": "耳机音频",
+    "cooperation_count": 24,
+    "history_budget_total": 8787718.05
+  },
+  {
+    "brand_id": "B004",
+    "brand_name": "元气发酵",
+    "industry": "食品饮料",
+    "category": "食品饮料",
+    "sub_category": "乳制品",
+    "cooperation_count": 19,
+    "history_budget_total": 5829710.21
+  },
+  {
+    "brand_id": "B005",
+    "brand_name": "素冉",
+    "industry": "服饰鞋包",
+    "category": "服饰",
+    "sub_category": "女装",
+    "cooperation_count": 23,
+    "history_budget_total": 1987934.22
+  },
+  {
+    "brand_id": "B006",
+    "brand_name": "织眠家纺",
+    "industry": "家居家电",
+    "category": "家居",
+    "sub_category": "家具",
+    "cooperation_count": 21,
+    "history_budget_total": 1066815.51
+  },
+  {
+    "brand_id": "B007",
+    "brand_name": "星驰新能源",
+    "industry": "汽车出行",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "cooperation_count": 12,
+    "history_budget_total": 7253909.71
+  },
+  {
+    "brand_id": "B008",
+    "brand_name": "掌趣互娱",
+    "industry": "游戏互娱",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "cooperation_count": 20,
+    "history_budget_total": 5429248.82
+  },
+  {
+    "brand_id": "B009",
+    "brand_name": "LANZUO蓝佐",
+    "industry": "美妆个护",
+    "category": "美妆",
+    "sub_category": "香水",
+    "cooperation_count": 16,
+    "history_budget_total": 4670022.08
+  },
+  {
+    "brand_id": "B010",
+    "brand_name": "奶糖星球",
+    "industry": "母婴亲子",
+    "category": "母婴",
+    "sub_category": "纸尿裤",
+    "cooperation_count": 14,
+    "history_budget_total": 8587319.64
+  },
+  {
+    "brand_id": "B011",
+    "brand_name": "极影视界",
+    "industry": "3C数码",
+    "category": "3C数码",
+    "sub_category": "智能穿戴",
+    "cooperation_count": 5,
+    "history_budget_total": 1994853.58
+  },
+  {
+    "brand_id": "B012",
+    "brand_name": "三顿半刻",
+    "industry": "食品饮料",
+    "category": "食品饮料",
+    "sub_category": "乳制品",
+    "cooperation_count": 21,
+    "history_budget_total": 6698807.7
+  },
+  {
+    "brand_id": "B013",
+    "brand_name": "行野户外",
+    "industry": "服饰鞋包",
+    "category": "服饰",
+    "sub_category": "运动户外",
+    "cooperation_count": 13,
+    "history_budget_total": 5305513.4
+  },
+  {
+    "brand_id": "B014",
+    "brand_name": "净博士",
+    "industry": "家居家电",
+    "category": "家居",
+    "sub_category": "清洁用品",
+    "cooperation_count": 5,
+    "history_budget_total": 2314768.66
+  },
+  {
+    "brand_id": "B015",
+    "brand_name": "驰加养护",
+    "industry": "汽车出行",
+    "category": "汽车",
+    "sub_category": "汽车用品",
+    "cooperation_count": 20,
+    "history_budget_total": 8971835.85
+  },
+  {
+    "brand_id": "B016",
+    "brand_name": "神州手游",
+    "industry": "游戏互娱",
+    "category": "游戏",
+    "sub_category": "游戏外设",
+    "cooperation_count": 21,
+    "history_budget_total": 1253772.46
+  },
+  {
+    "brand_id": "B017",
+    "brand_name": "轻氧CLEAIR",
+    "industry": "美妆个护",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "cooperation_count": 25,
+    "history_budget_total": 3013296.87
+  },
+  {
+    "brand_id": "B018",
+    "brand_name": "米兔童装",
+    "industry": "母婴亲子",
+    "category": "母婴",
+    "sub_category": "童装童鞋",
+    "cooperation_count": 15,
+    "history_budget_total": 6235778.62
+  },
+  {
+    "brand_id": "B019",
+    "brand_name": "轻联数码",
+    "industry": "3C数码",
+    "category": "3C数码",
+    "sub_category": "手机",
+    "cooperation_count": 19,
+    "history_budget_total": 7914999.51
+  },
+  {
+    "brand_id": "B020",
+    "brand_name": "牛気乳业",
+    "industry": "食品饮料",
+    "category": "食品饮料",
+    "sub_category": "休闲零食",
+    "cooperation_count": 21,
+    "history_budget_total": 5602825.56
+  },
+  {
+    "brand_id": "B021",
+    "brand_name": "罗纹内衣",
+    "industry": "服饰鞋包",
+    "category": "服饰",
+    "sub_category": "女装",
+    "cooperation_count": 3,
+    "history_budget_total": 4421413.98
+  },
+  {
+    "brand_id": "B022",
+    "brand_name": "小厨匠",
+    "industry": "家居家电",
+    "category": "家居",
+    "sub_category": "收纳整理",
+    "cooperation_count": 15,
+    "history_budget_total": 4586429.79
+  },
+  {
+    "brand_id": "B023",
+    "brand_name": "环球轮胎",
+    "industry": "汽车出行",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "cooperation_count": 24,
+    "history_budget_total": 3706411.23
+  },
+  {
+    "brand_id": "B024",
+    "brand_name": "山海经手游",
+    "industry": "游戏互娱",
+    "category": "游戏",
+    "sub_category": "手游推广",
+    "cooperation_count": 10,
+    "history_budget_total": 1801990.22
+  },
+  {
+    "brand_id": "B025",
+    "brand_name": "沐光护肤",
+    "industry": "美妆个护",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "cooperation_count": 13,
+    "history_budget_total": 5358233.5
+  },
+  {
+    "brand_id": "B026",
+    "brand_name": "云朵母婴",
+    "industry": "母婴亲子",
+    "category": "母婴",
+    "sub_category": "玩具早教",
+    "cooperation_count": 8,
+    "history_budget_total": 3101583.03
+  },
+  {
+    "brand_id": "B027",
+    "brand_name": "声浪音频",
+    "industry": "3C数码",
+    "category": "3C数码",
+    "sub_category": "耳机音频",
+    "cooperation_count": 2,
+    "history_budget_total": 6267575.19
+  },
+  {
+    "brand_id": "B028",
+    "brand_name": "速食星球",
+    "industry": "食品饮料",
+    "category": "食品饮料",
+    "sub_category": "冲饮咖啡",
+    "cooperation_count": 12,
+    "history_budget_total": 4475786.31
+  },
+  {
+    "brand_id": "B029",
+    "brand_name": "风行鞋业",
+    "industry": "服饰鞋包",
+    "category": "服饰",
+    "sub_category": "女装",
+    "cooperation_count": 17,
+    "history_budget_total": 1112216.64
+  },
+  {
+    "brand_id": "B030",
+    "brand_name": "收好物",
+    "industry": "家居家电",
+    "category": "家居",
+    "sub_category": "家具",
+    "cooperation_count": 25,
+    "history_budget_total": 3809462.53
+  },
+  {
+    "brand_id": "B031",
+    "brand_name": "途安车品",
+    "industry": "汽车出行",
+    "category": "汽车",
+    "sub_category": "车险服务",
+    "cooperation_count": 18,
+    "history_budget_total": 4256444.63
+  },
+  {
+    "brand_id": "B032",
+    "brand_name": "云顶互娱",
+    "industry": "游戏互娱",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "cooperation_count": 3,
+    "history_budget_total": 6809769.2
+  },
+  {
+    "brand_id": "B033",
+    "brand_name": "采薇彩妆",
+    "industry": "美妆个护",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "cooperation_count": 2,
+    "history_budget_total": 5456522.95
+  },
+  {
+    "brand_id": "B034",
+    "brand_name": "初见童鞋",
+    "industry": "母婴亲子",
+    "category": "母婴",
+    "sub_category": "奶粉辅食",
+    "cooperation_count": 17,
+    "history_budget_total": 1109005.97
+  },
+  {
+    "brand_id": "B035",
+    "brand_name": "雷神外设",
+    "industry": "3C数码",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "cooperation_count": 7,
+    "history_budget_total": 7308237.15
+  },
+  {
+    "brand_id": "B036",
+    "brand_name": "果小茶",
+    "industry": "食品饮料",
+    "category": "食品饮料",
+    "sub_category": "乳制品",
+    "cooperation_count": 15,
+    "history_budget_total": 4474895.19
+  },
+  {
+    "brand_id": "B037",
+    "brand_name": "简棉服饰",
+    "industry": "服饰鞋包",
+    "category": "服饰",
+    "sub_category": "男装",
+    "cooperation_count": 18,
+    "history_budget_total": 724956.64
+  },
+  {
+    "brand_id": "B038",
+    "brand_name": "木野家具",
+    "industry": "家居家电",
+    "category": "家居",
+    "sub_category": "收纳整理",
+    "cooperation_count": 11,
+    "history_budget_total": 7534824.81
+  },
+  {
+    "brand_id": "B039",
+    "brand_name": "启程出行",
+    "industry": "汽车出行",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "cooperation_count": 23,
+    "history_budget_total": 3709694.44
+  },
+  {
+    "brand_id": "B040",
+    "brand_name": "疾风游戏",
+    "industry": "游戏互娱",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "cooperation_count": 4,
+    "history_budget_total": 6111990.38
+  }
+]

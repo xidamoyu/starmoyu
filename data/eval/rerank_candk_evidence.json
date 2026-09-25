@@ -1,0 +1,288 @@
+{
+  "n_items": 54,
+  "hit_at_k_before_rerank": {
+    "top_1": 40,
+    "top_3": 52,
+    "top_5": 54,
+    "top_10": 54,
+    "top_20": 54,
+    "top_30": 54
+  },
+  "covered_by_rerank_cand_k": {
+    "10": 54,
+    "30": 54
+  },
+  "missed_in_pool": 0,
+  "per_item": [
+    {
+      "query": "头部达人的档期一般要提前多久锁定？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "星图下单后达人多久内必须确认接单？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "商单立项的预算怎么分配，达人费用占比多少？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "内容修改次数有没有限制？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "达人怎么按粉丝量分级？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "美妆类目投放有哪些合规红线？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "达人筛选的五维评估模型是什么？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "提案的标准结构包含哪些部分？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "面对广告主压价应该怎么谈？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "美妆投放推荐的达人组合策略是什么？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "哪些达人属于硬性排除项？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "平台服务费怎么收取？",
+      "type": "规则/方法论",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "美妆类目达人的刊例报价标准是怎样的？",
+      "type": "刊例数值",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我想看美妆类目 10 到 50 万粉的腰部达人报价",
+      "type": "刊例数值+条件过滤",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "母婴类目达人的刊例报价标准是怎样的？",
+      "type": "刊例数值",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我想看母婴类目 10 到 50 万粉的腰部达人报价",
+      "type": "刊例数值+条件过滤",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "服饰类目达人的刊例报价标准是怎样的？",
+      "type": "刊例数值",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我想看服饰类目 10 到 50 万粉的腰部达人报价",
+      "type": "刊例数值+条件过滤",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "家居类目达人的刊例报价标准是怎样的？",
+      "type": "刊例数值",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我想看家居类目 10 到 50 万粉的腰部达人报价",
+      "type": "刊例数值+条件过滤",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "汽车类目达人的刊例报价标准是怎样的？",
+      "type": "刊例数值",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我想看汽车类目 10 到 50 万粉的腰部达人报价",
+      "type": "刊例数值+条件过滤",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "沐光护肤那个精华护肤的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 3
+    },
+    {
+      "query": "轻氧CLEAIR那个精华护肤的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "初见童鞋那个奶粉辅食的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "初见童鞋那个奶粉辅食的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "果小茶那个乳制品的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "果小茶那个乳制品的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "轻联数码那个手机的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "声浪音频那个耳机音频的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "环球轮胎那个轮胎养护的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "途安车品那个车险服务的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "净博士那个清洁用品的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "木野家具那个收纳整理的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "风行鞋业那个女装的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 3
+    },
+    {
+      "query": "简棉服饰那个男装的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "疾风游戏那个端游推广的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "掌趣互娱那个端游推广的商单是什么预算，ROI 多少？",
+      "type": "案例详情",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些美妆类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 4
+    },
+    {
+      "query": "我们做过哪些母婴类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些食品饮料类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些3C数码类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些汽车类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些家居类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些服饰类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "我们做过哪些游戏类目的成功案例，效果怎么样？",
+      "type": "案例聚合",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "声take声当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 4
+    },
+    {
+      "query": "云朵母婴当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 3
+    },
+    {
+      "query": "速食星球当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "素冉当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 3
+    },
+    {
+      "query": "米兔童装当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "果小茶当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 1
+    },
+    {
+      "query": "罗纹内衣当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 2
+    },
+    {
+      "query": "途安车品当前在途商单进行到哪个阶段了？",
+      "type": "在途跟进",
+      "gt_rank_in_pool": 1
+    }
+  ]
+}

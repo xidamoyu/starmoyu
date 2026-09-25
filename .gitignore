@@ -1,0 +1,17 @@
+# 环境与依赖
+.venv/
+__pycache__/
+*.pyc
+
+# 配置与密钥
+.env
+
+# 运行时产物
+data/checkpoints.db
+reports/*.log
+!reports/ablation.md
+!reports/e2e_proposal.md
+
+# 系统
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+# Starmoyu 运行依赖
+#
+# 安装：
+#   uv venv .venv --python 3.11
+#   uv pip install --python .venv/Scripts/python.exe -r requirements.txt
+#
+# 说明：本文件只列项目直接依赖。Rerank 走云端 DashScope API，
+# 不再需要 torch / transformers / sentence-transformers（原依赖 3.9GB，已移除）。
+
+# --- RAG 检索 ---
+pymilvus==3.0.2            # 向量库
+rank-bm25                  # BM25 关键词召回（与向量路做 RRF 融合）
+jieba==0.42.1              # 中文分词（BM25 与查询解析）
+numpy==2.4.6
+
+# --- 存储 ---
+psycopg==3.3.6             # PostgreSQL 关系台账
+minio==7.2.20              # 对象存储（原件 + 预签名直链）
+
+# --- Agent 编排 ---
+langgraph==1.2.12          # 状态机 + Checkpointer + interrupt()
+langchain-core==1.6.4
+
+# --- 前端 ---
+streamlit==1.64.0          # 三 tab UI
+pandas==3.0.6              # 表格展示
+pyarrow==25.0.1
+
+# --- 基础设施 / HTTP ---
+httpx==0.28.1              # 调用 ARK(DeepSeek) / Ollama / DashScope
+python-dotenv==1.2.3
+
+# --- 外部服务（需单独部署，不在 pip 依赖内）---
+# Milvus   : WSL Docker，端口 19530
+# PostgreSQL: 本机，端口 5432
+# MinIO    : WSL Docker，端口 9000
+# Ollama   : 本机 11434，需 `ollama pull bge-m3`（Embedding，1024 维）
+#
+# 云端 API（需 .env 配置 key）：
+#   ARK_API_KEY   -> DeepSeek Chat（火山方舟）
+#   QWEN_API_KEY  -> DashScope gte-rerank-v2（Rerank）

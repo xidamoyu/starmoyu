@@ -1,0 +1,38 @@
+[
+  {
+    "name": "⑦ Full (rerank_cand_k=30)",
+    "rerank_cand_k": 30,
+    "wall_s": 3593.38,
+    "ms_per_query": 66544.2,
+    "hit@1": 0.7407,
+    "hit@3": 0.963,
+    "hit@5": 0.9815,
+    "hit@10": 1.0,
+    "recall@5": 0.9722,
+    "mrr": 0.8525
+  },
+  {
+    "name": "⑧ 收窄 (rerank_cand_k=10)",
+    "rerank_cand_k": 10,
+    "wall_s": 879.9,
+    "ms_per_query": 16294.4,
+    "hit@1": 0.7407,
+    "hit@3": 0.9815,
+    "hit@5": 1.0,
+    "hit@10": 1.0,
+    "recall@5": 0.9907,
+    "mrr": 0.8586
+  },
+  {
+    "name": "⑨ 激进收窄 (rerank_cand_k=5)",
+    "rerank_cand_k": 5,
+    "wall_s": 355.66,
+    "ms_per_query": 6586.3,
+    "hit@1": 0.7593,
+    "hit@3": 0.9815,
+    "hit@5": 1.0,
+    "hit@10": 1.0,
+    "recall@5": 0.963,
+    "mrr": 0.8688
+  }
+]

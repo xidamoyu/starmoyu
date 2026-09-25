@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "total": 16,
+    "passed": 16
+  },
+  "items": [
+    {
+      "step": "1.1 意图路由",
+      "ok": true,
+      "detail": "intent=proposal"
+    },
+    {
+      "step": "1.2 需求结构化",
+      "ok": true,
+      "detail": "category=美妆 budget=150000 kol_count=4 tier=腰部"
+    },
+    {
+      "step": "1.3 历史商单召回",
+      "ok": true,
+      "detail": "5 条"
+    },
+    {
+      "step": "1.4 达人匹配",
+      "ok": true,
+      "detail": "8 位候选，分布=['腰部']"
+    },
+    {
+      "step": "1.5 方案生成+引用校验",
+      "ok": true,
+      "detail": "4049 字，引用 [1, 2, 3, 4, 5] 无越界=True"
+    },
+    {
+      "step": "1.6 人工介入中断",
+      "ok": true,
+      "detail": "next=('human_review',)（图已挂起等待人工）"
+    },
+    {
+      "step": "1.7 按意见重生成",
+      "ok": true,
+      "detail": "revision_count=1 next=('human_review',)"
+    },
+    {
+      "step": "1.8 重生成后再次中断",
+      "ok": true,
+      "detail": "next=('human_review',)"
+    },
+    {
+      "step": "1.9 确认定稿并结束",
+      "ok": true,
+      "detail": "next=()"
+    },
+    {
+      "step": "2.1 速查[美妆类目 10 到 50 万粉的腰部…]",
+      "ok": true,
+      "detail": "引用 ok=True 命中类型=['rate_card', 'inflight_deal', 'inflight_deal'] 期望=['rate_card']"
+    },
+    {
+      "step": "2.2 速查[头部达人的档期一般要提前多久锁定？…]",
+      "ok": true,
+      "detail": "引用 ok=True 命中类型=['platform_policy', 'platform_policy', 'deal_case'] 期望=['platform_policy']"
+    },
+    {
+      "step": "2.3 速查[我们做过哪些美妆精华类的成功案例，R…]",
+      "ok": true,
+      "detail": "引用 ok=True 命中类型=['deal_case', 'deal_case', 'deal_case'] 期望=['deal_case']"
+    },
+    {
+      "step": "2.4 无依据时明确拒答",
+      "ok": true,
+      "detail": "明确声明无依据=True 未编造金额=True 零引用=True（拒答时应为零）"
+    },
+    {
+      "step": "3.1 在途商单扫描",
+      "ok": true,
+      "detail": "在途 45 单｜高 18 中 16 正常 11"
+    },
+    {
+      "step": "3.2 跟进建议生成",
+      "ok": true,
+      "detail": "输出 15 条风险建议"
+    },
+    {
+      "step": "3.3 建议含可发送话术",
+      "ok": true,
+      "detail": "所有风险项均含 message_draft"
+    }
+  ]
+}

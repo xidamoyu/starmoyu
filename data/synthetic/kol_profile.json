@@ -1,0 +1,4078 @@
+[
+  {
+    "kol_id": "K0001",
+    "kol_name": "美妆铺子",
+    "real_name": "赵皎皎",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "fans_count": 417770,
+    "tier": "尾部",
+    "avg_views": 134547,
+    "interact_rate": 0.0187,
+    "conversion_rate": 0.0242,
+    "gender_ratio": {
+      "female": 0.29,
+      "male": 0.71
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "武汉",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "C",
+    "tags": [
+      "妆教",
+      "空瓶记录",
+      "测评向"
+    ],
+    "price_1_20s": 3700,
+    "price_21_60s": 6600,
+    "price_live": 15200
+  },
+  {
+    "kol_id": "K0002",
+    "kol_name": "一只育儿日记",
+    "real_name": "吴叙白",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "奶粉辅食",
+    "fans_count": 3600089,
+    "tier": "腰部",
+    "avg_views": 636624,
+    "interact_rate": 0.0503,
+    "conversion_rate": 0.0281,
+    "gender_ratio": {
+      "female": 0.42,
+      "male": 0.58
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "武汉",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "辅食教程",
+      "育儿知识",
+      "萌娃日常"
+    ],
+    "price_1_20s": 37700,
+    "price_21_60s": 68500,
+    "price_live": 133100
+  },
+  {
+    "kol_id": "K0003",
+    "kol_name": "数码日记",
+    "real_name": "魏昭昭",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 314187,
+    "tier": "尾部",
+    "avg_views": 110058,
+    "interact_rate": 0.0269,
+    "conversion_rate": 0.0108,
+    "gender_ratio": {
+      "female": 0.44,
+      "male": 0.56
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "硬核拆解",
+      "科技资讯",
+      "参数党",
+      "数码好物"
+    ],
+    "price_1_20s": 2700,
+    "price_21_60s": 4800,
+    "price_live": 7000
+  },
+  {
+    "kol_id": "K0004",
+    "kol_name": "老美食日记",
+    "real_name": "卫亦然",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "方便速食",
+    "fans_count": 17680850,
+    "tier": "头部",
+    "avg_views": 3287035,
+    "interact_rate": 0.038,
+    "conversion_rate": 0.0205,
+    "gender_ratio": {
+      "female": 0.44,
+      "male": 0.56
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "囤货分享",
+      "零食试吃",
+      "健康饮食",
+      "口感测评"
+    ],
+    "price_1_20s": 287200,
+    "price_21_60s": 522200,
+    "price_live": 1224800
+  },
+  {
+    "kol_id": "K0005",
+    "kol_name": "是穿搭研究所",
+    "real_name": "秦灵均",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "女装",
+    "fans_count": 4592199,
+    "tier": "腰部",
+    "avg_views": 1414238,
+    "interact_rate": 0.025,
+    "conversion_rate": 0.0228,
+    "gender_ratio": {
+      "female": 0.5,
+      "male": 0.5
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "A",
+    "tags": [
+      "面料科普",
+      "穿搭教程",
+      "OOTD",
+      "小众设计"
+    ],
+    "price_1_20s": 35600,
+    "price_21_60s": 64800,
+    "price_live": 86100
+  },
+  {
+    "kol_id": "K0006",
+    "kol_name": "爱家居研究所",
+    "real_name": "蒋清和",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 231851,
+    "tier": "尾部",
+    "avg_views": 55766,
+    "interact_rate": 0.0601,
+    "conversion_rate": 0.0277,
+    "gender_ratio": {
+      "female": 0.4,
+      "male": 0.6
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "上海",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "清洁技巧",
+      "收纳达人",
+      "改造翻新",
+      "小户型优化"
+    ],
+    "price_1_20s": 2000,
+    "price_21_60s": 3600,
+    "price_live": 5600
+  },
+  {
+    "kol_id": "K0007",
+    "kol_name": "老车记",
+    "real_name": "郑悠悠",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "车险服务",
+    "fans_count": 252716,
+    "tier": "尾部",
+    "avg_views": 80911,
+    "interact_rate": 0.0324,
+    "conversion_rate": 0.0216,
+    "gender_ratio": {
+      "female": 0.18,
+      "male": 0.82
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "试驾评测",
+      "用车技巧"
+    ],
+    "price_1_20s": 2100,
+    "price_21_60s": 3900,
+    "price_live": 10000
+  },
+  {
+    "kol_id": "K0008",
+    "kol_name": "是游戏日记",
+    "real_name": "孙亦然",
+    "platform": "小红书",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 4123184,
+    "tier": "腰部",
+    "avg_views": 1702744,
+    "interact_rate": 0.0385,
+    "conversion_rate": 0.0122,
+    "gender_ratio": {
+      "female": 0.23,
+      "male": 0.77
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "设备测评",
+      "版本前瞻",
+      "高光时刻"
+    ],
+    "price_1_20s": 45500,
+    "price_21_60s": 82700,
+    "price_live": 108900
+  },
+  {
+    "kol_id": "K0009",
+    "kol_name": "美妆君",
+    "real_name": "李叙白",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "fans_count": 4479084,
+    "tier": "腰部",
+    "avg_views": 1195994,
+    "interact_rate": 0.0567,
+    "conversion_rate": 0.0287,
+    "gender_ratio": {
+      "female": 0.3,
+      "male": 0.7
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "专业配方师",
+      "性价比推荐",
+      "妆教"
+    ],
+    "price_1_20s": 32100,
+    "price_21_60s": 58300,
+    "price_live": 128400
+  },
+  {
+    "kol_id": "K0010",
+    "kol_name": "小育儿日常",
+    "real_name": "许灵均",
+    "platform": "快手",
+    "category": "母婴",
+    "sub_category": "童装童鞋",
+    "fans_count": 174980,
+    "tier": "尾部",
+    "avg_views": 67727,
+    "interact_rate": 0.0641,
+    "conversion_rate": 0.032,
+    "gender_ratio": {
+      "female": 0.33,
+      "male": 0.67
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "C",
+    "tags": [
+      "囤货清单",
+      "母婴测评",
+      "育儿知识"
+    ],
+    "price_1_20s": 2100,
+    "price_21_60s": 3800,
+    "price_live": 8900
+  },
+  {
+    "kol_id": "K0011",
+    "kol_name": "小数码实验室",
+    "real_name": "冯与安",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "耳机音频",
+    "fans_count": 3125894,
+    "tier": "腰部",
+    "avg_views": 955002,
+    "interact_rate": 0.0359,
+    "conversion_rate": 0.021,
+    "gender_ratio": {
+      "female": 0.57,
+      "male": 0.43
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "开箱测评",
+      "体验分享",
+      "科技资讯"
+    ],
+    "price_1_20s": 43200,
+    "price_21_60s": 78500,
+    "price_live": 172000
+  },
+  {
+    "kol_id": "K0012",
+    "kol_name": "美食记",
+    "real_name": "严清和",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "健康保健",
+    "fans_count": 1980073,
+    "tier": "腰部",
+    "avg_views": 119031,
+    "interact_rate": 0.0557,
+    "conversion_rate": 0.018,
+    "gender_ratio": {
+      "female": 0.4,
+      "male": 0.6
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "健康饮食",
+      "零食试吃"
+    ],
+    "price_1_20s": 18900,
+    "price_21_60s": 34400,
+    "price_live": 58700
+  },
+  {
+    "kol_id": "K0013",
+    "kol_name": "一只穿搭实验室",
+    "real_name": "吴稚川",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "鞋靴箱包",
+    "fans_count": 21994288,
+    "tier": "头部",
+    "avg_views": 4837105,
+    "interact_rate": 0.0119,
+    "conversion_rate": 0.0063,
+    "gender_ratio": {
+      "female": 0.33,
+      "male": 0.67
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "穿搭教程",
+      "OOTD"
+    ],
+    "price_1_20s": 218700,
+    "price_21_60s": 397700,
+    "price_live": 962200
+  },
+  {
+    "kol_id": "K0014",
+    "kol_name": "阿家居日常",
+    "real_name": "施亦然",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "收纳整理",
+    "fans_count": 3026648,
+    "tier": "腰部",
+    "avg_views": 250686,
+    "interact_rate": 0.0275,
+    "conversion_rate": 0.0238,
+    "gender_ratio": {
+      "female": 0.3,
+      "male": 0.7
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "家居好物",
+      "收纳达人"
+    ],
+    "price_1_20s": 36000,
+    "price_21_60s": 65400,
+    "price_live": 141700
+  },
+  {
+    "kol_id": "K0015",
+    "kol_name": "爱车记",
+    "real_name": "沈南乔",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "汽车用品",
+    "fans_count": 2164965,
+    "tier": "腰部",
+    "avg_views": 229923,
+    "interact_rate": 0.0381,
+    "conversion_rate": 0.0131,
+    "gender_ratio": {
+      "female": 0.47,
+      "male": 0.53
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "用车技巧",
+      "新能源科普"
+    ],
+    "price_1_20s": 16800,
+    "price_21_60s": 30500,
+    "price_live": 51300
+  },
+  {
+    "kol_id": "K0016",
+    "kol_name": "老游戏研究所",
+    "real_name": "孙清和",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "游戏外设",
+    "fans_count": 219764,
+    "tier": "尾部",
+    "avg_views": 28807,
+    "interact_rate": 0.0257,
+    "conversion_rate": 0.0274,
+    "gender_ratio": {
+      "female": 0.26,
+      "male": 0.74
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "S",
+    "tags": [
+      "赛事解说",
+      "版本前瞻",
+      "攻略解说"
+    ],
+    "price_1_20s": 2800,
+    "price_21_60s": 5100,
+    "price_live": 8500
+  },
+  {
+    "kol_id": "K0017",
+    "kol_name": "小美妆日记",
+    "real_name": "孔望舒",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "防晒",
+    "fans_count": 4496007,
+    "tier": "腰部",
+    "avg_views": 1386444,
+    "interact_rate": 0.0196,
+    "conversion_rate": 0.0287,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "性价比推荐",
+      "成分党"
+    ],
+    "price_1_20s": 43100,
+    "price_21_60s": 78300,
+    "price_live": 165100
+  },
+  {
+    "kol_id": "K0018",
+    "kol_name": "一只育儿笔记",
+    "real_name": "秦稚川",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "孕产护理",
+    "fans_count": 258356,
+    "tier": "尾部",
+    "avg_views": 71193,
+    "interact_rate": 0.0295,
+    "conversion_rate": 0.0338,
+    "gender_ratio": {
+      "female": 0.86,
+      "male": 0.14
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "广州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "萌娃日常",
+      "辅食教程",
+      "囤货清单"
+    ],
+    "price_1_20s": 2900,
+    "price_21_60s": 5200,
+    "price_live": 7600
+  },
+  {
+    "kol_id": "K0019",
+    "kol_name": "爱数码研究所",
+    "real_name": "孙望舒",
+    "platform": "小红书",
+    "category": "3C数码",
+    "sub_category": "笔记本平板",
+    "fans_count": 4369579,
+    "tier": "腰部",
+    "avg_views": 1183018,
+    "interact_rate": 0.0617,
+    "conversion_rate": 0.0043,
+    "gender_ratio": {
+      "female": 0.41,
+      "male": 0.59
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "广州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "硬核拆解",
+      "体验分享",
+      "开箱测评"
+    ],
+    "price_1_20s": 43900,
+    "price_21_60s": 79800,
+    "price_live": 157000
+  },
+  {
+    "kol_id": "K0020",
+    "kol_name": "一只美食记",
+    "real_name": "沈望舒",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "健康保健",
+    "fans_count": 18680085,
+    "tier": "头部",
+    "avg_views": 3132241,
+    "interact_rate": 0.0172,
+    "conversion_rate": 0.0167,
+    "gender_ratio": {
+      "female": 0.56,
+      "male": 0.44
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "零食试吃",
+      "探店",
+      "健康饮食"
+    ],
+    "price_1_20s": 302400,
+    "price_21_60s": 549900,
+    "price_live": 966100
+  },
+  {
+    "kol_id": "K0021",
+    "kol_name": "穿搭记",
+    "real_name": "郑时予",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "女装",
+    "fans_count": 2495345,
+    "tier": "腰部",
+    "avg_views": 875414,
+    "interact_rate": 0.0555,
+    "conversion_rate": 0.0177,
+    "gender_ratio": {
+      "female": 0.7,
+      "male": 0.3
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "大码穿搭",
+      "小众设计",
+      "OOTD"
+    ],
+    "price_1_20s": 30200,
+    "price_21_60s": 54800,
+    "price_live": 84000
+  },
+  {
+    "kol_id": "K0022",
+    "kol_name": "家居日常",
+    "real_name": "赵悠悠",
+    "platform": "小红书",
+    "category": "家居",
+    "sub_category": "清洁用品",
+    "fans_count": 1830696,
+    "tier": "腰部",
+    "avg_views": 358813,
+    "interact_rate": 0.0235,
+    "conversion_rate": 0.0224,
+    "gender_ratio": {
+      "female": 0.88,
+      "male": 0.12
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "家居好物",
+      "小户型优化",
+      "清洁技巧"
+    ],
+    "price_1_20s": 13800,
+    "price_21_60s": 25100,
+    "price_live": 43200
+  },
+  {
+    "kol_id": "K0023",
+    "kol_name": "小车君",
+    "real_name": "华望舒",
+    "platform": "快手",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 1881390,
+    "tier": "腰部",
+    "avg_views": 306527,
+    "interact_rate": 0.034,
+    "conversion_rate": 0.0208,
+    "gender_ratio": {
+      "female": 0.48,
+      "male": 0.52
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "上海",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "用车技巧",
+      "新能源科普",
+      "改装"
+    ],
+    "price_1_20s": 25000,
+    "price_21_60s": 45400,
+    "price_live": 117200
+  },
+  {
+    "kol_id": "K0024",
+    "kol_name": "小游戏说",
+    "real_name": "吕锦书",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "手游推广",
+    "fans_count": 303867,
+    "tier": "尾部",
+    "avg_views": 118387,
+    "interact_rate": 0.0328,
+    "conversion_rate": 0.0361,
+    "gender_ratio": {
+      "female": 0.29,
+      "male": 0.71
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "高光时刻",
+      "赛事解说",
+      "攻略解说"
+    ],
+    "price_1_20s": 3800,
+    "price_21_60s": 7000,
+    "price_live": 10300
+  },
+  {
+    "kol_id": "K0025",
+    "kol_name": "美妆日常",
+    "real_name": "钱沐言",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "精华护肤",
+    "fans_count": 4427939,
+    "tier": "腰部",
+    "avg_views": 981843,
+    "interact_rate": 0.046,
+    "conversion_rate": 0.0168,
+    "gender_ratio": {
+      "female": 0.79,
+      "male": 0.21
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "专业配方师",
+      "成分党",
+      "妆教",
+      "测评向"
+    ],
+    "price_1_20s": 32800,
+    "price_21_60s": 59700,
+    "price_live": 135200
+  },
+  {
+    "kol_id": "K0026",
+    "kol_name": "阿育儿酱",
+    "real_name": "陶小满",
+    "platform": "小红书",
+    "category": "母婴",
+    "sub_category": "纸尿裤",
+    "fans_count": 379124,
+    "tier": "尾部",
+    "avg_views": 46260,
+    "interact_rate": 0.0328,
+    "conversion_rate": 0.0084,
+    "gender_ratio": {
+      "female": 0.41,
+      "male": 0.59
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "A",
+    "tags": [
+      "辅食教程",
+      "囤货清单"
+    ],
+    "price_1_20s": 2600,
+    "price_21_60s": 4700,
+    "price_live": 7100
+  },
+  {
+    "kol_id": "K0027",
+    "kol_name": "小数码研究所",
+    "real_name": "李时予",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "智能穿戴",
+    "fans_count": 2940910,
+    "tier": "腰部",
+    "avg_views": 920288,
+    "interact_rate": 0.0501,
+    "conversion_rate": 0.008,
+    "gender_ratio": {
+      "female": 0.53,
+      "male": 0.47
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "深圳",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "A",
+    "tags": [
+      "开箱测评",
+      "硬核拆解"
+    ],
+    "price_1_20s": 39700,
+    "price_21_60s": 72200,
+    "price_live": 103000
+  },
+  {
+    "kol_id": "K0028",
+    "kol_name": "小美食君",
+    "real_name": "张皎皎",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "健康保健",
+    "fans_count": 238225,
+    "tier": "尾部",
+    "avg_views": 51341,
+    "interact_rate": 0.066,
+    "conversion_rate": 0.0091,
+    "gender_ratio": {
+      "female": 0.56,
+      "male": 0.44
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "零食试吃",
+      "美食制作",
+      "口感测评"
+    ],
+    "price_1_20s": 2800,
+    "price_21_60s": 5100,
+    "price_live": 11700
+  },
+  {
+    "kol_id": "K0029",
+    "kol_name": "一只穿搭研究所",
+    "real_name": "魏知夏",
+    "platform": "快手",
+    "category": "服饰",
+    "sub_category": "鞋靴箱包",
+    "fans_count": 3943274,
+    "tier": "腰部",
+    "avg_views": 965220,
+    "interact_rate": 0.0282,
+    "conversion_rate": 0.0113,
+    "gender_ratio": {
+      "female": 0.56,
+      "male": 0.44
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "上海",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "OOTD",
+      "大码穿搭",
+      "通勤穿搭",
+      "小众设计"
+    ],
+    "price_1_20s": 54100,
+    "price_21_60s": 98400,
+    "price_live": 133000
+  },
+  {
+    "kol_id": "K0030",
+    "kol_name": "爱家居记",
+    "real_name": "金悠悠",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "清洁用品",
+    "fans_count": 257031,
+    "tier": "尾部",
+    "avg_views": 43428,
+    "interact_rate": 0.0716,
+    "conversion_rate": 0.0338,
+    "gender_ratio": {
+      "female": 0.56,
+      "male": 0.44
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "长沙",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "S",
+    "tags": [
+      "清洁技巧",
+      "小户型优化"
+    ],
+    "price_1_20s": 3400,
+    "price_21_60s": 6200,
+    "price_live": 12500
+  },
+  {
+    "kol_id": "K0031",
+    "kol_name": "爱车实验室",
+    "real_name": "吴皎皎",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "新能源整车",
+    "fans_count": 2006326,
+    "tier": "腰部",
+    "avg_views": 627795,
+    "interact_rate": 0.0145,
+    "conversion_rate": 0.0148,
+    "gender_ratio": {
+      "female": 0.53,
+      "male": 0.47
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "车主vlog",
+      "改装"
+    ],
+    "price_1_20s": 18700,
+    "price_21_60s": 33900,
+    "price_live": 64200
+  },
+  {
+    "kol_id": "K0032",
+    "kol_name": "游戏记",
+    "real_name": "华星野",
+    "platform": "小红书",
+    "category": "游戏",
+    "sub_category": "游戏外设",
+    "fans_count": 2945890,
+    "tier": "腰部",
+    "avg_views": 1098843,
+    "interact_rate": 0.0331,
+    "conversion_rate": 0.0215,
+    "gender_ratio": {
+      "female": 0.59,
+      "male": 0.41
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "赛事解说",
+      "攻略解说"
+    ],
+    "price_1_20s": 38100,
+    "price_21_60s": 69400,
+    "price_live": 105100
+  },
+  {
+    "kol_id": "K0033",
+    "kol_name": "小美妆记",
+    "real_name": "张砚青",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "香水",
+    "fans_count": 728958,
+    "tier": "腰部",
+    "avg_views": 272532,
+    "interact_rate": 0.0549,
+    "conversion_rate": 0.0163,
+    "gender_ratio": {
+      "female": 0.63,
+      "male": 0.37
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "空瓶记录",
+      "专业配方师"
+    ],
+    "price_1_20s": 8300,
+    "price_21_60s": 15100,
+    "price_live": 38400
+  },
+  {
+    "kol_id": "K0034",
+    "kol_name": "阿育儿日记",
+    "real_name": "华与安",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "童装童鞋",
+    "fans_count": 1097255,
+    "tier": "腰部",
+    "avg_views": 357166,
+    "interact_rate": 0.0475,
+    "conversion_rate": 0.0271,
+    "gender_ratio": {
+      "female": 0.55,
+      "male": 0.45
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "辅食教程",
+      "母婴测评"
+    ],
+    "price_1_20s": 14300,
+    "price_21_60s": 26100,
+    "price_live": 57500
+  },
+  {
+    "kol_id": "K0035",
+    "kol_name": "老数码研究所",
+    "real_name": "沈晏宁",
+    "platform": "快手",
+    "category": "3C数码",
+    "sub_category": "手机",
+    "fans_count": 4405966,
+    "tier": "腰部",
+    "avg_views": 769947,
+    "interact_rate": 0.0457,
+    "conversion_rate": 0.0247,
+    "gender_ratio": {
+      "female": 0.58,
+      "male": 0.42
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "长沙",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "数码好物",
+      "参数党",
+      "硬核拆解"
+    ],
+    "price_1_20s": 58300,
+    "price_21_60s": 106000,
+    "price_live": 260000
+  },
+  {
+    "kol_id": "K0036",
+    "kol_name": "是美食君",
+    "real_name": "魏亦然",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "方便速食",
+    "fans_count": 25036055,
+    "tier": "头部",
+    "avg_views": 7353323,
+    "interact_rate": 0.0555,
+    "conversion_rate": 0.0153,
+    "gender_ratio": {
+      "female": 0.31,
+      "male": 0.69
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "零食试吃",
+      "探店",
+      "健康饮食"
+    ],
+    "price_1_20s": 313800,
+    "price_21_60s": 570500,
+    "price_live": 788000
+  },
+  {
+    "kol_id": "K0037",
+    "kol_name": "爱穿搭记",
+    "real_name": "钱澜依",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "男装",
+    "fans_count": 4852649,
+    "tier": "腰部",
+    "avg_views": 733532,
+    "interact_rate": 0.0181,
+    "conversion_rate": 0.0234,
+    "gender_ratio": {
+      "female": 0.7,
+      "male": 0.3
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "深圳",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "OOTD",
+      "穿搭教程",
+      "面料科普"
+    ],
+    "price_1_20s": 65600,
+    "price_21_60s": 119200,
+    "price_live": 185100
+  },
+  {
+    "kol_id": "K0038",
+    "kol_name": "小家居日常",
+    "real_name": "施叙白",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 287033,
+    "tier": "尾部",
+    "avg_views": 29684,
+    "interact_rate": 0.0616,
+    "conversion_rate": 0.0357,
+    "gender_ratio": {
+      "female": 0.74,
+      "male": 0.26
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "家居好物",
+      "清洁技巧",
+      "收纳达人",
+      "改造翻新"
+    ],
+    "price_1_20s": 2500,
+    "price_21_60s": 4600,
+    "price_live": 8100
+  },
+  {
+    "kol_id": "K0039",
+    "kol_name": "是车酱",
+    "real_name": "王昭昭",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "汽车用品",
+    "fans_count": 6169074,
+    "tier": "头部",
+    "avg_views": 2273215,
+    "interact_rate": 0.0472,
+    "conversion_rate": 0.0156,
+    "gender_ratio": {
+      "female": 0.42,
+      "male": 0.58
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "改装",
+      "试驾评测",
+      "车主vlog"
+    ],
+    "price_1_20s": 102300,
+    "price_21_60s": 185900,
+    "price_live": 445400
+  },
+  {
+    "kol_id": "K0040",
+    "kol_name": "阿游戏酱",
+    "real_name": "金亦然",
+    "platform": "快手",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 360388,
+    "tier": "尾部",
+    "avg_views": 114581,
+    "interact_rate": 0.0723,
+    "conversion_rate": 0.0306,
+    "gender_ratio": {
+      "female": 0.64,
+      "male": 0.36
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "赛事解说",
+      "攻略解说",
+      "设备测评"
+    ],
+    "price_1_20s": 2600,
+    "price_21_60s": 4700,
+    "price_live": 9500
+  },
+  {
+    "kol_id": "K0041",
+    "kol_name": "一只美妆研究所",
+    "real_name": "吕与安",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "香水",
+    "fans_count": 4864612,
+    "tier": "腰部",
+    "avg_views": 922623,
+    "interact_rate": 0.0397,
+    "conversion_rate": 0.0222,
+    "gender_ratio": {
+      "female": 0.32,
+      "male": 0.68
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "测评向",
+      "专业配方师",
+      "妆教"
+    ],
+    "price_1_20s": 46700,
+    "price_21_60s": 84900,
+    "price_live": 158100
+  },
+  {
+    "kol_id": "K0042",
+    "kol_name": "爱育儿铺子",
+    "real_name": "华稚川",
+    "platform": "快手",
+    "category": "母婴",
+    "sub_category": "孕产护理",
+    "fans_count": 7678917,
+    "tier": "头部",
+    "avg_views": 695351,
+    "interact_rate": 0.014,
+    "conversion_rate": 0.018,
+    "gender_ratio": {
+      "female": 0.35,
+      "male": 0.65
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "萌娃日常",
+      "囤货清单",
+      "宝妈vlog",
+      "辅食教程"
+    ],
+    "price_1_20s": 102100,
+    "price_21_60s": 185600,
+    "price_live": 332800
+  },
+  {
+    "kol_id": "K0043",
+    "kol_name": "是数码君",
+    "real_name": "王与安",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 689576,
+    "tier": "腰部",
+    "avg_views": 185019,
+    "interact_rate": 0.0178,
+    "conversion_rate": 0.013,
+    "gender_ratio": {
+      "female": 0.29,
+      "male": 0.71
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "广州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "体验分享",
+      "数码好物"
+    ],
+    "price_1_20s": 5200,
+    "price_21_60s": 9400,
+    "price_live": 21500
+  },
+  {
+    "kol_id": "K0044",
+    "kol_name": "阿美食日常",
+    "real_name": "姜稚川",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "健康保健",
+    "fans_count": 19630933,
+    "tier": "头部",
+    "avg_views": 4225742,
+    "interact_rate": 0.0525,
+    "conversion_rate": 0.0082,
+    "gender_ratio": {
+      "female": 0.21,
+      "male": 0.79
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "零食试吃",
+      "探店",
+      "健康饮食",
+      "囤货分享"
+    ],
+    "price_1_20s": 191500,
+    "price_21_60s": 348200,
+    "price_live": 534200
+  },
+  {
+    "kol_id": "K0045",
+    "kol_name": "穿搭笔记",
+    "real_name": "王悠悠",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "内衣",
+    "fans_count": 137465,
+    "tier": "尾部",
+    "avg_views": 50903,
+    "interact_rate": 0.0623,
+    "conversion_rate": 0.0069,
+    "gender_ratio": {
+      "female": 0.79,
+      "male": 0.21
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "穿搭教程",
+      "大码穿搭"
+    ],
+    "price_1_20s": 1200,
+    "price_21_60s": 2100,
+    "price_live": 3600
+  },
+  {
+    "kol_id": "K0046",
+    "kol_name": "阿家居说",
+    "real_name": "卫皎皎",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 2768733,
+    "tier": "腰部",
+    "avg_views": 722396,
+    "interact_rate": 0.0524,
+    "conversion_rate": 0.0263,
+    "gender_ratio": {
+      "female": 0.84,
+      "male": 0.16
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "改造翻新",
+      "家居好物",
+      "小户型优化"
+    ],
+    "price_1_20s": 31700,
+    "price_21_60s": 57600,
+    "price_live": 96700
+  },
+  {
+    "kol_id": "K0047",
+    "kol_name": "是车日常",
+    "real_name": "金灵均",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 3482603,
+    "tier": "腰部",
+    "avg_views": 1150865,
+    "interact_rate": 0.0324,
+    "conversion_rate": 0.0294,
+    "gender_ratio": {
+      "female": 0.2,
+      "male": 0.8
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "A",
+    "tags": [
+      "新能源科普",
+      "试驾评测"
+    ],
+    "price_1_20s": 26500,
+    "price_21_60s": 48200,
+    "price_live": 88000
+  },
+  {
+    "kol_id": "K0048",
+    "kol_name": "游戏研究所",
+    "real_name": "陶小满",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "手游推广",
+    "fans_count": 358884,
+    "tier": "尾部",
+    "avg_views": 111066,
+    "interact_rate": 0.0372,
+    "conversion_rate": 0.022,
+    "gender_ratio": {
+      "female": 0.57,
+      "male": 0.43
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "赛事解说",
+      "设备测评"
+    ],
+    "price_1_20s": 3100,
+    "price_21_60s": 5600,
+    "price_live": 10200
+  },
+  {
+    "kol_id": "K0049",
+    "kol_name": "是美妆日常",
+    "real_name": "华砚青",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "洗护",
+    "fans_count": 433141,
+    "tier": "尾部",
+    "avg_views": 46661,
+    "interact_rate": 0.0592,
+    "conversion_rate": 0.0295,
+    "gender_ratio": {
+      "female": 0.64,
+      "male": 0.36
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "成分党",
+      "性价比推荐"
+    ],
+    "price_1_20s": 3400,
+    "price_21_60s": 6200,
+    "price_live": 8200
+  },
+  {
+    "kol_id": "K0050",
+    "kol_name": "爱育儿君",
+    "real_name": "王时予",
+    "platform": "小红书",
+    "category": "母婴",
+    "sub_category": "奶粉辅食",
+    "fans_count": 497405,
+    "tier": "尾部",
+    "avg_views": 118210,
+    "interact_rate": 0.0674,
+    "conversion_rate": 0.0265,
+    "gender_ratio": {
+      "female": 0.91,
+      "male": 0.09
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "宝妈vlog",
+      "囤货清单",
+      "萌娃日常"
+    ],
+    "price_1_20s": 5200,
+    "price_21_60s": 9400,
+    "price_live": 15300
+  },
+  {
+    "kol_id": "K0051",
+    "kol_name": "是数码记",
+    "real_name": "魏知夏",
+    "platform": "小红书",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 1990618,
+    "tier": "腰部",
+    "avg_views": 246386,
+    "interact_rate": 0.0132,
+    "conversion_rate": 0.0287,
+    "gender_ratio": {
+      "female": 0.45,
+      "male": 0.55
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "体验分享",
+      "数码好物",
+      "参数党"
+    ],
+    "price_1_20s": 15600,
+    "price_21_60s": 28400,
+    "price_live": 48400
+  },
+  {
+    "kol_id": "K0052",
+    "kol_name": "老美食日常",
+    "real_name": "张时予",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "乳制品",
+    "fans_count": 381806,
+    "tier": "尾部",
+    "avg_views": 147180,
+    "interact_rate": 0.0422,
+    "conversion_rate": 0.0094,
+    "gender_ratio": {
+      "female": 0.39,
+      "male": 0.61
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "长沙",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "美食制作",
+      "零食试吃",
+      "健康饮食"
+    ],
+    "price_1_20s": 3800,
+    "price_21_60s": 6900,
+    "price_live": 17700
+  },
+  {
+    "kol_id": "K0053",
+    "kol_name": "阿穿搭酱",
+    "real_name": "华锦书",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "男装",
+    "fans_count": 408758,
+    "tier": "尾部",
+    "avg_views": 131540,
+    "interact_rate": 0.0364,
+    "conversion_rate": 0.0086,
+    "gender_ratio": {
+      "female": 0.32,
+      "male": 0.68
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "OOTD",
+      "面料科普",
+      "通勤穿搭",
+      "穿搭教程"
+    ],
+    "price_1_20s": 4900,
+    "price_21_60s": 8900,
+    "price_live": 22700
+  },
+  {
+    "kol_id": "K0054",
+    "kol_name": "阿家居君",
+    "real_name": "朱时予",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "清洁用品",
+    "fans_count": 5675924,
+    "tier": "头部",
+    "avg_views": 1892168,
+    "interact_rate": 0.0382,
+    "conversion_rate": 0.0138,
+    "gender_ratio": {
+      "female": 0.65,
+      "male": 0.35
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "收纳达人",
+      "家居好物",
+      "清洁技巧",
+      "小户型优化"
+    ],
+    "price_1_20s": 61000,
+    "price_21_60s": 111000,
+    "price_live": 172700
+  },
+  {
+    "kol_id": "K0055",
+    "kol_name": "一只车君",
+    "real_name": "褚灵均",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "车险服务",
+    "fans_count": 381024,
+    "tier": "尾部",
+    "avg_views": 111259,
+    "interact_rate": 0.0663,
+    "conversion_rate": 0.0061,
+    "gender_ratio": {
+      "female": 0.43,
+      "male": 0.57
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "新能源科普",
+      "车主vlog"
+    ],
+    "price_1_20s": 4300,
+    "price_21_60s": 7800,
+    "price_live": 12200
+  },
+  {
+    "kol_id": "K0056",
+    "kol_name": "一只游戏酱",
+    "real_name": "冯清和",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 447850,
+    "tier": "尾部",
+    "avg_views": 139703,
+    "interact_rate": 0.0612,
+    "conversion_rate": 0.0136,
+    "gender_ratio": {
+      "female": 0.24,
+      "male": 0.76
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "赛事解说",
+      "设备测评"
+    ],
+    "price_1_20s": 3400,
+    "price_21_60s": 6100,
+    "price_live": 12800
+  },
+  {
+    "kol_id": "K0057",
+    "kol_name": "小美妆君",
+    "real_name": "郑晏宁",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "洗护",
+    "fans_count": 4656502,
+    "tier": "腰部",
+    "avg_views": 716230,
+    "interact_rate": 0.0552,
+    "conversion_rate": 0.0056,
+    "gender_ratio": {
+      "female": 0.33,
+      "male": 0.67
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "性价比推荐",
+      "专业配方师",
+      "空瓶记录",
+      "妆教"
+    ],
+    "price_1_20s": 47300,
+    "price_21_60s": 86000,
+    "price_live": 155500
+  },
+  {
+    "kol_id": "K0058",
+    "kol_name": "小育儿日记",
+    "real_name": "郑知夏",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "童装童鞋",
+    "fans_count": 1695253,
+    "tier": "腰部",
+    "avg_views": 396790,
+    "interact_rate": 0.0312,
+    "conversion_rate": 0.0071,
+    "gender_ratio": {
+      "female": 0.77,
+      "male": 0.23
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "S",
+    "tags": [
+      "母婴测评",
+      "囤货清单",
+      "育儿知识",
+      "宝妈vlog"
+    ],
+    "price_1_20s": 23800,
+    "price_21_60s": 43300,
+    "price_live": 85400
+  },
+  {
+    "kol_id": "K0059",
+    "kol_name": "数码日常",
+    "real_name": "朱皎皎",
+    "platform": "小红书",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 4842693,
+    "tier": "腰部",
+    "avg_views": 607279,
+    "interact_rate": 0.0266,
+    "conversion_rate": 0.0075,
+    "gender_ratio": {
+      "female": 0.48,
+      "male": 0.52
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "广州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "数码好物",
+      "体验分享"
+    ],
+    "price_1_20s": 43900,
+    "price_21_60s": 79800,
+    "price_live": 128400
+  },
+  {
+    "kol_id": "K0060",
+    "kol_name": "爱美食记",
+    "real_name": "金皎皎",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "冲饮咖啡",
+    "fans_count": 273916,
+    "tier": "尾部",
+    "avg_views": 78186,
+    "interact_rate": 0.0249,
+    "conversion_rate": 0.0324,
+    "gender_ratio": {
+      "female": 0.61,
+      "male": 0.39
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "零食试吃",
+      "探店",
+      "囤货分享",
+      "健康饮食"
+    ],
+    "price_1_20s": 3800,
+    "price_21_60s": 6900,
+    "price_live": 16800
+  },
+  {
+    "kol_id": "K0061",
+    "kol_name": "穿搭笔记",
+    "real_name": "华亦然",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "女装",
+    "fans_count": 1761014,
+    "tier": "腰部",
+    "avg_views": 596896,
+    "interact_rate": 0.0326,
+    "conversion_rate": 0.0088,
+    "gender_ratio": {
+      "female": 0.45,
+      "male": 0.55
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "成都",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "通勤穿搭",
+      "小众设计",
+      "面料科普"
+    ],
+    "price_1_20s": 19100,
+    "price_21_60s": 34600,
+    "price_live": 82800
+  },
+  {
+    "kol_id": "K0062",
+    "kol_name": "是家居记",
+    "real_name": "秦晏宁",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家纺",
+    "fans_count": 422210,
+    "tier": "尾部",
+    "avg_views": 50303,
+    "interact_rate": 0.0313,
+    "conversion_rate": 0.0077,
+    "gender_ratio": {
+      "female": 0.38,
+      "male": 0.62
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "收纳达人",
+      "清洁技巧",
+      "改造翻新"
+    ],
+    "price_1_20s": 5700,
+    "price_21_60s": 10400,
+    "price_live": 14700
+  },
+  {
+    "kol_id": "K0063",
+    "kol_name": "是车日记",
+    "real_name": "严时予",
+    "platform": "快手",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 2129243,
+    "tier": "腰部",
+    "avg_views": 221387,
+    "interact_rate": 0.0316,
+    "conversion_rate": 0.0214,
+    "gender_ratio": {
+      "female": 0.17,
+      "male": 0.83
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "试驾评测",
+      "车主vlog",
+      "改装"
+    ],
+    "price_1_20s": 16700,
+    "price_21_60s": 30400,
+    "price_live": 63600
+  },
+  {
+    "kol_id": "K0064",
+    "kol_name": "一只游戏君",
+    "real_name": "曹时予",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "手游推广",
+    "fans_count": 3079801,
+    "tier": "腰部",
+    "avg_views": 292057,
+    "interact_rate": 0.0512,
+    "conversion_rate": 0.0285,
+    "gender_ratio": {
+      "female": 0.24,
+      "male": 0.76
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "高光时刻",
+      "攻略解说",
+      "设备测评"
+    ],
+    "price_1_20s": 28300,
+    "price_21_60s": 51500,
+    "price_live": 110700
+  },
+  {
+    "kol_id": "K0065",
+    "kol_name": "阿美妆研究所",
+    "real_name": "褚南乔",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "香水",
+    "fans_count": 2755966,
+    "tier": "腰部",
+    "avg_views": 448120,
+    "interact_rate": 0.0481,
+    "conversion_rate": 0.0092,
+    "gender_ratio": {
+      "female": 0.42,
+      "male": 0.58
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "成分党",
+      "测评向"
+    ],
+    "price_1_20s": 38500,
+    "price_21_60s": 70100,
+    "price_live": 180600
+  },
+  {
+    "kol_id": "K0066",
+    "kol_name": "小育儿笔记",
+    "real_name": "周昭昭",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "孕产护理",
+    "fans_count": 229835,
+    "tier": "尾部",
+    "avg_views": 93990,
+    "interact_rate": 0.0691,
+    "conversion_rate": 0.0068,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "辅食教程",
+      "育儿知识",
+      "萌娃日常"
+    ],
+    "price_1_20s": 2700,
+    "price_21_60s": 4900,
+    "price_live": 9600
+  },
+  {
+    "kol_id": "K0067",
+    "kol_name": "数码酱",
+    "real_name": "许晏宁",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "耳机音频",
+    "fans_count": 3060657,
+    "tier": "腰部",
+    "avg_views": 846129,
+    "interact_rate": 0.0344,
+    "conversion_rate": 0.0205,
+    "gender_ratio": {
+      "female": 0.34,
+      "male": 0.66
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "开箱测评",
+      "硬核拆解",
+      "数码好物"
+    ],
+    "price_1_20s": 27300,
+    "price_21_60s": 49700,
+    "price_live": 96400
+  },
+  {
+    "kol_id": "K0068",
+    "kol_name": "小美食研究所",
+    "real_name": "赵澜依",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "休闲零食",
+    "fans_count": 426924,
+    "tier": "尾部",
+    "avg_views": 162858,
+    "interact_rate": 0.0123,
+    "conversion_rate": 0.0265,
+    "gender_ratio": {
+      "female": 0.56,
+      "male": 0.44
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "美食制作",
+      "囤货分享",
+      "口感测评"
+    ],
+    "price_1_20s": 5500,
+    "price_21_60s": 10000,
+    "price_live": 18700
+  },
+  {
+    "kol_id": "K0069",
+    "kol_name": "老穿搭研究所",
+    "real_name": "曹昭昭",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "内衣",
+    "fans_count": 1937626,
+    "tier": "腰部",
+    "avg_views": 808950,
+    "interact_rate": 0.0403,
+    "conversion_rate": 0.0243,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "面料科普",
+      "通勤穿搭",
+      "穿搭教程",
+      "OOTD"
+    ],
+    "price_1_20s": 18000,
+    "price_21_60s": 32800,
+    "price_live": 71000
+  },
+  {
+    "kol_id": "K0070",
+    "kol_name": "阿家居铺子",
+    "real_name": "杨砚青",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 343472,
+    "tier": "尾部",
+    "avg_views": 96758,
+    "interact_rate": 0.0197,
+    "conversion_rate": 0.0126,
+    "gender_ratio": {
+      "female": 0.71,
+      "male": 0.29
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "小户型优化",
+      "收纳达人",
+      "改造翻新",
+      "清洁技巧"
+    ],
+    "price_1_20s": 3800,
+    "price_21_60s": 6800,
+    "price_live": 15600
+  },
+  {
+    "kol_id": "K0071",
+    "kol_name": "爱车君",
+    "real_name": "王晏宁",
+    "platform": "小红书",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 128925,
+    "tier": "尾部",
+    "avg_views": 50811,
+    "interact_rate": 0.0446,
+    "conversion_rate": 0.0131,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "改装",
+      "用车技巧",
+      "车主vlog"
+    ],
+    "price_1_20s": 1800,
+    "price_21_60s": 3300,
+    "price_live": 5200
+  },
+  {
+    "kol_id": "K0072",
+    "kol_name": "爱游戏君",
+    "real_name": "陈皎皎",
+    "platform": "小红书",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 404063,
+    "tier": "尾部",
+    "avg_views": 41012,
+    "interact_rate": 0.0541,
+    "conversion_rate": 0.0273,
+    "gender_ratio": {
+      "female": 0.16,
+      "male": 0.84
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "设备测评",
+      "攻略解说",
+      "赛事解说"
+    ],
+    "price_1_20s": 5200,
+    "price_21_60s": 9400,
+    "price_live": 21600
+  },
+  {
+    "kol_id": "K0073",
+    "kol_name": "一只美妆记",
+    "real_name": "蒋沐言",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "防晒",
+    "fans_count": 3666081,
+    "tier": "腰部",
+    "avg_views": 728689,
+    "interact_rate": 0.011,
+    "conversion_rate": 0.0162,
+    "gender_ratio": {
+      "female": 0.47,
+      "male": 0.53
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "专业配方师",
+      "妆教",
+      "素人改造",
+      "测评向"
+    ],
+    "price_1_20s": 32200,
+    "price_21_60s": 58600,
+    "price_live": 87000
+  },
+  {
+    "kol_id": "K0074",
+    "kol_name": "爱育儿日记",
+    "real_name": "沈叙白",
+    "platform": "快手",
+    "category": "母婴",
+    "sub_category": "奶粉辅食",
+    "fans_count": 161024,
+    "tier": "尾部",
+    "avg_views": 32638,
+    "interact_rate": 0.0375,
+    "conversion_rate": 0.0057,
+    "gender_ratio": {
+      "female": 0.62,
+      "male": 0.38
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "武汉",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "S",
+    "tags": [
+      "萌娃日常",
+      "母婴测评",
+      "育儿知识"
+    ],
+    "price_1_20s": 1600,
+    "price_21_60s": 2900,
+    "price_live": 7400
+  },
+  {
+    "kol_id": "K0075",
+    "kol_name": "是数码研究所",
+    "real_name": "冯锦书",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "笔记本平板",
+    "fans_count": 4307022,
+    "tier": "腰部",
+    "avg_views": 1249177,
+    "interact_rate": 0.0114,
+    "conversion_rate": 0.009,
+    "gender_ratio": {
+      "female": 0.16,
+      "male": 0.84
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "开箱测评",
+      "硬核拆解",
+      "体验分享"
+    ],
+    "price_1_20s": 53100,
+    "price_21_60s": 96500,
+    "price_live": 128400
+  },
+  {
+    "kol_id": "K0076",
+    "kol_name": "老美食记",
+    "real_name": "吕皎皎",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "休闲零食",
+    "fans_count": 436762,
+    "tier": "尾部",
+    "avg_views": 104219,
+    "interact_rate": 0.0619,
+    "conversion_rate": 0.0354,
+    "gender_ratio": {
+      "female": 0.59,
+      "male": 0.41
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "囤货分享",
+      "健康饮食",
+      "零食试吃",
+      "口感测评"
+    ],
+    "price_1_20s": 3300,
+    "price_21_60s": 6000,
+    "price_live": 11300
+  },
+  {
+    "kol_id": "K0077",
+    "kol_name": "穿搭日记",
+    "real_name": "郑知夏",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "运动户外",
+    "fans_count": 113743,
+    "tier": "尾部",
+    "avg_views": 44997,
+    "interact_rate": 0.0535,
+    "conversion_rate": 0.035,
+    "gender_ratio": {
+      "female": 0.74,
+      "male": 0.26
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "通勤穿搭",
+      "OOTD",
+      "小众设计"
+    ],
+    "price_1_20s": 1300,
+    "price_21_60s": 2400,
+    "price_live": 5900
+  },
+  {
+    "kol_id": "K0078",
+    "kol_name": "小家居日常",
+    "real_name": "何稚川",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "厨房小电",
+    "fans_count": 15519441,
+    "tier": "头部",
+    "avg_views": 6310043,
+    "interact_rate": 0.0379,
+    "conversion_rate": 0.009,
+    "gender_ratio": {
+      "female": 0.63,
+      "male": 0.37
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "广州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "改造翻新",
+      "清洁技巧",
+      "收纳达人"
+    ],
+    "price_1_20s": 134100,
+    "price_21_60s": 243800,
+    "price_live": 343100
+  },
+  {
+    "kol_id": "K0079",
+    "kol_name": "车说",
+    "real_name": "严与安",
+    "platform": "小红书",
+    "category": "汽车",
+    "sub_category": "新能源整车",
+    "fans_count": 1048955,
+    "tier": "腰部",
+    "avg_views": 297630,
+    "interact_rate": 0.0574,
+    "conversion_rate": 0.0104,
+    "gender_ratio": {
+      "female": 0.16,
+      "male": 0.84
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "用车技巧",
+      "改装",
+      "试驾评测",
+      "新能源科普"
+    ],
+    "price_1_20s": 9800,
+    "price_21_60s": 17800,
+    "price_live": 28800
+  },
+  {
+    "kol_id": "K0080",
+    "kol_name": "小游戏酱",
+    "real_name": "赵时予",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "游戏外设",
+    "fans_count": 2565476,
+    "tier": "腰部",
+    "avg_views": 973728,
+    "interact_rate": 0.0382,
+    "conversion_rate": 0.0047,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "高光时刻",
+      "赛事解说",
+      "攻略解说",
+      "设备测评"
+    ],
+    "price_1_20s": 28300,
+    "price_21_60s": 51500,
+    "price_live": 102300
+  },
+  {
+    "kol_id": "K0081",
+    "kol_name": "是美妆日常",
+    "real_name": "金小满",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "香水",
+    "fans_count": 2127847,
+    "tier": "腰部",
+    "avg_views": 548415,
+    "interact_rate": 0.0511,
+    "conversion_rate": 0.0177,
+    "gender_ratio": {
+      "female": 0.4,
+      "male": 0.6
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "空瓶记录",
+      "测评向"
+    ],
+    "price_1_20s": 20400,
+    "price_21_60s": 37000,
+    "price_live": 76700
+  },
+  {
+    "kol_id": "K0082",
+    "kol_name": "一只育儿实验室",
+    "real_name": "冯晏宁",
+    "platform": "小红书",
+    "category": "母婴",
+    "sub_category": "玩具早教",
+    "fans_count": 137083,
+    "tier": "尾部",
+    "avg_views": 13211,
+    "interact_rate": 0.066,
+    "conversion_rate": 0.0133,
+    "gender_ratio": {
+      "female": 0.69,
+      "male": 0.31
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "辅食教程",
+      "育儿知识"
+    ],
+    "price_1_20s": 1900,
+    "price_21_60s": 3400,
+    "price_live": 6000
+  },
+  {
+    "kol_id": "K0083",
+    "kol_name": "老数码研究所",
+    "real_name": "郑小满",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "手机",
+    "fans_count": 2483522,
+    "tier": "腰部",
+    "avg_views": 659685,
+    "interact_rate": 0.0413,
+    "conversion_rate": 0.024,
+    "gender_ratio": {
+      "female": 0.51,
+      "male": 0.49
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "体验分享",
+      "数码好物",
+      "硬核拆解"
+    ],
+    "price_1_20s": 19700,
+    "price_21_60s": 35900,
+    "price_live": 65800
+  },
+  {
+    "kol_id": "K0084",
+    "kol_name": "老美食日常",
+    "real_name": "姜清和",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "乳制品",
+    "fans_count": 205439,
+    "tier": "尾部",
+    "avg_views": 38838,
+    "interact_rate": 0.031,
+    "conversion_rate": 0.0109,
+    "gender_ratio": {
+      "female": 0.39,
+      "male": 0.61
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "美食制作",
+      "零食试吃"
+    ],
+    "price_1_20s": 2100,
+    "price_21_60s": 3800,
+    "price_live": 6100
+  },
+  {
+    "kol_id": "K0085",
+    "kol_name": "穿搭说",
+    "real_name": "褚望舒",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "女装",
+    "fans_count": 2634185,
+    "tier": "腰部",
+    "avg_views": 350217,
+    "interact_rate": 0.0226,
+    "conversion_rate": 0.0263,
+    "gender_ratio": {
+      "female": 0.82,
+      "male": 0.18
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "小众设计",
+      "OOTD",
+      "通勤穿搭",
+      "穿搭教程"
+    ],
+    "price_1_20s": 17800,
+    "price_21_60s": 32400,
+    "price_live": 62900
+  },
+  {
+    "kol_id": "K0086",
+    "kol_name": "家居记",
+    "real_name": "孙望舒",
+    "platform": "小红书",
+    "category": "家居",
+    "sub_category": "厨房小电",
+    "fans_count": 4832791,
+    "tier": "腰部",
+    "avg_views": 370598,
+    "interact_rate": 0.0439,
+    "conversion_rate": 0.0299,
+    "gender_ratio": {
+      "female": 0.68,
+      "male": 0.32
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "家居好物",
+      "小户型优化",
+      "清洁技巧",
+      "收纳达人"
+    ],
+    "price_1_20s": 36200,
+    "price_21_60s": 65800,
+    "price_live": 119100
+  },
+  {
+    "kol_id": "K0087",
+    "kol_name": "小车记",
+    "real_name": "卫锦书",
+    "platform": "小红书",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 4450106,
+    "tier": "腰部",
+    "avg_views": 1828123,
+    "interact_rate": 0.0301,
+    "conversion_rate": 0.0287,
+    "gender_ratio": {
+      "female": 0.54,
+      "male": 0.46
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "改装",
+      "试驾评测",
+      "用车技巧"
+    ],
+    "price_1_20s": 36500,
+    "price_21_60s": 66400,
+    "price_live": 105800
+  },
+  {
+    "kol_id": "K0088",
+    "kol_name": "一只游戏日记",
+    "real_name": "李晏宁",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 4876320,
+    "tier": "腰部",
+    "avg_views": 517299,
+    "interact_rate": 0.015,
+    "conversion_rate": 0.0057,
+    "gender_ratio": {
+      "female": 0.23,
+      "male": 0.77
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "版本前瞻",
+      "赛事解说"
+    ],
+    "price_1_20s": 56400,
+    "price_21_60s": 102600,
+    "price_live": 245700
+  },
+  {
+    "kol_id": "K0089",
+    "kol_name": "老美妆说",
+    "real_name": "吕叙白",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "防晒",
+    "fans_count": 499821,
+    "tier": "尾部",
+    "avg_views": 60460,
+    "interact_rate": 0.0541,
+    "conversion_rate": 0.0067,
+    "gender_ratio": {
+      "female": 0.42,
+      "male": 0.58
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "专业配方师",
+      "妆教",
+      "空瓶记录",
+      "素人改造"
+    ],
+    "price_1_20s": 4700,
+    "price_21_60s": 8500,
+    "price_live": 19400
+  },
+  {
+    "kol_id": "K0090",
+    "kol_name": "是育儿铺子",
+    "real_name": "何悠悠",
+    "platform": "小红书",
+    "category": "母婴",
+    "sub_category": "纸尿裤",
+    "fans_count": 123204,
+    "tier": "尾部",
+    "avg_views": 48175,
+    "interact_rate": 0.0491,
+    "conversion_rate": 0.0323,
+    "gender_ratio": {
+      "female": 0.86,
+      "male": 0.14
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "萌娃日常",
+      "母婴测评",
+      "囤货清单"
+    ],
+    "price_1_20s": 1100,
+    "price_21_60s": 2000,
+    "price_live": 4700
+  },
+  {
+    "kol_id": "K0091",
+    "kol_name": "小数码日常",
+    "real_name": "周清和",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "耳机音频",
+    "fans_count": 230541,
+    "tier": "尾部",
+    "avg_views": 70396,
+    "interact_rate": 0.0674,
+    "conversion_rate": 0.0348,
+    "gender_ratio": {
+      "female": 0.61,
+      "male": 0.39
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "参数党",
+      "体验分享"
+    ],
+    "price_1_20s": 1600,
+    "price_21_60s": 2800,
+    "price_live": 5400
+  },
+  {
+    "kol_id": "K0092",
+    "kol_name": "老美食实验室",
+    "real_name": "冯叙白",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "健康保健",
+    "fans_count": 388599,
+    "tier": "尾部",
+    "avg_views": 38611,
+    "interact_rate": 0.0541,
+    "conversion_rate": 0.0123,
+    "gender_ratio": {
+      "female": 0.59,
+      "male": 0.41
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "美食制作",
+      "囤货分享",
+      "健康饮食",
+      "口感测评"
+    ],
+    "price_1_20s": 4600,
+    "price_21_60s": 8400,
+    "price_live": 16700
+  },
+  {
+    "kol_id": "K0093",
+    "kol_name": "穿搭日常",
+    "real_name": "魏小满",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "男装",
+    "fans_count": 325517,
+    "tier": "尾部",
+    "avg_views": 78930,
+    "interact_rate": 0.0531,
+    "conversion_rate": 0.0369,
+    "gender_ratio": {
+      "female": 0.58,
+      "male": 0.42
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "小众设计",
+      "OOTD",
+      "大码穿搭"
+    ],
+    "price_1_20s": 3500,
+    "price_21_60s": 6400,
+    "price_live": 8500
+  },
+  {
+    "kol_id": "K0094",
+    "kol_name": "是家居日常",
+    "real_name": "蒋稚川",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家纺",
+    "fans_count": 110704,
+    "tier": "尾部",
+    "avg_views": 11686,
+    "interact_rate": 0.0256,
+    "conversion_rate": 0.0311,
+    "gender_ratio": {
+      "female": 0.89,
+      "male": 0.11
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "成都",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "家居好物",
+      "小户型优化",
+      "收纳达人",
+      "改造翻新"
+    ],
+    "price_1_20s": 1200,
+    "price_21_60s": 2200,
+    "price_live": 3000
+  },
+  {
+    "kol_id": "K0095",
+    "kol_name": "阿车君",
+    "real_name": "韩时予",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "汽车用品",
+    "fans_count": 80246,
+    "tier": "尾部",
+    "avg_views": 5596,
+    "interact_rate": 0.0677,
+    "conversion_rate": 0.0265,
+    "gender_ratio": {
+      "female": 0.27,
+      "male": 0.73
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "改装",
+      "试驾评测",
+      "车主vlog",
+      "新能源科普"
+    ],
+    "price_1_20s": 900,
+    "price_21_60s": 1700,
+    "price_live": 3700
+  },
+  {
+    "kol_id": "K0096",
+    "kol_name": "爱游戏君",
+    "real_name": "韩望舒",
+    "platform": "小红书",
+    "category": "游戏",
+    "sub_category": "游戏外设",
+    "fans_count": 920996,
+    "tier": "腰部",
+    "avg_views": 158800,
+    "interact_rate": 0.0265,
+    "conversion_rate": 0.0235,
+    "gender_ratio": {
+      "female": 0.55,
+      "male": 0.45
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "深圳",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "C",
+    "tags": [
+      "设备测评",
+      "攻略解说",
+      "高光时刻"
+    ],
+    "price_1_20s": 8000,
+    "price_21_60s": 14500,
+    "price_live": 30300
+  },
+  {
+    "kol_id": "K0097",
+    "kol_name": "阿美妆研究所",
+    "real_name": "沈灵均",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "洗护",
+    "fans_count": 225469,
+    "tier": "尾部",
+    "avg_views": 50110,
+    "interact_rate": 0.0343,
+    "conversion_rate": 0.0327,
+    "gender_ratio": {
+      "female": 0.42,
+      "male": 0.58
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "北京",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "专业配方师",
+      "成分党"
+    ],
+    "price_1_20s": 2600,
+    "price_21_60s": 4700,
+    "price_live": 7500
+  },
+  {
+    "kol_id": "K0098",
+    "kol_name": "小育儿日常",
+    "real_name": "吕砚青",
+    "platform": "快手",
+    "category": "母婴",
+    "sub_category": "纸尿裤",
+    "fans_count": 21968461,
+    "tier": "头部",
+    "avg_views": 7948268,
+    "interact_rate": 0.0146,
+    "conversion_rate": 0.0145,
+    "gender_ratio": {
+      "female": 0.3,
+      "male": 0.7
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "宝妈vlog",
+      "萌娃日常",
+      "育儿知识",
+      "囤货清单"
+    ],
+    "price_1_20s": 385000,
+    "price_21_60s": 700000,
+    "price_live": 1742600
+  },
+  {
+    "kol_id": "K0099",
+    "kol_name": "是数码研究所",
+    "real_name": "姜稚川",
+    "platform": "小红书",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 312292,
+    "tier": "尾部",
+    "avg_views": 36181,
+    "interact_rate": 0.0262,
+    "conversion_rate": 0.0383,
+    "gender_ratio": {
+      "female": 0.22,
+      "male": 0.78
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "体验分享",
+      "参数党",
+      "硬核拆解",
+      "科技资讯"
+    ],
+    "price_1_20s": 2700,
+    "price_21_60s": 5000,
+    "price_live": 11300
+  },
+  {
+    "kol_id": "K0100",
+    "kol_name": "老美食日记",
+    "real_name": "王知夏",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "休闲零食",
+    "fans_count": 2045210,
+    "tier": "腰部",
+    "avg_views": 594219,
+    "interact_rate": 0.0256,
+    "conversion_rate": 0.0148,
+    "gender_ratio": {
+      "female": 0.2,
+      "male": 0.8
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "C",
+    "tags": [
+      "探店",
+      "健康饮食",
+      "美食制作"
+    ],
+    "price_1_20s": 23400,
+    "price_21_60s": 42500,
+    "price_live": 78100
+  },
+  {
+    "kol_id": "K0101",
+    "kol_name": "阿穿搭日常",
+    "real_name": "赵砚青",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "女装",
+    "fans_count": 281971,
+    "tier": "尾部",
+    "avg_views": 72550,
+    "interact_rate": 0.067,
+    "conversion_rate": 0.0168,
+    "gender_ratio": {
+      "female": 0.6,
+      "male": 0.4
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "小众设计",
+      "OOTD",
+      "大码穿搭",
+      "通勤穿搭"
+    ],
+    "price_1_20s": 2100,
+    "price_21_60s": 3700,
+    "price_live": 5900
+  },
+  {
+    "kol_id": "K0102",
+    "kol_name": "小家居实验室",
+    "real_name": "秦时予",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 3360493,
+    "tier": "腰部",
+    "avg_views": 1105802,
+    "interact_rate": 0.0532,
+    "conversion_rate": 0.0281,
+    "gender_ratio": {
+      "female": 0.53,
+      "male": 0.47
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "改造翻新",
+      "收纳达人",
+      "小户型优化",
+      "清洁技巧"
+    ],
+    "price_1_20s": 29400,
+    "price_21_60s": 53500,
+    "price_live": 72200
+  },
+  {
+    "kol_id": "K0103",
+    "kol_name": "小车铺子",
+    "real_name": "吕清和",
+    "platform": "小红书",
+    "category": "汽车",
+    "sub_category": "轮胎养护",
+    "fans_count": 516788,
+    "tier": "腰部",
+    "avg_views": 55352,
+    "interact_rate": 0.0288,
+    "conversion_rate": 0.0307,
+    "gender_ratio": {
+      "female": 0.37,
+      "male": 0.63
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "改装",
+      "车主vlog"
+    ],
+    "price_1_20s": 3700,
+    "price_21_60s": 6800,
+    "price_live": 13900
+  },
+  {
+    "kol_id": "K0104",
+    "kol_name": "老游戏酱",
+    "real_name": "钱小满",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "手游推广",
+    "fans_count": 229163,
+    "tier": "尾部",
+    "avg_views": 21006,
+    "interact_rate": 0.0201,
+    "conversion_rate": 0.0109,
+    "gender_ratio": {
+      "female": 0.6,
+      "male": 0.4
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "长沙",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "S",
+    "tags": [
+      "版本前瞻",
+      "攻略解说",
+      "设备测评"
+    ],
+    "price_1_20s": 1600,
+    "price_21_60s": 3000,
+    "price_live": 4700
+  },
+  {
+    "kol_id": "K0105",
+    "kol_name": "是美妆研究所",
+    "real_name": "秦亦然",
+    "platform": "小红书",
+    "category": "美妆",
+    "sub_category": "洗护",
+    "fans_count": 3909501,
+    "tier": "腰部",
+    "avg_views": 1321255,
+    "interact_rate": 0.0093,
+    "conversion_rate": 0.0067,
+    "gender_ratio": {
+      "female": 0.77,
+      "male": 0.23
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "上海",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "空瓶记录",
+      "性价比推荐"
+    ],
+    "price_1_20s": 54900,
+    "price_21_60s": 99900,
+    "price_live": 237800
+  },
+  {
+    "kol_id": "K0106",
+    "kol_name": "是育儿说",
+    "real_name": "陈晏宁",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "奶粉辅食",
+    "fans_count": 5290309,
+    "tier": "头部",
+    "avg_views": 463121,
+    "interact_rate": 0.0321,
+    "conversion_rate": 0.0281,
+    "gender_ratio": {
+      "female": 0.31,
+      "male": 0.69
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "S",
+    "tags": [
+      "母婴测评",
+      "囤货清单"
+    ],
+    "price_1_20s": 65700,
+    "price_21_60s": 119400,
+    "price_live": 254900
+  },
+  {
+    "kol_id": "K0107",
+    "kol_name": "小数码研究所",
+    "real_name": "张皎皎",
+    "platform": "小红书",
+    "category": "3C数码",
+    "sub_category": "手机",
+    "fans_count": 198749,
+    "tier": "尾部",
+    "avg_views": 30782,
+    "interact_rate": 0.02,
+    "conversion_rate": 0.0354,
+    "gender_ratio": {
+      "female": 0.4,
+      "male": 0.6
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "数码好物",
+      "硬核拆解",
+      "科技资讯"
+    ],
+    "price_1_20s": 1800,
+    "price_21_60s": 3200,
+    "price_live": 7100
+  },
+  {
+    "kol_id": "K0108",
+    "kol_name": "一只美食日记",
+    "real_name": "陈与安",
+    "platform": "抖音",
+    "category": "食品饮料",
+    "sub_category": "冲饮咖啡",
+    "fans_count": 3359977,
+    "tier": "腰部",
+    "avg_views": 1363939,
+    "interact_rate": 0.0313,
+    "conversion_rate": 0.0215,
+    "gender_ratio": {
+      "female": 0.25,
+      "male": 0.75
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "健康饮食",
+      "零食试吃",
+      "囤货分享"
+    ],
+    "price_1_20s": 25200,
+    "price_21_60s": 45800,
+    "price_live": 84000
+  },
+  {
+    "kol_id": "K0109",
+    "kol_name": "是穿搭记",
+    "real_name": "李知夏",
+    "platform": "小红书",
+    "category": "服饰",
+    "sub_category": "内衣",
+    "fans_count": 2427026,
+    "tier": "腰部",
+    "avg_views": 146412,
+    "interact_rate": 0.0549,
+    "conversion_rate": 0.0207,
+    "gender_ratio": {
+      "female": 0.74,
+      "male": 0.26
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "OOTD",
+      "通勤穿搭",
+      "穿搭教程"
+    ],
+    "price_1_20s": 20900,
+    "price_21_60s": 38000,
+    "price_live": 66000
+  },
+  {
+    "kol_id": "K0110",
+    "kol_name": "一只家居君",
+    "real_name": "郑皎皎",
+    "platform": "抖音",
+    "category": "家居",
+    "sub_category": "家具",
+    "fans_count": 2196611,
+    "tier": "腰部",
+    "avg_views": 800989,
+    "interact_rate": 0.0294,
+    "conversion_rate": 0.0088,
+    "gender_ratio": {
+      "female": 0.57,
+      "male": 0.43
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "小户型优化",
+      "家居好物"
+    ],
+    "price_1_20s": 21800,
+    "price_21_60s": 39600,
+    "price_live": 80300
+  },
+  {
+    "kol_id": "K0111",
+    "kol_name": "阿车笔记",
+    "real_name": "施澜依",
+    "platform": "小红书",
+    "category": "汽车",
+    "sub_category": "汽车用品",
+    "fans_count": 183786,
+    "tier": "尾部",
+    "avg_views": 44948,
+    "interact_rate": 0.0472,
+    "conversion_rate": 0.0106,
+    "gender_ratio": {
+      "female": 0.3,
+      "male": 0.7
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "深圳",
+    "mcn_name": "本司直签",
+    "cooperation_level": "C",
+    "tags": [
+      "新能源科普",
+      "改装"
+    ],
+    "price_1_20s": 2400,
+    "price_21_60s": 4300,
+    "price_live": 10500
+  },
+  {
+    "kol_id": "K0112",
+    "kol_name": "游戏日常",
+    "real_name": "卫叙白",
+    "platform": "小红书",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 13849606,
+    "tier": "头部",
+    "avg_views": 5212874,
+    "interact_rate": 0.057,
+    "conversion_rate": 0.0278,
+    "gender_ratio": {
+      "female": 0.43,
+      "male": 0.57
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "设备测评",
+      "攻略解说"
+    ],
+    "price_1_20s": 134900,
+    "price_21_60s": 245200,
+    "price_live": 489200
+  },
+  {
+    "kol_id": "K0113",
+    "kol_name": "阿美妆日记",
+    "real_name": "周亦然",
+    "platform": "抖音",
+    "category": "美妆",
+    "sub_category": "彩妆",
+    "fans_count": 99372,
+    "tier": "尾部",
+    "avg_views": 16280,
+    "interact_rate": 0.0228,
+    "conversion_rate": 0.017,
+    "gender_ratio": {
+      "female": 0.36,
+      "male": 0.64
+    },
+    "age_ratio": {
+      "18-23": 0.41,
+      "24-30": 0.37,
+      "31-40": 0.17,
+      "40+": 0.05
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "专业配方师",
+      "成分党"
+    ],
+    "price_1_20s": 700,
+    "price_21_60s": 1300,
+    "price_live": 1900
+  },
+  {
+    "kol_id": "K0114",
+    "kol_name": "老育儿日记",
+    "real_name": "赵与安",
+    "platform": "抖音",
+    "category": "母婴",
+    "sub_category": "孕产护理",
+    "fans_count": 17491780,
+    "tier": "头部",
+    "avg_views": 4645478,
+    "interact_rate": 0.0553,
+    "conversion_rate": 0.0241,
+    "gender_ratio": {
+      "female": 0.44,
+      "male": 0.56
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "B",
+    "tags": [
+      "母婴测评",
+      "囤货清单",
+      "宝妈vlog"
+    ],
+    "price_1_20s": 299500,
+    "price_21_60s": 544500,
+    "price_live": 1245900
+  },
+  {
+    "kol_id": "K0115",
+    "kol_name": "一只数码铺子",
+    "real_name": "曹知夏",
+    "platform": "抖音",
+    "category": "3C数码",
+    "sub_category": "摄影器材",
+    "fans_count": 191966,
+    "tier": "尾部",
+    "avg_views": 49535,
+    "interact_rate": 0.0206,
+    "conversion_rate": 0.023,
+    "gender_ratio": {
+      "female": 0.52,
+      "male": 0.48
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "成都",
+    "mcn_name": "本司直签",
+    "cooperation_level": "A",
+    "tags": [
+      "硬核拆解",
+      "科技资讯",
+      "参数党"
+    ],
+    "price_1_20s": 2100,
+    "price_21_60s": 3900,
+    "price_live": 5900
+  },
+  {
+    "kol_id": "K0116",
+    "kol_name": "美食日记",
+    "real_name": "魏晏宁",
+    "platform": "小红书",
+    "category": "食品饮料",
+    "sub_category": "方便速食",
+    "fans_count": 4400727,
+    "tier": "腰部",
+    "avg_views": 283023,
+    "interact_rate": 0.0297,
+    "conversion_rate": 0.0186,
+    "gender_ratio": {
+      "female": 0.46,
+      "male": 0.54
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "杭州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "A",
+    "tags": [
+      "零食试吃",
+      "健康饮食",
+      "囤货分享"
+    ],
+    "price_1_20s": 40800,
+    "price_21_60s": 74200,
+    "price_live": 108800
+  },
+  {
+    "kol_id": "K0117",
+    "kol_name": "阿穿搭实验室",
+    "real_name": "姜灵均",
+    "platform": "抖音",
+    "category": "服饰",
+    "sub_category": "鞋靴箱包",
+    "fans_count": 254731,
+    "tier": "尾部",
+    "avg_views": 33902,
+    "interact_rate": 0.0699,
+    "conversion_rate": 0.0283,
+    "gender_ratio": {
+      "female": 0.58,
+      "male": 0.42
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "北京",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "面料科普",
+      "OOTD",
+      "大码穿搭"
+    ],
+    "price_1_20s": 2600,
+    "price_21_60s": 4800,
+    "price_live": 6500
+  },
+  {
+    "kol_id": "K0118",
+    "kol_name": "一只家居酱",
+    "real_name": "韩锦书",
+    "platform": "快手",
+    "category": "家居",
+    "sub_category": "家纺",
+    "fans_count": 388604,
+    "tier": "尾部",
+    "avg_views": 85701,
+    "interact_rate": 0.0685,
+    "conversion_rate": 0.0305,
+    "gender_ratio": {
+      "female": 0.29,
+      "male": 0.71
+    },
+    "age_ratio": {
+      "18-23": 0.18,
+      "24-30": 0.38,
+      "31-40": 0.31,
+      "40+": 0.13
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-星合",
+    "cooperation_level": "A",
+    "tags": [
+      "清洁技巧",
+      "家居好物"
+    ],
+    "price_1_20s": 4200,
+    "price_21_60s": 7600,
+    "price_live": 18700
+  },
+  {
+    "kol_id": "K0119",
+    "kol_name": "小车说",
+    "real_name": "施晏宁",
+    "platform": "抖音",
+    "category": "汽车",
+    "sub_category": "车险服务",
+    "fans_count": 4185479,
+    "tier": "腰部",
+    "avg_views": 1718921,
+    "interact_rate": 0.0144,
+    "conversion_rate": 0.0058,
+    "gender_ratio": {
+      "female": 0.25,
+      "male": 0.75
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "广州",
+    "mcn_name": "合作MCN-云雀",
+    "cooperation_level": "B",
+    "tags": [
+      "用车技巧",
+      "车主vlog",
+      "新能源科普",
+      "改装"
+    ],
+    "price_1_20s": 34800,
+    "price_21_60s": 63200,
+    "price_live": 157500
+  },
+  {
+    "kol_id": "K0120",
+    "kol_name": "老游戏日记",
+    "real_name": "李悠悠",
+    "platform": "抖音",
+    "category": "游戏",
+    "sub_category": "端游推广",
+    "fans_count": 4399559,
+    "tier": "腰部",
+    "avg_views": 782610,
+    "interact_rate": 0.0486,
+    "conversion_rate": 0.0089,
+    "gender_ratio": {
+      "female": 0.37,
+      "male": 0.63
+    },
+    "age_ratio": {
+      "18-23": 0.34,
+      "24-30": 0.41,
+      "31-40": 0.19,
+      "40+": 0.06
+    },
+    "region": "武汉",
+    "mcn_name": "本司直签",
+    "cooperation_level": "B",
+    "tags": [
+      "赛事解说",
+      "攻略解说",
+      "高光时刻",
+      "版本前瞻"
+    ],
+    "price_1_20s": 40400,
+    "price_21_60s": 73400,
+    "price_live": 184600
+  }
+]
