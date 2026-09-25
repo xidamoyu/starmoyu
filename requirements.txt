@@ -20,6 +20,9 @@ minio==7.2.20              # 对象存储（原件 + 预签名直链）
 # --- Agent 编排 ---
 langgraph==1.2.12          # 状态机 + Checkpointer + interrupt()
 langchain-core==1.6.4
+langgraph-checkpoint-sqlite==3.1.1   # 跨进程人工介入的持久化 Checkpointer
+                                     # 启用：export LANGGRAPH_CHECKPOINT_SQLITE=<path/to/checkpoints.db>
+                                     # 不设则兜底 MemorySaver（内存态，进程退出即丢）
 
 # --- 前端 ---
 streamlit==1.64.0          # 三 tab UI

@@ -10,7 +10,7 @@
 
 | 层次 | 选型 | 运行位置 | 验证状态 |
 |---|---|---|---|
-| Agent 编排 | **LangGraph**（StateGraph + Checkpointer + `interrupt()`） | 本地 | ✅ 端到端跑通 |
+| Agent 编排 | **LangGraph**（StateGraph + Checkpointer + `interrupt()`） | 本地 | ✅ 端到端跑通（跨进程续跑已验证） |
 | LLM | **DeepSeek**（火山方舟 ARK，`deepseek-v4-flash/pro`） | 云端 API | ✅ HTTP 200 |
 | Embedding | **bge-m3**（1024 维） | **本地 Ollama** | ✅ dim=1024 |
 | Rerank | **gte-rerank-v2**（阿里云 DashScope） | 云端 API | ✅ 35 ms/条（30 条候选 1051ms） |
@@ -135,12 +135,37 @@ Query → 意图路由 → 多路召回（Milvus 向量 ∥ BM25）→ 元数据
 **ground-truth 文档在重排前的候选池 top-5 内命中率已是 54/54 = 100%** ——
 意味着候选池中大部分条目对最终 Top-K 毫无贡献，却要付出等量重排开销。
 
+> 该统计由 `scripts/verify_rerank_candk.py` 计算并落盘（`reports/rerank_candk_evidence.log`，
+> 关闭 rerank 后逐条检查 GT 文档在候选池中的排名）：
+> top-1 74.1% / top-3 96.3% / **top-5 100%** / top-10 100%；`rerank_cand_k` 取 10 或 30 均覆盖 GT 54/54。
+
 于是新增 `rerank_cand_k` 参数，只收窄送入 reranker 的候选数（不动召回池宽度 `cand_k`）。
 结果：**耗时 -16.6%（212.4s → 177.2s），且 MRR / Recall@5 反而微升**。
 
 > 该参数默认从环境变量 `RERANK_CAND_K` 读取，生产默认 10。
 
 > 完整 8 组数据与分问题类型明细见 `reports/ablation.md`（脚本自动生成，无手工誊抄）。
+
+### 人工介入与 Checkpointer 语义
+
+`human_review` 节点用 LangGraph `interrupt()` 让图**真正挂起**（实测 `next=('human_review',)`），
+不是模拟等待。**但能否跨进程恢复，取决于注入的 Checkpointer**：
+
+| 实现 | 触发条件 | 跨进程恢复 |
+|---|---|---|
+| `SqliteSaver` | 设置 `LANGGRAPH_CHECKPOINT_SQLITE=<path>` | ✅ 是 |
+| `MemorySaver` | 默认兜底 | ❌ 否，进程退出即丢 |
+
+已用**三个独立进程**验证持久化路径（`scripts/demo_cross_process_resume.py` → `reports/cross_process_resume.log`）：
+
+```
+进程 A  生成方案 → 在 human_review 挂起(NEXT=('human_review',), 2943字) → 退出
+进程 B  新进程读取    → FOUND_STATE=True，方案 2943 字完整存活
+进程 C  新进程恢复执行 → revision_count=1，方案被改写为 2444 字，再次挂起
+结论：A挂起=True / B跨进程读状态=True / C跨进程恢复=True ✅
+```
+
+> 若用 `MemorySaver`，进程 B 会读不到任何状态 —— 这也是本项目此前文档的一处不实表述，现已修正。
 
 ---
 
@@ -206,6 +231,9 @@ starmoyu/
 │   ├── e2e_check.py          # 端到端验收（16 项）
 │   ├── ui_apptest.py         # 前端元素级验证（13 项）
 │   ├── ui_smoke.py           # 前端业务逻辑冒烟（12 项）
+│   ├── bench_rerank.py       # Rerank 延迟基准（本地 vs 云端，同口径）
+│   ├── verify_rerank_candk.py# rerank_cand_k 裁剪的安全边界验证
+│   ├── demo_cross_process_resume.py  # 三进程演示人工介入跨进程续跑
 │   ├── compare_embedding.py  # Embedding 方案对比
 │   └── probe_*.py            # 环境探测脚本
 ├── app.py             # Streamlit 前端（三 tab）
