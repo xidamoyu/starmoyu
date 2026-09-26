@@ -7,6 +7,8 @@
 """
 from __future__ import annotations
 
+import csv
+import io
 import json
 import os
 import sys
@@ -14,7 +16,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -175,3 +177,177 @@ def health():
         return {"ok": True, "infra": h, "agent": "ready" if _agent is not None else "lazy"}
     except Exception as e:
         return {"ok": False, "error": str(e)}
+
+
+# ============================================================ M2：方案全生命周期
+
+@app.get("/api/proposals/{proposal_id}")
+def proposal_detail(proposal_id: str, sub: str = Depends(_jwt_sub)):
+    p = ProposalService().get(proposal_id)
+    if not p:
+        raise HTTPException(404, "方案不存在")
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute("""SELECT version_id, version_no, content, comment, changed_by, created_at
+                       FROM proposal_versions WHERE proposal_id=%s ORDER BY version_no""",
+                    (proposal_id,))
+        names = [d[0] for d in cur.description]
+        p["versions"] = [dict(zip(names, r)) for r in cur.fetchall()]
+    return p
+
+
+class ReviewBody(BaseModel):
+    action: str
+    comment: str = ""
+
+
+@app.post("/api/proposals/{proposal_id}/review")
+def review_proposal(proposal_id: str, body: ReviewBody, sub: str = Depends(_jwt_sub)):
+    try:
+        ProposalService().transition(proposal_id, body.action, body.comment,
+                                     changed_by=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    return {"ok": True, "status": ProposalService().get(proposal_id)["status"]}
+
+
+# ============================================================ M2：达人库（含档期/排他）
+
+KOL_COLS = ("kol_id", "kol_name", "platform", "category", "sub_category",
+            "tier", "fans_count", "interact_rate", "price_21_60s", "avg_views",
+            "exclusive_until", "available_from", "blacklist")
+
+
+@app.get("/api/kols")
+def list_kols(sub: str = Depends(_jwt_sub), q: str = "", category: str = "",
+              tier: str = "", limit: int = 50):
+    sql = """SELECT kol_id, kol_name, platform, category, sub_category, tier,
+                    fans_count, interact_rate, price_21_60s, avg_views,
+                    exclusive_until, available_from, blacklist
+             FROM kol_profile WHERE 1=1"""
+    args: list = []
+    if q:
+        sql += " AND kol_name ILIKE %s"
+        args.append(f"%{q}%")
+    if category:
+        sql += " AND category=%s"
+        args.append(category)
+    if tier:
+        sql += " AND tier=%s"
+        args.append(tier)
+    sql += " ORDER BY fans_count DESC LIMIT %s"
+    args.append(min(limit, 200))
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute(sql, args)
+        names = [d[0] for d in cur.description]
+        return {"items": [dict(zip(names, r)) for r in cur.fetchall()]}
+
+
+class KolPatch(BaseModel):
+    exclusive_until: str | None = None
+    available_from: str | None = None
+    blacklist: str | None = None
+
+
+@app.patch("/api/kols/{kol_id}")
+def patch_kol(kol_id: str, body: KolPatch, sub: str = Depends(_jwt_sub)):
+    sets, args = [], []
+    for f in ("exclusive_until", "available_from", "blacklist"):
+        v = getattr(body, f)
+        if v is not None:
+            sets.append(f"{f}=%s")
+            args.append(v if v != "" else None)
+    if not sets:
+        raise HTTPException(422, "无可更新字段")
+    args.append(kol_id)
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute(f"UPDATE kol_profile SET {', '.join(sets)} WHERE kol_id=%s", args)
+        n = cur.rowcount
+        conn.commit()
+    if not n:
+        raise HTTPException(404, "达人不存在")
+    return {"ok": True, "updated": n}
+
+
+# ============================================================ M2：商单台账
+
+@app.get("/api/deals")
+def list_deals(sub: str = Depends(_jwt_sub), status: str = "", limit: int = 50):
+    sql = """SELECT d.deal_id, d.brand_id, b.brand_name, d.product, d.category,
+                    d.amount, d.stage, d.risk_level, d.created_at
+             FROM deal d LEFT JOIN brand b ON d.brand_id=b.brand_id WHERE 1=1"""
+    args: list = []
+    if status:
+        sql += " AND d.stage=%s"
+        args.append(status)
+    sql += " ORDER BY d.created_at DESC LIMIT %s"
+    args.append(min(limit, 200))
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute(sql, args)
+        names = [d[0] for d in cur.description]
+        return {"items": [dict(zip(names, r)) for r in cur.fetchall()]}
+
+
+# ============================================================ M2：Excel/CSV 导入
+
+def _parse_rows(b: bytes, filename: str) -> list[dict]:
+    """xlsx 用 openpyxl，csv 直接解。返回 dict 行。"""
+    if filename.lower().endswith((".xlsx", ".xls")):
+        from openpyxl import load_workbook
+        import io
+        wb = load_workbook(io.BytesIO(b), read_only=True, data_only=True)
+        ws = wb.active
+        rows = list(ws.iter_rows(values_only=True))
+        if not rows:
+            return []
+        head = [str(h).strip() for h in rows[0]]
+        return [dict(zip(head, r)) for r in rows[1:] if any(v is not None for v in r)]
+    text = b.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(text))
+    return [dict(r) for r in reader]
+
+
+@app.post("/api/admin/import")
+async def admin_import(file: UploadFile, kind: str = "kols",
+                       sub: str = Depends(_jwt_sub)):
+    if sub not in ("admin", "u-admin"):
+        raise HTTPException(403, "仅管理员可导入")
+    data = await file.read()
+    try:
+        rows = _parse_rows(data, file.filename or "")
+    except Exception as e:
+        raise HTTPException(422, f"解析失败: {e}")
+
+    inserted = 0
+    if kind == "kols":
+        cols = KOL_COLS
+        with storage.pg_connect() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT count(*) FROM kol_profile")
+            before = cur.fetchone()[0]
+            for r in rows:
+                nick = r.get("kol_name") or r.get("nickname")
+                if not nick:
+                    continue
+                r = {**r, "kol_name": nick}
+                kid = r.get("kol_id") or f"KOL-{uuid.uuid4().hex[:10]}"
+                vals = [r.get(c) for c in cols[1:]]
+                cur.execute(
+                    """INSERT INTO kol_profile
+                       (kol_id, kol_name, platform, category, sub_category, tier,
+                        fans_count, interact_rate, price_21_60s, avg_views,
+                        exclusive_until, available_from, blacklist)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                       ON CONFLICT (kol_id) DO NOTHING""",
+                    (kid, *vals))
+                inserted += 1
+            conn.commit()
+            cur.execute("SELECT count(*) FROM kol_profile")
+            after = cur.fetchone()[0]
+            inserted = after - before  # 以实际落库数为准（冲突跳过）
+    else:
+        raise HTTPException(422, f"暂不支持 kind={kind}")
+    return {"ok": True, "rows_parsed": len(rows), "inserted": inserted}
