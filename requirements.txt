@@ -29,6 +29,17 @@ streamlit==1.64.0          # 三 tab UI
 pandas==3.0.6              # 表格展示
 pyarrow==25.0.1
 
+# --- M1 后端（FastAPI + Agent）---
+fastapi==0.141.1
+uvicorn[standard]==0.53.0
+sqlalchemy==2.1.1
+asyncpg==0.31.0
+python-jose[cryptography]==3.5.0
+passlib==1.7.4
+bcrypt==4.0.1
+langchain-openai==1.6.6
+httpx==0.28.1
+
 # --- 基础设施 / HTTP ---
 httpx==0.28.1              # 调用 ARK(DeepSeek) / Ollama / DashScope
 python-dotenv==1.2.3
