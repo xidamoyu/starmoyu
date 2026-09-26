@@ -179,11 +179,12 @@ def get_deal_status(deal_id: str = "", brand_name: str = "") -> str:
             conds.append("deal_id = %s"); args.append(deal_id)
         if brand_name:
             conds.append("brand_name ILIKE %s"); args.append(f"%{brand_name}%")
+        where = f" WHERE {' AND '.join(conds)}" if conds else ""
         with storage.pg_connect() as conn:
             cur = conn.cursor()
             cur.execute(f"""SELECT d.*, (SELECT count(*) FROM deal_followup f
                              WHERE f.deal_id=d.deal_id) AS followups
-                             FROM deal d WHERE {' AND '.join(conds)} LIMIT 5""")
+                             FROM deal d{where} LIMIT 5""")
             rows = _rows(cur)
         today = date.today()
         for d in rows:

@@ -26,6 +26,7 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
 from agent_tools import AGENT_TOOLS  # noqa: E402
+from m4_tools import M4_TOOLS  # noqa: E402
 from starmoyu import llm  # noqa: E402
 
 MAX_STEPS = 12
@@ -40,13 +41,25 @@ SYSTEM_PROMPT = """你是「星图商单助手」，服务 MCN 机构的商单�
 - create_proposal：用户明确要方案时创建草稿（先拿到检索依据再调）
 - update_proposal_status：用户做出审批决定或要求改方案时
 - create_followup：用户要求记录跟进动作时
+- list_kol_traits：谈到某个达人时，先查TA的沉淀特质（历史合作经验），主动提示用户
+- save_interaction：用户确认沉淀条目后调用，原子入库（原文留档 + 达人特质 + 跟进记录）
+
+## 沉淀流（重要——必须严格遵守）
+当用户说"记录一下/沉淀/这次合作的情况是…"并粘贴内容时：
+1. 先用你自己的理解从原文抽取：每条特质 = 分类(沟通偏好/改稿态度/排期习惯/付款要求/内容尺度/其他) + 内容 + 原文引用 + 严重度(critical/warning/info)
+2. 把抽取结果用清单展示给用户，明确说"确认无误请回复'确认'"
+3. 用户回复"确认/同意/可以/没问题"等肯定答复后，【必须立即调用一次 save_interaction】：kol_id/kol_name 传达人标识，raw_text 传原始内容原文，traits 传你抽取的特质列表（list 直接传，每条含 分类/内容/原文引用/严重度）
+4. 绝不允许：用户确认后只做口头总结而不调 save_interaction。也不允许未经用户确认就调它。
+5. 如果不知道达人编号(kol_id)，可以在 save_interaction 里直接传达人昵称(kol_name)。
+6. save_interaction 的 deal_id 是可选的：用户没提供商单号就直接留空调工具，不要反问商单号打断流程。
 
 ## 行为准则
 1. 事实性回答必须基于工具返回的内容；工具未找到就明说，禁止编造报价、粉丝数、商单数据。
 2. 数字（报价/预算/粉丝量）必须原样引用工具结果，不得四舍五入或估算。
 3. 用户表达模糊时先追问，不要猜着调工具。
 4. 回答用中文，简洁专业；给出建议时说明依据来自哪次工具查询。
-5. 一个问题可能需要连续调用多个工具（例：先查知识库再看达人再建方案），按需串联。"""
+5. 一个问题可能需要连续调用多个工具（例：先查知识库再看达人再建方案），按需串联。
+6. 提到达人历史合作经验时，只引用 list_kol_traits 返回的条目原文，禁止自行总结加工。"""
 
 
 class AgentState(TypedDict):
@@ -100,9 +113,10 @@ class MCAgent:
         return END
 
     def _build(self):
+        all_tools = list(AGENT_TOOLS) + list(M4_TOOLS)
         g = StateGraph(AgentState)
         g.add_node("agent", self._agent_node)
-        g.add_node("tools", ToolNode(AGENT_TOOLS,
+        g.add_node("tools", ToolNode(all_tools,
                                      handle_tool_errors=lambda e: f"工具执行失败: {e}"))
         g.add_edge(START, "agent")
         g.add_conditional_edges("agent", self._should_continue, ["tools", END])
