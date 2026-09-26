@@ -275,9 +275,10 @@ def patch_kol(kol_id: str, body: KolPatch, sub: str = Depends(_jwt_sub)):
 
 @app.get("/api/deals")
 def list_deals(sub: str = Depends(_jwt_sub), status: str = "", limit: int = 50):
-    sql = """SELECT d.deal_id, d.brand_id, b.brand_name, d.product, d.category,
-                    d.amount, d.stage, d.risk_level, d.created_at
-             FROM deal d LEFT JOIN brand b ON d.brand_id=b.brand_id WHERE 1=1"""
+    sql = """SELECT d.deal_id, d.brand_name, d.category, d.sub_category,
+                    d.budget, d.goal, d.stage, d.demand_desc, d.start_date, d.end_date,
+                    d.created_at
+             FROM deal d WHERE 1=1"""
     args: list = []
     if status:
         sql += " AND d.stage=%s"
