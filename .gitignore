@@ -2,7 +2,7 @@
 .env
 __pycache__/
 *.pyc
-data/checkpoints.db
+data/checkpoints.db*
 reports/
 node_modules/
 frontend/dist/
