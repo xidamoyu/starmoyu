@@ -29,6 +29,12 @@ export async function login(username: string, password: string) {
   return r.data
 }
 
+/** 登出：清本地 token 并回登录页 */
+export function logout() {
+  localStorage.removeItem('token')
+  location.hash = '#/login'
+}
+
 /** 新建会话 */
 export async function newConversation(title: string) {
   const r = await api.post('/conversations', { title })

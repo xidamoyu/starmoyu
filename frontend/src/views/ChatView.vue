@@ -46,6 +46,7 @@ async function send() {
 
 async function loadHistory(convId: string) {
   store.select(convId)
+  store.pinnedDealId = null   // 切会话先清，避免闪现上一个会话的钉住
   // 还原本会话钉住的商单（M6）
   try {
     const p = await getPinned(convId)
@@ -73,9 +74,10 @@ function openDrawer(dealId: string) { drawerDealId.value = dealId }
 watch(() => store.pinnedDealId, () => scrollBottom())
 
 onMounted(async () => {
+  // 只拉会话列表，不自动建新对话；空态由用户选会话或手动新建
   try {
     await store.refreshConversations()
-    await store.startNew()
+    store.clearSelection()
   } catch { /* 401 已由拦截器处理 */ }
   if (!localStorage.getItem('token')) {
     ElMessage.warning('请先登录')
@@ -117,6 +119,19 @@ onMounted(async () => {
 
       <!-- 消息体 -->
       <div ref="bodyRef" class="chat-body">
+        <!-- 空态：未选会话。引导用户找到新功能入口 -->
+        <div v-if="!store.convId" class="empty-state">
+          <div class="empty-title">选一个会话，或开启新对话</div>
+          <div class="empty-sub">在对话里可以直接查达人、问商单、沉淀经验；提到商单号时右侧会弹出关联提示。</div>
+          <div class="empty-caps">
+            <span class="cap">💬 对话式查数 / 出方案</span>
+            <span class="cap">📌 商单号关联溯源（M6）</span>
+            <span class="cap">🗂️ 沉淀达人经验复用</span>
+          </div>
+          <button class="empty-new" @click="newConv"><el-icon><Plus /></el-icon> 开启新对话</button>
+          <div class="empty-hint">左侧选历史会话继续 · 台账/达人/审批在导航栏</div>
+        </div>
+
         <template v-for="(m, i) in store.messages" :key="i">
           <div v-if="m.role === 'user'" class="row user">
             <div class="bubble user-bubble">{{ m.text }}</div>
@@ -200,6 +215,18 @@ onMounted(async () => {
 .pinned-chip .x:hover { background: rgba(15,76,92,.12); }
 
 .chat-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; text-align: center; gap: 12px; color: var(--ink); }
+.empty-title { font-size: 19px; font-weight: 700; }
+.empty-sub { font-size: 13px; color: var(--ink-2); max-width: 420px; line-height: 1.6; }
+.empty-caps { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.cap { font-size: 12px; padding: 6px 12px; background: var(--brand-softer); color: var(--brand-strong);
+  border-radius: 20px; font-weight: 600; }
+.empty-new { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding: 10px 20px;
+  border: none; border-radius: var(--r-sm); background: var(--brand); color: #fff; font: inherit;
+  font-weight: 600; cursor: pointer; transition: background 120ms ease-out; }
+.empty-new:hover { background: var(--brand-strong); }
+.empty-hint { font-size: 11.5px; color: var(--ink-3); margin-top: 6px; }
 .row { display: flex; margin: 14px 0; }
 .row.user { justify-content: flex-end; }
 .row.assistant { justify-content: flex-start; flex-direction: column; }

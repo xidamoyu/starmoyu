@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ChatDotRound, Notebook, User, DocumentChecked, Upload } from '@element-plus/icons-vue'
+import { ChatDotRound, Notebook, User, DocumentChecked, Upload, SwitchButton } from '@element-plus/icons-vue'
+import { logout } from '../api'
 
 const route = useRoute()
 const navs = [
@@ -23,6 +24,9 @@ const navs = [
           <span>{{ n.label }}</span>
         </router-link>
       </nav>
+      <button class="logout" @click="logout" title="登出">
+        <el-icon><SwitchButton /></el-icon><span>登出</span>
+      </button>
       <div class="foot">MCN 业务工作台</div>
     </aside>
     <main class="main">
@@ -46,6 +50,10 @@ const navs = [
 .nav-item.active { background: var(--brand-soft); color: var(--brand-strong);
   font-weight: 600; border-left-color: var(--brand); }
 .foot { margin-top: auto; text-align: center; font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+.logout { display: flex; align-items: center; gap: 9px; margin: 8px 0 6px; padding: 9px 12px;
+  border: none; border-radius: var(--r-sm); background: transparent; color: var(--ink-2);
+  font: inherit; font-size: 13.5px; cursor: pointer; transition: background 120ms ease-out, color 120ms ease-out; }
+.logout:hover { background: var(--danger-soft); color: var(--danger); }
 .main { flex: 1; min-width: 0; background: var(--paper); overflow: hidden; }
 
 /* 窄屏：侧边栏折叠为图标 rail，主区恢复宽度（修 stage badge 被挤掉） */
@@ -58,6 +66,8 @@ const navs = [
     border-radius: var(--r-sm); }
   .nav-item span { display: none; }
   .nav-item.active { border-left: none; box-shadow: inset 0 0 0 1px var(--brand); }
+  .logout { justify-content: center; padding: 10px 0; gap: 0; }
+  .logout span { display: none; }
   .foot { visibility: hidden; }
 }
 </style>

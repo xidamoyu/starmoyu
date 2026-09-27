@@ -47,6 +47,13 @@ export const useChatStore = defineStore('chat', {
       this.messages = []
       this.detectedDealIds = []
     },
+    /** 清空当前选中（点「对话助手」导航时）：回到空态，不自动建新 */
+    clearSelection() {
+      this.convId = ''
+      this.messages = []
+      this.pinnedDealId = null
+      this.detectedDealIds = []
+    },
     /** M6: 关联 / 取消关联商单到本会话 */
     async setPinned(dealId: string | null) {
       if (!this.convId) return
@@ -60,7 +67,7 @@ export const useChatStore = defineStore('chat', {
     },
     async send(text: string) {
       if (!text.trim() || this.streaming) return
-      if (!this.convId) await this.startNew()
+      if (!this.convId) await this.startNew()   // 仅在真正发消息时才惰性建新会话
       this.messages.push({ role: 'user', text })
       this.streaming = true
 
