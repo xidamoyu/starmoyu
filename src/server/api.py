@@ -413,6 +413,13 @@ def pin_conversation_deal(conv_id: str, body: PinBody, sub: str = Depends(_jwt_s
         raise HTTPException(422, str(e))
 
 
+@app.get("/api/conversations/{conv_id}/pin")
+def get_conversation_pin(conv_id: str, sub: str = Depends(_jwt_sub)):
+    """读取会话当前钉住的商单。"""
+    from server import m6_service as m6
+    return {"conv_id": conv_id, "pinned_deal_id": m6.get_pinned(conv_id)}
+
+
 @app.get("/api/deals/{deal_id}/timeline")
 def deal_timeline(deal_id: str, sub: str = Depends(_jwt_sub)):
     """商单路线图：stage 时间线 + 跟进流水 + 特质溯源。"""
@@ -421,6 +428,17 @@ def deal_timeline(deal_id: str, sub: str = Depends(_jwt_sub)):
     if not d:
         raise HTTPException(404, f"商单不存在: {deal_id}")
     return d
+
+
+@app.get("/api/vision/enabled")
+def vision_enabled():
+    """视觉（截图→特质）抽取能力是否可用。
+
+    探测结论：当前 chat 模型 deepseek-v4-flash 对真实截图内容识别不可靠（自报无法加载图片），
+    故置灰。前端据此隐藏抽取 UI、仅把截图作附件留档。接入可靠视觉模型后置 True 即启用。
+    """
+    return {"enabled": False,
+            "reason": "当前模型视觉能力未验证可用；接入视觉模型后启用截图自动抽取。"}
 
 
 @app.post("/api/deals/{deal_id}/stage")

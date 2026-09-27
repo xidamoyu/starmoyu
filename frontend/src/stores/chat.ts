@@ -1,6 +1,6 @@
 /** 对话状态管理。 */
 import { defineStore } from 'pinia'
-import { listConversations, newConversation } from '../api'
+import { listConversations, newConversation, pinDeal } from '../api'
 import { streamChat, type ChatEvent } from '../api/stream'
 
 export interface ToolStep {
@@ -22,6 +22,10 @@ export const useChatStore = defineStore('chat', {
     convList: [] as Array<{ conv_id: string; title: string; last_active_at: string }>,
     messages: [] as ChatMsg[],
     streaming: false,
+    /** M6: 本会话钉住的商单（对话内沉淀自动溯源） */
+    pinnedDealId: null as string | null,
+    /** M6: 检测到、尚未关联的商单号（用于「关联」提示条） */
+    detectedDealIds: [] as string[],
   }),
   actions: {
     async refreshConversations() {
@@ -34,11 +38,25 @@ export const useChatStore = defineStore('chat', {
     async startNew() {
       this.convId = await newConversation('新对话')
       this.messages = []
+      this.pinnedDealId = null
+      this.detectedDealIds = []
       await this.refreshConversations()
     },
     select(convId: string) {
       this.convId = convId
       this.messages = []
+      this.detectedDealIds = []
+    },
+    /** M6: 关联 / 取消关联商单到本会话 */
+    async setPinned(dealId: string | null) {
+      if (!this.convId) return
+      const r = await pinDeal(this.convId, dealId)
+      this.pinnedDealId = r.pinned_deal_id
+      if (dealId) this.detectedDealIds = this.detectedDealIds.filter((d) => d !== dealId)
+    },
+    /** M6: 忽略某条检测提示 */
+    dismissDetected(dealId: string) {
+      this.detectedDealIds = this.detectedDealIds.filter((d) => d !== dealId)
     },
     async send(text: string) {
       if (!text.trim() || this.streaming) return
@@ -71,7 +89,14 @@ export const useChatStore = defineStore('chat', {
       }
 
       try {
-        await streamChat(this.convId, text, onEvent)
+        const res = await streamChat(this.convId, text, onEvent, this.pinnedDealId)
+        // M6: 同步钉住状态与检测到的商单
+        if (res.pinnedDealId) this.pinnedDealId = res.pinnedDealId
+        for (const d of res.detected) {
+          if (d !== this.pinnedDealId && !this.detectedDealIds.includes(d)) {
+            this.detectedDealIds.push(d)
+          }
+        }
       } finally {
         this.streaming = false
         await this.refreshConversations()

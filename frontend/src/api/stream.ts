@@ -3,27 +3,39 @@
  * fetch 流式读取（EventSource 不支持 POST + Authorization）。
  */
 export interface ChatEvent {
-  type: 'token' | 'tool_call' | 'tool_result' | 'done' | 'error'
+  type: 'token' | 'tool_call' | 'tool_result' | 'done' | 'error' | 'deal_context'
   text?: string
   name?: string
   args?: Record<string, unknown>
   preview?: string
   error?: string
   node?: string
+  /** deal_context 事件：钉住状态 / 新检测到的商单号 */
+  pinned_deal_id?: string | null
+  detected_deal_id?: string | null
+}
+
+export interface StreamResult {
+  /** 本轮对话过程中钉住的商单（来自 deal_context 事件） */
+  pinnedDealId: string | null
+  /** 检测到的、尚未关联的商单号（用于弹「关联」提示） */
+  detected: string[]
 }
 
 export async function streamChat(
   convId: string,
   text: string,
   onEvent: (ev: ChatEvent) => void,
-): Promise<void> {
+  dealId: string | null = null,
+): Promise<StreamResult> {
+  const result: StreamResult = { pinnedDealId: null, detected: [] }
   const resp = await fetch(`/api/chat/${convId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
     },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, deal_id: dealId }),
   })
   if (!resp.ok || !resp.body) {
     let detail = `HTTP ${resp.status}`
@@ -32,7 +44,7 @@ export async function streamChat(
       detail = j.detail ?? detail
     } catch { /* ignore */ }
     onEvent({ type: 'error', error: detail })
-    return
+    return result
   }
 
   const reader = resp.body.getReader()
@@ -55,10 +67,18 @@ export async function streamChat(
       }
       if (ev && data) {
         try {
-          onEvent({ type: ev as ChatEvent['type'], ...JSON.parse(data) })
+          const parsed = JSON.parse(data)
+          if (ev === 'deal_context') {
+            if (parsed.pinned_deal_id) result.pinnedDealId = parsed.pinned_deal_id
+            if (parsed.detected_deal_id && !result.detected.includes(parsed.detected_deal_id)) {
+              result.detected.push(parsed.detected_deal_id)
+            }
+          }
+          onEvent({ type: ev as ChatEvent['type'], ...parsed })
         } catch { /* 忽略残帧 */ }
       }
     }
   }
   onEvent({ type: 'done' })
+  return result
 }

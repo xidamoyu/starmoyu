@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ChatDotRound, Notebook, User, DocumentChecked, Upload } from '@element-plus/icons-vue'
 
@@ -14,45 +13,36 @@ const navs = [
 </script>
 
 <template>
-  <el-container class="layout">
-    <el-aside width="200px" class="nav">
+  <div class="layout">
+    <aside class="nav">
       <div class="brand">星图商单助手</div>
-      <div
-        v-for="n in navs"
-        :key="n.path"
-        class="nav-item"
-        :class="{ active: route.path === n.path }"
-        @click="$router.push(n.path)"
-      >
-        <el-icon><component :is="n.icon" /></el-icon>
-        <span>{{ n.label }}</span>
-      </div>
-      <div class="foot">M2 · Vue3</div>
-    </el-aside>
-    <el-main class="main">
+      <nav>
+        <router-link v-for="n in navs" :key="n.path" :to="n.path" class="nav-item"
+                     :class="{ active: route.path === n.path }">
+          <el-icon><component :is="n.icon" /></el-icon>
+          <span>{{ n.label }}</span>
+        </router-link>
+      </nav>
+      <div class="foot">MCN 业务工作台</div>
+    </aside>
+    <main class="main">
       <router-view />
-    </el-main>
-  </el-container>
+    </main>
+  </div>
 </template>
 
 <style scoped>
-.layout { height: 100vh; }
-.nav {
-  display: flex; flex-direction: column;
-  border-right: 1px solid var(--el-border-color-light); padding: 12px 8px;
-}
-.brand { font-weight: 700; font-size: 15px; padding: 8px 10px 16px; }
-.nav-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px; border-radius: 6px; cursor: pointer;
-  color: var(--el-text-color-regular); font-size: 14px;
-}
-.nav-item:hover { background: var(--el-fill-color-light); }
-.nav-item.active { background: var(--el-color-primary-light-9); color: var(--el-color-primary); }
-.foot { margin-top: auto; text-align: center; font-size: 11px; color: var(--el-text-color-secondary); }
-.main { padding: 0; background: var(--el-fill-color-lighter); }
-</style>
-
-<style>
-body { margin: 0; font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.layout { display: flex; height: 100vh; }
+.nav { width: 208px; flex: none; display: flex; flex-direction: column;
+  border-right: 1px solid var(--line); background: var(--surface); padding: 14px 10px; }
+.brand { font-weight: 700; font-size: 15px; padding: 6px 12px 18px; color: var(--ink); }
+.nav nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 12px;
+  border-radius: var(--r-sm); color: var(--ink-2); font-size: 13.5px; text-decoration: none;
+  border-left: 3px solid transparent; transition: background 120ms ease-out, color 120ms ease-out; }
+.nav-item:hover { background: var(--surface-2); color: var(--ink); }
+.nav-item.active { background: var(--brand-soft); color: var(--brand-strong);
+  font-weight: 600; border-left-color: var(--brand); }
+.foot { margin-top: auto; text-align: center; font-size: 11px; color: var(--ink-3); }
+.main { flex: 1; min-width: 0; background: var(--paper); overflow: hidden; }
 </style>

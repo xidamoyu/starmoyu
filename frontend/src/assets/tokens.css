@@ -1,0 +1,101 @@
+/* ============================================================
+   starmoyu 设计令牌 —— 纸面工作工具
+   背景 L≈0.95 亮页；深海蓝绿主色（hue 215）；humanist sans。
+   所有屏幕共享。新增色/组件先改 design/DESIGN.md。
+   ============================================================ */
+:root {
+  /* surface & ink */
+  --paper: #f7f6f2;          /* 应用背景，微染非暖米 */
+  --surface: #ffffff;       /* 卡片/气泡/抽屉 */
+  --surface-2: #faf9f6;     /* 斑马纹/嵌底 */
+  --ink: #1d2733;           /* 正文，对比 ≥7:1 */
+  --ink-2: rgba(29, 39, 51, .72);
+  --ink-3: rgba(29, 39, 51, .55);
+  --line: #e6e3dc;          /* 1px 全边框 */
+  --line-strong: #d4d0c7;
+
+  /* brand — 深海蓝绿（committed） */
+  --brand: #0f4c5c;
+  --brand-strong: #0a3a47;
+  --brand-soft: #e2edef;
+  --brand-softer: #eef4f5;
+
+  /* semantic（仅状态用） */
+  --ok: #2f7d4f;
+  --ok-soft: #e6f1ea;
+  --warn: #b07d1e;
+  --warn-soft: #f6ecd8;
+  --danger: #b4443a;
+  --danger-soft: #f4e4e2;
+
+  /* type */
+  --font: "Avenir Next", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* space & radius */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+
+  /* shadow：仅浮层，单一光源 */
+  --shadow-1: 0 1px 2px rgba(29,39,51,.06);
+  --shadow-2: 0 4px 16px rgba(29,39,51,.10);
+  --shadow-3: 0 12px 40px rgba(29,39,51,.16);
+}
+
+/* element-plus 主题变量覆写，融入令牌 */
+:root {
+  --el-color-primary: var(--brand);
+  --el-color-primary-light-3: #3a7180;
+  --el-color-primary-light-5: #6f98a3;
+  --el-color-primary-light-7: #a6c2c8;
+  --el-color-primary-light-8: #c6d8db;
+  --el-color-primary-light-9: var(--brand-soft);
+  --el-color-primary-dark-2: var(--brand-strong);
+  --el-text-color-primary: var(--ink);
+  --el-text-color-regular: var(--ink);
+  --el-text-color-secondary: var(--ink-3);
+  --el-text-color-placeholder: var(--ink-3);
+  --el-border-color: var(--line);
+  --el-border-color-light: var(--line);
+  --el-border-color-lighter: var(--line);
+  --el-border-color-extra-light: var(--line);
+  --el-fill-color-light: var(--surface-2);
+  --el-fill-color-lighter: var(--paper);
+  --el-fill-color-blank: var(--surface);
+  --el-bg-color: var(--surface);
+  --el-font-family: var(--font);
+  --el-border-radius-base: var(--r-sm);
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+::selection { background: var(--brand-soft); }
+
+/* 数字对齐（表格预算/ROI） */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* 统一焦点态：所有可交互元素可见焦点环（systemscan 检查项） */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* 滚动条（WebKit） */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 6px; border: 2px solid var(--paper); }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
