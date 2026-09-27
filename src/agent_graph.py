@@ -27,6 +27,7 @@ if str(ROOT / "src") not in sys.path:
 
 from agent_tools import AGENT_TOOLS  # noqa: E402
 from m4_tools import M4_TOOLS  # noqa: E402
+from m5_tools import M5_TOOLS  # noqa: E402
 from starmoyu import llm  # noqa: E402
 
 MAX_STEPS = 12
@@ -36,13 +37,24 @@ SYSTEM_PROMPT = """你是「星图商单助手」，服务 MCN 机构的商单�
 ## 可用工具与使用时机
 - search_knowledge：查报价/规则/历史案例/方法论（回答事实问题前先查，禁止凭记忆答报价）
 - search_kols：搜达人（类目/量级/粉丝区间/价格上限），自动排除档期冲突
-- match_kols_for_requirement：用户给出类目+预算+人数时，生成组合建议
+- match_kols_for_requirement：用户给出类目+预算+人数时，生成组合建议（排序参考达人历史结案效果）
 - get_deal_status：查商单进展与风险；不带参数 = 全量在途风险概览
 - create_proposal：用户明确要方案时创建草稿（先拿到检索依据再调）
 - update_proposal_status：用户做出审批决定或要求改方案时
 - create_followup：用户要求记录跟进动作时
 - list_kol_traits：查询某达人的沉淀特质（历史合作经验原文条目）。【强制】用户问"某达人有什么要注意的/靠谱吗/什么脾气/有没有坑"，或任何涉及评估、选择、联系某个具体达人的场景，必须先调 list_kol_traits（kol_id 或 kol_name 传一个即可）再回答。库里有条目就引用原文，没有就明说"暂无沉淀记录"。禁止跳过该工具直接回答。
 - save_interaction：用户确认沉淀条目后调用，原子入库（原文留档 + 达人特质 + 跟进记录）
+- save_deal_result：结案复盘入库（确认卡动作：先展示效果数字，用户确认后调）
+- get_deal_result：查商单结案效果（ROI/GMV/曝光/互动原值）
+- save_brief：甲方 brief 解析确认后建方案草稿（确认卡动作）
+- get_today_briefing：今日工作简报（档期临期/待审批/失联单/黑名单撞单）
+- get_brand_traits / save_brand_traits：品牌特质查询与沉淀（回款习惯/brief 风格，同样只列原文）
+- get_pending_traits：待人工确认的特质队列
+
+## 主动简报（重要）
+新会话开场用户打招呼（你好/在吗/今天有什么事/该干什么）时，【必须先调 get_today_briefing】，
+按返回的四类事项逐条简要汇报（没有的类别直接说无），再问用户想先处理哪件。
+禁止开场只回一句问候语。
 
 ## 沉淀流（重要——必须严格遵守）
 当用户说"记录一下/沉淀/这次合作的情况是…"并粘贴内容时：
@@ -52,6 +64,18 @@ SYSTEM_PROMPT = """你是「星图商单助手」，服务 MCN 机构的商单�
 4. 绝不允许：用户确认后只做口头总结而不调 save_interaction。也不允许未经用户确认就调它。
 5. 如果不知道达人编号(kol_id)，可以在 save_interaction 里直接传达人昵称(kol_name)。
 6. save_interaction 的 deal_id 是可选的：用户没提供商单号就直接留空调工具，不要反问商单号打断流程。
+
+## 结案复盘流
+当用户粘贴商单结案/效果数据（含 ROI、GMV、曝光、互动量等数字）时：
+1. 抽取效果数字用清单展示（标明商单号），说"确认无误请回复'确认'"
+2. 用户确认后【立即调用 save_deal_result】：deal_id 传商单编号，raw_text 传原文，metrics 传效果 dict（中文键可直传，如 {"ROI": 2.1, "GMV": 150000, "曝光": 5000000}）
+3. 不知道商单号时先问用户或调 get_deal_status 帮助定位；确认卡里必须让用户看到数字与商单号的对应关系
+
+## Brief 接单流（重要——必须严格遵守）
+当用户粘贴甲方需求/brief 原文要求"建方案/接单/起个提案"时：
+1. 解析为需求卡（品类/预算/人数/档期/特殊要求），展示需求卡并以一句"确认无误请回复'确认'"结尾。【这一轮禁止调任何写库工具（save_brief/create_proposal 都不行），也不要额外反问细节打断确认】
+2. 用户回复"确认/可以/没问题"等肯定答复后，【必须立即调用 save_brief（而不是 create_proposal）】：raw_text 传 brief 原文，category/budget/kol_count/schedule/requirements 传解析字段
+3. save_brief 会自动建草稿并返回达人组合建议；把建议表格转述给用户，说明"草稿已建，可在审批中心查看"
 
 ## 行为准则
 1. 事实性回答必须基于工具返回的内容；工具未找到就明说，禁止编造报价、粉丝数、商单数据。
@@ -76,7 +100,7 @@ def _make_model():
         api_key=os.environ.get("ARK_API_KEY", ""),
         base_url=os.environ.get("ARK_BASE_URL", ""),
         temperature=0.3,
-        max_tokens=2500,
+        max_tokens=8000,
         timeout=90,
         max_retries=2,
     )
@@ -113,7 +137,7 @@ class MCAgent:
         return END
 
     def _build(self):
-        all_tools = list(AGENT_TOOLS) + list(M4_TOOLS)
+        all_tools = list(AGENT_TOOLS) + list(M4_TOOLS) + list(M5_TOOLS)
         g = StateGraph(AgentState)
         g.add_node("agent", self._agent_node)
         g.add_node("tools", ToolNode(all_tools,

@@ -217,10 +217,18 @@ def match_kols_for_requirement(category: str, budget: int, kol_count: int,
             conds.append("tier = %s"); args.append(kol_tier)
         with storage.pg_connect() as conn:
             cur = conn.cursor()
-            cur.execute(f"""SELECT kol_id, kol_name, tier, fans_count, interact_rate,
-                                   price_21_60s, exclusive_until
-                            FROM kol_profile WHERE {' AND '.join(conds)}
-                            ORDER BY interact_rate DESC NULLS LAST LIMIT 10""", args)
+            cur.execute(f"""SELECT k.kol_id, k.kol_name, k.tier, k.fans_count, k.interact_rate,
+                                   k.price_21_60s, k.exclusive_until,
+                                   (SELECT count(*) FROM deal d
+                                     WHERE d.stage='结案' AND d.result_metrics IS NOT NULL
+                                       AND d.kol_ids @> to_jsonb(k.kol_id::text)) AS hist_deals,
+                                   (SELECT avg((d.result_metrics->>'roi')::numeric) FROM deal d
+                                     WHERE d.stage='结案' AND d.result_metrics->>'roi' IS NOT NULL
+                                       AND d.kol_ids @> to_jsonb(k.kol_id::text)) AS avg_roi
+                            FROM kol_profile k WHERE {' AND '.join(conds)}
+                            ORDER BY (CASE WHEN k.tier='腰部' THEN 0 WHEN k.tier='尾部' THEN 1 ELSE 2 END),
+                                     k.interact_rate DESC NULLS LAST
+                            LIMIT 10""", args)
             rows = _rows(cur)
         if not rows:
             return json.dumps({"match": False,
@@ -232,7 +240,11 @@ def match_kols_for_requirement(category: str, budget: int, kol_count: int,
         return json.dumps({"per_kol_budget": round(per),
                            "combo": [{"kol_id": c["kol_id"], "name": c["kol_name"],
                                       "tier": c["tier"], "fans": c["fans_count"],
-                                      "price": c["price_21_60s"]} for c in combos],
+                                      "price": c["price_21_60s"],
+                                      "hist_deals": c.get("hist_deals") or 0,
+                                      "avg_roi": (round(float(c["avg_roi"]), 2)
+                                                  if c.get("avg_roi") is not None else None)}
+                                     for c in combos],
                            "total_price": total,
                            "within_budget": total <= budget},
                           ensure_ascii=False, default=_j)
@@ -257,7 +269,9 @@ def _service():
 def create_proposal(requirement_text: str, deal_id: str = "") -> str:
     """创建商单构思方案（写入数据库，状态为草稿待审批）。
 
-    何时使用：用户明确要求「做个方案」「生成构思」并已给出需求信息（类目/预算/人数/目标）。
+    何时使用：仅限【没有 brief 原文】、用户口头描述需求并明确要求「做个方案」的场景。
+    【重要】如果用户粘贴了甲方 brief 原文（哪怕是转述），必须用 save_brief 而不是本工具——
+    save_brief 会走暂存确认流程并留下需求卡版本痕，本工具不会。确认卡流程中禁止用本工具替代。
     注意：创建前应先用 match_kols_for_requirement 和 search_knowledge 拿到依据。
     Args:
         requirement_text: 完整需求描述

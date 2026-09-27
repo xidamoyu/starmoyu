@@ -33,11 +33,12 @@
 
 | 阶段 | 状态 | 产出 | 验收 |
 |---|---|---|---|
-| R1 Agent 后端 | ✅ | bind_tools 循环 + 9 工具 + FastAPI(19端点/JWT/SSE) + PG 13 表 | `verify_m1.py` 8/8 |
+| R1 Agent 后端 | ✅ | bind_tools 循环 + 16 工具 + FastAPI(19端点/JWT/SSE) + PG 13 表 | `verify_m1.py` 8/8 |
 | R1 Vue3 前端 | ✅ | 对话页（SSE流式 + 工具卡片 + 会话列表），浏览器端到端实测 | 冒烟 4/4 + Chrome 实测 |
 | R2 业务闭环 | ✅ | 方案审批流(版本化) + 达人档期/排他 + Excel 导入 + 4 管理页面 | `verify_m2.py` 11/11 |
 | R4 沉淀流 | ✅ | party_traits 确认卡式经验入库 + 原文召回 + 歧义澄清 | `verify_m4.py` 7/7 × 3轮 + TDD 8/8 |
-| R3 业务深化 | ⚪ 未开始 | 风险扫描进对话 + 54条评测迁移回归 + RAGAS | `verify_m3.py` 待建 |
+| R5 全周期扩展 | ✅ | 结案复盘回流 + Brief 接单 + 主动简报 + 品牌特质 + 匹配器历史ROI | `verify_m5.py` 14/14 + TDD 7/7 |
+| R3 业务深化 | 🟡 进行中 | 54条评测迁移回归 + RAGAS | `verify_m3_eval.py` 回归通过 |
 
 ### 旧版（v1 已退役，历史记录）
 
@@ -132,15 +133,45 @@
 
 **F 双模式报价字段**（随 migrate_m4 落库）：kol_profile 加 coop_models/quote_embed_15s/30s/60s/quote_custom，deal 加 coop_mode/embed_duration_sec。植入按固定档位、定制达人自报价，不涉及直播。
 
+## R5 · 商单全生命周期扩展 ✅（确认卡三兄弟 + 数据飞轮 + 主动简报）
+
+**动机**（联网调研 + 用户确认）：项目此前只覆盖"选号→评估→方案→审批"，缺"结案回流"与"接单入口"——商单效果数据从不回流，选号永远基于静态粉丝数。克劳锐 2025 报告印证行业趋势：考核从唯流量转向精准 ROI、品牌自建达人资源池看重复投。
+
+**四条新流**（全部经真实 Agent 循环验收）：
+
+| 流 | 工具 | 关键设计 | 验收 |
+|---|---|---|---|
+| 结案复盘 | `save_deal_result` / `get_deal_result` | 粘贴效果数据 → 确认卡 → merge 写 `deal.result_metrics`（不覆盖未提及字段）+ `stage='结案'` + 跟进留痕 | R2/R3 |
+| Brief 接单 | `save_brief` | 贴甲方原话 → 需求卡 → 确认 → proposals 草稿 + proposal_versions v1 版本痕 + 自动组合建议 | R4 |
+| 主动简报 | `get_today_briefing` | 开场打招呼必调：档期临期 / 待审批 / 3 天未跟进 / 黑名单撞单（只列事实） | R1 |
+| 品牌特质 | `get_brand_traits` / `save_brand_traits` | 复用 TraitService（party_type='brand'），回款习惯/brief 风格同"只列原文" | TDD |
+
+**数据飞轮**（核心卖点）：`match_kols_for_requirement` 排序参考历史结案效果——组合建议每个达人带 `hist_deals`（历史结案单数）与 `avg_roi`（平均 ROI，来自 deal.result_metrics 原值）。实测：美妆 10 万预算组合返回"小美妆记 2 单 avg_roi 1.59 / 是美妆日常 2 单 0.98 / 老美妆说 0 单 null"。沉淀越多 → 建议越准。
+
+**验收**：`scripts/verify_m5.py` 15/15（R1 简报 2 + R2 复盘 5 + R3 召回 1 + R4 接单 5 + R5 飞轮 1 + 清理恢复 1，全走真实 LLM 循环 + PG 直查断言）；TDD `test_m5_service.py` 7/7。工具总数 9 → 16。
+
+**过程中修掉的真问题**：
+1. `ingest_staging.suggested_kind` CHECK 约束缺 brief/deal_result 枚举 → `migrate_m5.py` 扩约束（幂等）。
+2. proposals 表无 version 列（版本痕在 proposal_versions 表）→ 建稿时同步写 v1 版本行。
+3. `kol_profile.blacklist` 是 text 存 'true' 不是 boolean → 简报 SQL 改字面量比较。
+4. **max_tokens=2500 被 reasoning 全吃光**（finish_reason=length，content 空，工具没调出来——这就是此前"LLM 服从性波动"的真正根因之一）→ 提到 8000，两条确认流瞬间稳定。
+5. 验收脚本断言过严两处（LIKE 前缀不匹配原文、确认卡误判已调写库工具的时序）→ 修正判定逻辑。
+
+## R3 · 评测迁移回归 ✅（护栏先于功能扩张）
+
+`scripts/verify_m3_eval.py`：54 条评测集全链路（多路召回+RRF+Rerank，cand_k=10）回归，与 v1 基线对比，回退超 ±0.02 即 fail。实测 **Hit@1 0.796 / Hit@5 1.000 / Recall@5 0.977 / MRR 0.892**，与基线（0.778/1.000/0.986/0.883）持平（Recall@5 -0.009、MRR +0.009 在抖动带内），明细落盘 `data/eval/m3_regression.json`。**检索层未被 v2/v5 改动破坏，护栏建成。**
+
+RAGAS：已装 0.2.10（0.4.x 与 langchain-community 0.4 不兼容，缺 ChatVertexAI 模块，写 shim 解决 import）。生成质量抽评待 trait/复盘数据积累后接。
+
 ## R4 · 数据库现状
 
 PG **13 张表**（v1 的 6 张 + v2 新增 7 张）：brand / chunk_meta / deal / deal_followup / kol_profile / parent_chunk / **conversations / messages / proposals / proposal_versions / users / party_traits / ingest_staging**（另有 kol_profile 与 deal 的档期/报价扩展列）。
 
 ## R · 待办
 
-- **R3**：风险扫描进对话 + 旧评测 54 条迁移回归 + RAGAS 生成质量抽评 → `verify_m3.py`
 - 前端 Markdown 渲染（当前表格/加粗显示原始语法，影响可读性）
-- LLM 服从性 100% 确定性方案（state 确定性分发）
+- RAGAS 生成质量抽评（ragas 0.2.10 已装，等 trait/复盘数据积累）
+- LLM 服从性 100% 确定性方案（state 确定性分发；max_tokens 修复后波动已大减）
 - C 对齐清单（等 trait 数据积累后接，半天活）
 - v1 遗留 P1：评测集与语料同源偏乐观、presigned_url 未接前端
 
