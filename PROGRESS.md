@@ -1,12 +1,45 @@
 # Starmoyu 项目进度跟踪
 
-> 最后更新：2026-09-24 13:30
+> 最后更新：2026-09-27（重建二期完成：M1-M4）
 > 项目路径：`C:/Users/Administrator/AppData/Local/hermes/workspace/starmoyu`
 > 本文件是**唯一权威进度来源**，每次推进后更新。
 
 ---
 
+## ⚠️ 两个版本说明（先读这段）
+
+本项目经历了**一次推倒重建**（2026-09-26 起），文件分为两个互不隶属的部分：
+
+### 旧版（v1 · 固定流水线 RAG demo）—— 已归档退役
+
+- 下文 **W0-W7 各节** 记录的是 v1 的完整历史：Streamlit 三 tab + 10 节点 router 流水线 + 双审计整改 22 处。
+- **检索资产仍然有效且在用**：`retriever.py`（混合检索+RRF+重排链路）、消融 8 组指标、三库存储——这些被新版**原样复用**，一行未改。
+- **已废弃**：`graph.py`（10 节点流水线）、`app.py`（Streamlit）、router 三分支架构。文件保留作历史，不再是运行时入口。
+- W6 的 P0 缺陷（retrieve_cases 单查询词）在新版中随旧 graph 一起废弃，由新版 Agent 的工具化检索替代。
+
+### 新版（v2 · 对话式 MCN 业务助手）—— 当前唯一活跃版本
+
+- 蓝图：`docs/REBUILD-PLAN.md`。核心变化：**bind_tools 真 Agent 循环**（LLM 自选工具）替换 router 三选一；**FastAPI + Vue3** 替换 Streamlit；**Service 层唯一写库** + 会话/消息落库 + 人工确认式经验沉淀。
+- 新版进度见下文 **[R1]-[R4] 各节**，每节带验收脚本与落盘日志。
+- 用户判定重建的直接原因（原话摘要）：v1 是"固定词条搜索软件/预制答案 demo"——多轮对话、真工具调用、数据写回闭环、管理后台全部缺失。
+
+**数字纪律（两版通用）**：所有数字可回溯 `reports/` 落盘日志；写不进日志的解释不写成结论。
+
+---
+
 ## 总览
+
+### 新版（v2 当前）
+
+| 阶段 | 状态 | 产出 | 验收 |
+|---|---|---|---|
+| R1 Agent 后端 | ✅ | bind_tools 循环 + 9 工具 + FastAPI(19端点/JWT/SSE) + PG 13 表 | `verify_m1.py` 8/8 |
+| R1 Vue3 前端 | ✅ | 对话页（SSE流式 + 工具卡片 + 会话列表），浏览器端到端实测 | 冒烟 4/4 + Chrome 实测 |
+| R2 业务闭环 | ✅ | 方案审批流(版本化) + 达人档期/排他 + Excel 导入 + 4 管理页面 | `verify_m2.py` 11/11 |
+| R4 沉淀流 | ✅ | party_traits 确认卡式经验入库 + 原文召回 + 歧义澄清 | `verify_m4.py` 7/7 × 3轮 + TDD 8/8 |
+| R3 业务深化 | ⚪ 未开始 | 风险扫描进对话 + 54条评测迁移回归 + RAGAS | `verify_m3.py` 待建 |
+
+### 旧版（v1 已退役，历史记录）
 
 | 阶段 | 状态 | 产出 |
 |---|---|---|
@@ -15,19 +48,110 @@
 | W1 入库管线（三库） | ✅ 完成 | Milvus 457 向量 / PG 6 表 / MinIO 104 原件 |
 | W2 RAG 检索链路 | ✅ 完成 | 混合检索 + RRF + 重排 + 元数据过滤 + 引用溯源 |
 | W2 评测与消融实验 | ✅ 完成 | 8 组消融，完整链路 MRR 0.883 / Hit@5 1.000 |
-| W3 LangGraph Agent | ✅ 完成 | 10 节点状态机 + 人工介入 + 断点续跑 |
+| W3 LangGraph Agent | ⚠️ 已废弃 | 10 节点 router 流水线 → 被 v2 Agent 循环替换 |
 | W3 端到端验收 | ✅ 通过 | 16/16（`reports/e2e_dashscope.log`，EXIT=0） |
-| W4 Streamlit 前端 | ✅ 验证 | 前端逻辑冒烟 12/12，页面可访问 |
-| W4 README / 简历条目 | ✅ 完成 | README + `docs/RESUME.md`（数字已填） |
+| W4 Streamlit 前端 | ⚠️ 已退役 | → 被 Vue3 替换 |
 | W5 文档完整性审计 | ✅ 完成 | 修正 6 处不符 + 补齐开发说明书 |
-| W6 业务闭环审计 | ⚠️ 发现缺陷 | `retrieve_cases` 单查询词多意图，效果数据未取回（P0） |
+| W6 业务闭环审计 | ⚠️ 缺陷随旧架构废弃 | retrieve_cases 单查询词（转入 v2 工具化解决） |
 | W7 独立审计与整改 | ✅ 完成 | reviewer 发现 9 处漏项，全部整改（含 3 处代码真修复） |
 
-图例：✅ 完成并验证 ｜ 🟡 进行中 ｜ 🔴 有问题 ｜ ⚪ 未开始
+图例：✅ 完成并验证 ｜ 🟡 进行中 ｜ 🔴 有问题 ｜ ⚪ 未开始 ｜ ⚠️ 含已废弃部分
 
 ---
 
-## W0 · 需求确认 ✅
+# ===== 新版（v2）：对话式 MCN 业务助手 =====
+
+## R1 · Agent 后端 + FastAPI ✅（commit `ef7c402`）
+
+**架构**（`src/agent_graph.py` / `src/agent_tools.py` / `src/server/api.py`）：
+
+- `MCAgent`：StateGraph agent↔tools 循环，`bind_tools` + ToolNode，LLM 自主选工具、结果回喂、无 tool_calls 即结束；`recursion_limit=12` 兜底。
+- 9 工具：只读 4（search_knowledge / search_kols / get_deal_status / match_kols_for_requirement）+ 写库 4（create_proposal / update_proposal_status / create_followup / save_interaction）+ 查询 1（list_kol_traits）。
+- `src/server/service.py`：**业务库唯一写入口**（ID 生成/状态机校验/`max(id)+1` 取号——deal_followup.id 非 serial）。
+- FastAPI 19 端点：JWT(login/me) + 会话(messages 落 PG) + SSE 对话流 + 业务 CRUD + Excel 导入。
+- Checkpointer：`LANGGRAPH_CHECKPOINT_SQLITE` → SqliteSaver（跨进程持久），默认 MemorySaver。
+
+**验收 `scripts/verify_m1.py` 8/8**（`reports/verify_m1.log`）：
+
+| 断言 | 结果 |
+|---|---|
+| V1 JWT 登录 | ✅ |
+| V2a Agent 自主调 search_kols（LLM 决定，非写死路径） | ✅ |
+| V2c 最终回答生成 | ✅ |
+| V4a 对话中"记录跟进"→ Agent 自主调 create_followup | ✅ |
+| V3 messages 表真有新行（直接查 PG） | ✅ |
+| V4b deal_followup 表真有新行（直接查 PG） | ✅ |
+| V5 检索回归 9/9（复用 retriever 未破坏指标） | ✅ |
+
+期间修的 3 个真实 bug：deal_followup.id 无序列（改显式取号）；draft 直接 approve 被状态机拦截（防呆有效）；MSYS 路径传原生 Python 打不开 SQLite（改 Windows 路径）。
+
+## R1 · Vue3 前端 ✅（commit `b28fe62` / `89ae5ff`）
+
+- 技术栈：Vite + Vue3 + TypeScript + Element Plus + Pinia（`frontend/`）。
+- 页面：**对话**（SSE 流式 + 工具调用折叠卡片 + 会话侧栏）、**商单台账**、**达人库**（档期/排他/黑名单编辑对话框）、**审批中心**（状态标签 + 版本历史抽屉 + 通过/驳回）、**导入管理**（拖拽 xlsx/csv）。
+- `verify_frontend_m1.py` 4/4（Vite 代理链路：页面/代理/登录/建会话）+ Chrome 浏览器实测（登录→搜达人→表格回答全通）。
+- 期间修：vue-router 漏装、3 个 Vite 进程叠 5173 端口致模块缓存假死、deal 表列名臆造（product/amount → 实际 goal/budget）。
+
+## R2 · 业务闭环 ✅（commit `ccffe24`）
+
+**后端新增 6 端点**（13→19）：方案详情(含版本表)/审批 review / 达人列表(含档期字段)/PATCH 档期 / 商单台账 / xlsx 导入。
+
+**验收 `scripts/verify_m2.py` 11/11**（`reports/verify_m2.log`）：
+
+| 断言 | 结果 |
+|---|---|
+| W1.1 草稿→提交审批 | ✅ pending_review |
+| W1.2 API 审批通过 | ✅ approved |
+| W1.3 版本表 2 行 + 内容为修订版 | ✅ |
+| W1.4 状态机防呆（approved 不可 reject） | ✅ HTTP 422 |
+| W2.1 PATCH 排他期落库 | ✅ K0088 → +30天 |
+| W2.2 search_kols 排他过滤生效 | ✅ 该达人从结果消失 |
+| W3.1-3.3 xlsx 导入 10 条 → 计数+10 → 测试数据清理 | ✅ |
+
+## R4 · 沉淀流（核心差异化）✅（commit `b8b8fd3` / `253f261`）
+
+**功能**：工单收尾时用户粘贴一句话/聊天记录 → Agent 抽取结构化条目（分类/内容/原文引用/严重度）→ 对话内确认卡 → 用户确认 → `save_interaction` 原子写三处（原文留档 + party_traits verified=TRUE + 跟进记录）→ 之后任何会话谈到达人自动召回原文。
+
+**设计原则**（规格锁定）：
+- 人工确认是**对话层硬关口**：确认前不落任何正式表（验收断言 traits=0 AND staging=0）。
+- 查询侧**只列 verified 原文，零生成**——`source_quote` 随行返回，幻觉零风险（结构保证，非提示词祈求）。
+- 工具签名对 LLM 宽容：kol_id/kol_name 二选一、中英文键名都认、list/str 都收；昵称歧义返回候选列表强制澄清，禁止瞎猜。
+
+**验收**（`reports/verify_m4.log`）：
+- TDD `test_m4_service.py` 8/8（未确认不可见/确认后可见/critical 排序/防重复确认/防重复拒绝）。
+- 端到端 `verify_m4.py` **7/7 × 3 轮稳定**：R1 抽取展示且不越权入库 → R2 确认后 verified=TRUE 落库带原文引用 → R3 **全新会话**召回原文（critical 排前）。
+
+**期间修掉的关键问题（面试可讲）**：
+1. 两步工具（record→confirm）被 LLM 玩坏：跳过工具口头总结 / 一步到位不等人确认 / 反问商单号打断流程 → 合并为单原子工具，确认关口移到对话层（提示词硬约束 + 验收断言双重把关）。
+2. `traits` 传 list 报 schema 错 → 参数类型 `Any` + 内部容错；中英文键名映射。
+3. verify 脚本自身 bug：thread_id 固定致 SqliteSaver 恢复脏 state、staging 残留污染断言 → 时间戳隔离。
+4. **用户实测发现召回失败**（真实 bug）：Agent 跳过 list_kol_traits 直接搜知识库（数据在 PG 不在向量库当然搜不到）→ 提示词强制化 + 昵称歧义澄清（`253f261`）。
+5. `get_deal_status` 无条件查询时 WHERE 空子句 SQL 语法错误（顺手修）。
+
+**已知诚实声明**：LLM 服从性非 100%（出现过确认后不入库的波动），通过率靠提示词强化+单工具原子化提升至连续 3 轮稳定；若要 100% 确定性可把待确认数据放 LangGraph state 做确定性分发（记 TODO）。
+
+**F 双模式报价字段**（随 migrate_m4 落库）：kol_profile 加 coop_models/quote_embed_15s/30s/60s/quote_custom，deal 加 coop_mode/embed_duration_sec。植入按固定档位、定制达人自报价，不涉及直播。
+
+## R4 · 数据库现状
+
+PG **13 张表**（v1 的 6 张 + v2 新增 7 张）：brand / chunk_meta / deal / deal_followup / kol_profile / parent_chunk / **conversations / messages / proposals / proposal_versions / users / party_traits / ingest_staging**（另有 kol_profile 与 deal 的档期/报价扩展列）。
+
+## R · 待办
+
+- **R3**：风险扫描进对话 + 旧评测 54 条迁移回归 + RAGAS 生成质量抽评 → `verify_m3.py`
+- 前端 Markdown 渲染（当前表格/加粗显示原始语法，影响可读性）
+- LLM 服从性 100% 确定性方案（state 确定性分发）
+- C 对齐清单（等 trait 数据积累后接，半天活）
+- v1 遗留 P1：评测集与语料同源偏乐观、presigned_url 未接前端
+
+---
+
+# ===== 旧版（v1）：固定流水线 RAG demo（已退役，历史存档） =====
+
+
+---
+
+## 【v1】W0 · 需求确认 ✅
 
 - RAG + Agent 结合，目标岗位：大模型应用开发工程师
 - 场景：MCN/星图服务商私有商单资产助手（贴合本人达人商务对接经历）
@@ -36,7 +160,7 @@
 
 ---
 
-## W1 · 数据构造 ✅
+## 【v1】W1 · 数据构造 ✅（v2 沿用同一批数据）
 
 | 资产 | 规模 |
 |---|---|
@@ -54,7 +178,7 @@
 
 ---
 
-## W1 · 入库管线（三库）✅
+## 【v1】W1 · 入库管线（三库）✅（v2 沿用，未动一行）
 
 | 存储 | 内容 | 验证 |
 |---|---|---|
@@ -66,7 +190,7 @@
 
 ---
 
-## W2 · RAG 检索链路 ✅
+## 【v1→v2 复用】W2 · RAG 检索链路 ✅
 
 链路：`多路召回(Milvus向量 ∥ BM25) → 元数据预过滤 → 文档级去重 → RRF 融合 → 文档类型先验 → Rerank(DashScope gte-rerank-v2) → 引用组装`
 
@@ -79,7 +203,7 @@
 
 ---
 
-## W2 · 消融实验 ✅ 已完成（8 组）
+## 【v1→v2 复用】W2 · 消融实验 ✅ 已完成（8 组）
 
 评测集：54 条带 ground-truth 标签问答对（从真实台账反向构造，标签客观）
 
@@ -119,7 +243,7 @@
 
 ---
 
-## W3 · LangGraph Agent ✅
+## 【v1·已废弃】W3 · LangGraph Agent ✅（→ 被 v2 Agent 循环替换）
 
 图结构（10 节点，由 LangGraph `get_graph()` 内省核实）：
 
@@ -137,7 +261,7 @@ router ─┬─ proposal → parse_requirement → retrieve_cases → match_kol
 
 ---
 
-## W3 · 端到端验收 ✅
+## 【v1·已废弃】W3 · 端到端验收 ✅（16/16 结论对旧图有效；v2 有独立验收）
 
 **最新一次：16/16 全通过**（`reports/e2e_dashscope.log`，EXIT=0）
 
@@ -162,7 +286,7 @@ router ─┬─ proposal → parse_requirement → retrieve_cases → match_kol
 
 ---
 
-## W4 · 前端 ✅
+## 【v1·已退役】W4 · 前端 ✅（Streamlit → 被 Vue3 替换）
 
 `app.py`（三 tab：商单构思 / 刊例速查 / 在途跟进 + 人工确认面板）已实际启动验证：
 
@@ -188,7 +312,7 @@ streamlit run app.py --server.port 8501
 
 ---
 
-## W5 · 文档完整性审计 ✅
+## 【v1】W5 · 文档完整性审计 ✅
 
 对全部文档做了「以实测数据为准」的复核，**发现并修正 6 处与事实不符的表述**：
 
@@ -241,7 +365,7 @@ streamlit run app.py --server.port 8501
 
 ---
 
-## W6 · 业务闭环审计 ⚠️ 发现 1 处真实缺陷
+## 【v1·已废弃】W6 · 业务闭环审计 ⚠️ 发现 1 处真实缺陷（缺陷随旧 graph 废弃，检索层教训仍有效）
 
 核查「商单构思」链路是否真正用到了库里的效果数据，**发现单查询词覆盖多意图的缺陷**：
 
@@ -269,7 +393,7 @@ streamlit run app.py --server.port 8501
 
 ---
 
-## W7 · 独立第三方审计与整改 ✅
+## 【v1】W7 · 独立第三方审计与整改 ✅（整改成果沿用至今：数字纪律/git/checkpointer 分级）
 
 由**独立 reviewer 子代理**（68 次工具调用 / 26 分钟）对本项目做第三方审计，
 它自己读源码、跑命令、查数据库，发现了我此前审计**漏掉的 9 处问题**。逐项整改如下。
@@ -330,36 +454,36 @@ streamlit run app.py --server.port 8501
 | Embedding | 本地 Ollama `bge-m3` | ✅ dim=1024 |
 | Rerank | 阿里云 DashScope `gte-rerank-v2` | ✅ 35 ms/条（`reports/bench_rerank.log`） |
 | Milvus | WSL Docker `smartrecruit-milvus` | ✅ 19530 |
-| PostgreSQL | Windows 本机 | ✅ 5432，6 张表 |
+| PostgreSQL | Windows 本机 | ✅ 5432，13 张表（v1 6 + v2 7） |
 | MinIO | WSL Docker `starmoyu-minio`（独立实例） | ✅ 9000/9001，104 对象 |
-| 前端 | Streamlit | ✅ :8501 健康 ok |
+| ~~前端 Streamlit~~ | （v1 退役） | → v2: FastAPI :8000 + Vue3 :5173 |
 
 `venv` 660M（卸载 torch/transformers/sentence-transformers 后，原 1.3G）
 
-**待用户手动处理**（配置文件受保护，Agent 无权改）：
-
-```bash
-hermes config set agent.max_turns 200    # 默认 60，本会话已撞上限
-hermes config unset model.base_url       # 死值指向 openrouter，实际走 ARK
-```
-
----
-
-## 已知隐患
-
-1. LangGraph `MemorySaver` 仅内存态，进程重启丢 checkpoint —— 生产应换 `SqliteSaver`/`PostgresSaver`
-2. DashScope rerank 依赖外网；若需完全离线需换 ONNX Runtime（CPU 版预期 2-4 倍提速）
-3. 消融数字已写入 README 与简历条目 ✅
-
----
-
-## 复跑命令
+**复跑命令（v2 当前）**：
 
 ```bash
 cd C:/Users/Administrator/AppData/Local/hermes/workspace/starmoyu
-export PYTHONPATH="$PWD/src"
+export LANGGRAPH_CHECKPOINT_SQLITE="C:/Users/Administrator/AppData/Local/hermes/workspace/starmoyu/data/checkpoints.db"
 
-.venv/Scripts/python.exe scripts/e2e_check.py       # 端到端验收（重跑）
-.venv/Scripts/python.exe scripts/render_report.py   # 生成消融报告
-.venv/Scripts/python.exe -m streamlit run app.py    # 前端
+# 后端（19 端点）
+.venv/Scripts/python.exe -m uvicorn server.api:app --port 8000 --app-dir src
+
+# 前端（Vue3）
+cd frontend && npm run dev
+
+# 验收脚本
+.venv/Scripts/python.exe scripts/verify_m1.py          # 8/8
+.venv/Scripts/python.exe scripts/verify_m2.py          # 11/11
+.venv/Scripts/python.exe scripts/verify_m4.py          # 7/7
+.venv/Scripts/python.exe -m pytest scripts/test_m4_service.py -q   # 8/8
+.venv/Scripts/python.exe scripts/verify_frontend_m1.py # 4/4（需前端已启动）
+```
+
+**复跑命令（v1 已退役，仅存档）**：
+
+```bash
+.venv/Scripts/python.exe scripts/e2e_check.py       # 旧图端到端 16/16
+.venv/Scripts/python.exe scripts/render_report.py   # 消融报告
+.venv/Scripts/python.exe -m streamlit run app.py    # 旧前端
 ```
