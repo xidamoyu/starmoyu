@@ -1,0 +1,614 @@
+{
+  "routes": [
+    {
+      "url": "http://localhost:5173/#/",
+      "states": {
+        "link": {
+          "current": 1
+        }
+      },
+      "colors": {
+        "rgb(247, 246, 242)": 4,
+        "rgb(255, 255, 255)": 3,
+        "rgb(29, 39, 51)": 1,
+        "rgb(226, 237, 239)": 2,
+        "rgb(10, 58, 71)": 2,
+        "rgba(29, 39, 51, 0.72)": 50,
+        "rgba(29, 39, 51, 0.55)": 2,
+        "rgb(15, 76, 92)": 2
+      },
+      "type": {
+        "15px/700/Avenir Next": 1,
+        "14px/600/Avenir Next": 1,
+        "14px/400/Avenir Next": 4,
+        "11px/400/Avenir Next": 2,
+        "13px/600/Avenir Next": 1,
+        "13px/400/Avenir Next": 46
+      },
+      "radii": {
+        "6px": 54,
+        "10px": 1
+      },
+      "shadows": {},
+      "space": {
+        "14px": 1,
+        "10px": 49,
+        "6px": 2,
+        "12px": 10,
+        "9px": 56,
+        "605px": 1,
+        "16px": 2,
+        "20px": 1
+      },
+      "focusable": 8,
+      "hasDisabled": false,
+      "title": "frontend",
+      "landmarks": "nav,main,aside",
+      "h1": 0,
+      "focus": {
+        "probed": 8,
+        "noFocusRing": []
+      },
+      "errors": [],
+      "status": 200,
+      "empty": false
+    },
+    {
+      "url": "http://localhost:5173/#/deals",
+      "states": {
+        "link": {
+          "current": 1
+        }
+      },
+      "colors": {
+        "rgb(247, 246, 242)": 3,
+        "rgb(255, 255, 255)": 9,
+        "rgb(29, 39, 51)": 362,
+        "rgba(29, 39, 51, 0.72)": 204,
+        "rgb(226, 237, 239)": 15,
+        "rgb(10, 58, 71)": 15,
+        "rgba(29, 39, 51, 0.55)": 1,
+        "rgb(15, 76, 92)": 1,
+        "rgb(250, 249, 246)": 14,
+        "rgb(230, 241, 234)": 42,
+        "rgb(47, 125, 79)": 42,
+        "rgb(251, 250, 247)": 45,
+        "rgb(232, 230, 244)": 12,
+        "rgb(75, 67, 145)": 12,
+        "rgb(246, 236, 216)": 11,
+        "rgb(176, 125, 30)": 11,
+        "rgb(244, 228, 226)": 4,
+        "rgb(180, 68, 58)": 4
+      },
+      "type": {
+        "15px/700/Avenir Next": 1,
+        "14px/400/Avenir Next": 4,
+        "14px/600/Avenir Next": 1,
+        "11px/400/Avenir Next": 1,
+        "18px/700/Avenir Next": 1,
+        "13px/400/Avenir Next": 367,
+        "12px/600/Avenir Next": 7,
+        "12px/400/SF Mono": 90,
+        "12px/400/Avenir Next": 90
+      },
+      "radii": {
+        "6px": 5,
+        "20px": 97,
+        "14px": 1,
+        "50px": 90
+      },
+      "shadows": {
+        "rgba(29, 39, 51, 0.06) 0px 1px 2px 0px": 1
+      },
+      "space": {
+        "14px": 638,
+        "10px": 91,
+        "6px": 1,
+        "12px": 13,
+        "9px": 5,
+        "605px": 1,
+        "18px": 1,
+        "20px": 1,
+        "5px": 7,
+        "11px": 637,
+        "3px": 90
+      },
+      "focusable": 5,
+      "hasDisabled": false,
+      "title": "frontend",
+      "landmarks": "nav,main,aside",
+      "h1": 0,
+      "focus": {
+        "probed": 5,
+        "noFocusRing": []
+      },
+      "errors": [],
+      "status": 200,
+      "empty": false
+    },
+    {
+      "url": "http://localhost:5173/#/kols",
+      "states": {
+        "link": {
+          "current": 1
+        }
+      },
+      "colors": {
+        "rgb(247, 246, 242)": 3,
+        "rgb(255, 255, 255)": 4,
+        "rgb(29, 39, 51)": 602,
+        "rgba(29, 39, 51, 0.72)": 43,
+        "rgb(226, 237, 239)": 58,
+        "rgb(10, 58, 71)": 58,
+        "rgba(29, 39, 51, 0.55)": 200,
+        "rgb(250, 249, 246)": 40,
+        "rgb(240, 230, 246)": 13,
+        "rgb(107, 63, 160)": 13,
+        "rgb(15, 76, 92)": 100,
+        "rgb(251, 250, 247)": 50,
+        "rgb(244, 228, 226)": 2,
+        "rgb(180, 68, 58)": 2
+      },
+      "type": {
+        "15px/700/Avenir Next": 1,
+        "14px/400/Avenir Next": 4,
+        "14px/600/Avenir Next": 1,
+        "11px/400/Avenir Next": 1,
+        "18px/700/Avenir Next": 1,
+        "13px/400/Avenir Next": 699,
+        "12px/600/Avenir Next": 111,
+        "13px/600/Avenir Next": 200
+      },
+      "radii": {
+        "6px": 7,
+        "14px": 1,
+        "20px": 100,
+        "4px": 102
+      },
+      "shadows": {
+        "rgba(29, 39, 51, 0.06) 0px 1px 2px 0px": 1
+      },
+      "space": {
+        "14px": 1011,
+        "10px": 101,
+        "6px": 101,
+        "12px": 6,
+        "9px": 5,
+        "605px": 1,
+        "18px": 1,
+        "20px": 1,
+        "7px": 2,
+        "11px": 1012,
+        "3px": 202,
+        "8px": 2
+      },
+      "focusable": 107,
+      "hasDisabled": false,
+      "title": "frontend",
+      "landmarks": "nav,main,aside",
+      "h1": 0,
+      "focus": {
+        "probed": 40,
+        "noFocusRing": []
+      },
+      "errors": [],
+      "status": 200,
+      "empty": false
+    },
+    {
+      "url": "http://localhost:5173/#/proposals",
+      "states": {
+        "link": {
+          "current": 1
+        }
+      },
+      "colors": {
+        "rgb(247, 246, 242)": 3,
+        "rgb(255, 255, 255)": 2,
+        "rgb(29, 39, 51)": 13,
+        "rgba(29, 39, 51, 0.72)": 30,
+        "rgb(226, 237, 239)": 1,
+        "rgb(10, 58, 71)": 1,
+        "rgba(29, 39, 51, 0.55)": 1,
+        "rgb(250, 249, 246)": 5,
+        "rgb(230, 241, 234)": 11,
+        "rgb(47, 125, 79)": 11,
+        "rgb(15, 76, 92)": 11,
+        "rgb(251, 250, 247)": 5
+      },
+      "type": {
+        "15px/700/Avenir Next": 1,
+        "14px/400/Avenir Next": 4,
+        "14px/600/Avenir Next": 1,
+        "11px/400/Avenir Next": 1,
+        "18px/700/Avenir Next": 1,
+        "12px/600/Avenir Next": 4,
+        "12px/400/SF Mono": 11,
+        "13px/400/Avenir Next": 11,
+        "12px/400/Avenir Next": 11,
+        "13px/600/Avenir Next": 11
+      },
+      "radii": {
+        "6px": 5,
+        "14px": 1,
+        "20px": 11,
+        "50px": 11,
+        "4px": 11
+      },
+      "shadows": {
+        "rgba(29, 39, 51, 0.06) 0px 1px 2px 0px": 1
+      },
+      "space": {
+        "14px": 61,
+        "10px": 12,
+        "6px": 12,
+        "12px": 6,
+        "9px": 5,
+        "605px": 1,
+        "18px": 1,
+        "20px": 1,
+        "11px": 60,
+        "3px": 22
+      },
+      "focusable": 16,
+      "hasDisabled": false,
+      "title": "frontend",
+      "landmarks": "nav,main,aside",
+      "h1": 0,
+      "focus": {
+        "probed": 16,
+        "noFocusRing": []
+      },
+      "errors": [],
+      "status": 200,
+      "empty": false
+    },
+    {
+      "url": "http://localhost:5173/#/import",
+      "states": {
+        "link": {
+          "current": 1
+        },
+        "button": {
+          "disabled": 1
+        }
+      },
+      "colors": {
+        "rgb(247, 246, 242)": 3,
+        "rgb(255, 255, 255)": 4,
+        "rgb(29, 39, 51)": 3,
+        "rgba(29, 39, 51, 0.72)": 4,
+        "rgb(226, 237, 239)": 1,
+        "rgb(10, 58, 71)": 1,
+        "rgba(29, 39, 51, 0.55)": 2,
+        "rgb(15, 76, 92)": 1
+      },
+      "type": {
+        "15px/700/Avenir Next": 2,
+        "14px/400/Avenir Next": 4,
+        "14px/600/Avenir Next": 2,
+        "11px/400/Avenir Next": 1,
+        "18px/700/Avenir Next": 1,
+        "12px/400/Avenir Next": 1
+      },
+      "radii": {
+        "6px": 7,
+        "14px": 1,
+        "10px": 1
+      },
+      "shadows": {
+        "rgba(29, 39, 51, 0.06) 0px 1px 2px 0px": 1
+      },
+      "space": {
+        "14px": 1,
+        "10px": 1,
+        "6px": 1,
+        "12px": 6,
+        "9px": 5,
+        "605px": 1,
+        "18px": 2,
+        "20px": 2,
+        "22px": 2,
+        "34px": 1,
+        "16px": 1,
+        "8px": 2,
+        "11px": 1
+      },
+      "focusable": 7,
+      "hasDisabled": true,
+      "title": "frontend",
+      "landmarks": "nav,main,aside",
+      "h1": 0,
+      "focus": {
+        "probed": 6,
+        "noFocusRing": []
+      },
+      "errors": [],
+      "status": 200,
+      "empty": false
+    }
+  ],
+  "controls": {
+    "link": [
+      {
+        "sig": "rgba(0, 0, 0, 0) | rgba(29, 39, 51, 0.72) | rgba(29, 39, 51, 0.72) rgba(29, 39, 51, 0.72) rgba(29, 39, 51, 0.72) rgba(0, 0, 0, 0) | 0b | 6r | 14/400 | 9x12 | noshadow",
+        "count": 4,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "商单台账"
+      },
+      {
+        "sig": "rgb(15, 76, 92) | rgb(255, 255, 255) | rgb(15, 76, 92) | 1b | 20r | 13/400 | 5x12 | noshadow",
+        "count": 1,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "全部"
+      },
+      {
+        "sig": "rgb(255, 255, 255) | rgba(29, 39, 51, 0.72) | rgb(212, 208, 199) | 1b | 20r | 13/400 | 5x12 | noshadow",
+        "count": 6,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "需求沟通"
+      }
+    ],
+    "button": [
+      {
+        "sig": "rgb(15, 76, 92) | rgb(255, 255, 255) | rgb(255, 255, 255) | 0b | 6r | 14/600 | 9x9 | noshadow",
+        "count": 2,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "新对话"
+      },
+      {
+        "sig": "rgba(0, 0, 0, 0) | rgb(15, 76, 92) | rgb(15, 76, 92) | 0b | 4r | 13/600 | 3x6 | noshadow",
+        "count": 100,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "档期"
+      }
+    ],
+    "input": [
+      {
+        "sig": "rgb(247, 246, 242) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 10r | 14/400 | 10x12 | noshadow",
+        "count": 1,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "textarea"
+      },
+      {
+        "sig": "rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 7x11 | noshadow",
+        "count": 1,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "text"
+      }
+    ],
+    "select": [
+      {
+        "sig": "rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 7x11 | noshadow",
+        "count": 1,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "全部层级\n头部\n腰部\n尾部"
+      },
+      {
+        "sig": "rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 8x11 | noshadow",
+        "count": 1,
+        "routes": [
+          "http://localhost:5173/"
+        ],
+        "sample": "达人库"
+      }
+    ]
+  },
+  "colors": [
+    {
+      "k": "rgb(29, 39, 51)",
+      "total": 602,
+      "routes": 1
+    },
+    {
+      "k": "rgba(29, 39, 51, 0.72)",
+      "total": 204,
+      "routes": 1
+    },
+    {
+      "k": "rgba(29, 39, 51, 0.55)",
+      "total": 200,
+      "routes": 1
+    },
+    {
+      "k": "rgb(15, 76, 92)",
+      "total": 100,
+      "routes": 1
+    },
+    {
+      "k": "rgb(226, 237, 239)",
+      "total": 58,
+      "routes": 1
+    },
+    {
+      "k": "rgb(10, 58, 71)",
+      "total": 58,
+      "routes": 1
+    },
+    {
+      "k": "rgb(251, 250, 247)",
+      "total": 50,
+      "routes": 1
+    },
+    {
+      "k": "rgb(230, 241, 234)",
+      "total": 42,
+      "routes": 1
+    },
+    {
+      "k": "rgb(47, 125, 79)",
+      "total": 42,
+      "routes": 1
+    },
+    {
+      "k": "rgb(250, 249, 246)",
+      "total": 40,
+      "routes": 1
+    },
+    {
+      "k": "rgb(240, 230, 246)",
+      "total": 13,
+      "routes": 1
+    },
+    {
+      "k": "rgb(107, 63, 160)",
+      "total": 13,
+      "routes": 1
+    },
+    {
+      "k": "rgb(232, 230, 244)",
+      "total": 12,
+      "routes": 1
+    },
+    {
+      "k": "rgb(75, 67, 145)",
+      "total": 12,
+      "routes": 1
+    },
+    {
+      "k": "rgb(246, 236, 216)",
+      "total": 11,
+      "routes": 1
+    },
+    {
+      "k": "rgb(176, 125, 30)",
+      "total": 11,
+      "routes": 1
+    },
+    {
+      "k": "rgb(255, 255, 255)",
+      "total": 9,
+      "routes": 1
+    },
+    {
+      "k": "rgb(247, 246, 242)",
+      "total": 4,
+      "routes": 1
+    },
+    {
+      "k": "rgb(244, 228, 226)",
+      "total": 4,
+      "routes": 1
+    },
+    {
+      "k": "rgb(180, 68, 58)",
+      "total": 4,
+      "routes": 1
+    }
+  ],
+  "type": [
+    {
+      "k": "13px/400/Avenir Next",
+      "total": 699,
+      "routes": 1
+    },
+    {
+      "k": "13px/600/Avenir Next",
+      "total": 200,
+      "routes": 1
+    },
+    {
+      "k": "12px/600/Avenir Next",
+      "total": 111,
+      "routes": 1
+    },
+    {
+      "k": "12px/400/SF Mono",
+      "total": 90,
+      "routes": 1
+    },
+    {
+      "k": "12px/400/Avenir Next",
+      "total": 90,
+      "routes": 1
+    },
+    {
+      "k": "14px/400/Avenir Next",
+      "total": 4,
+      "routes": 1
+    },
+    {
+      "k": "15px/700/Avenir Next",
+      "total": 2,
+      "routes": 1
+    },
+    {
+      "k": "14px/600/Avenir Next",
+      "total": 2,
+      "routes": 1
+    },
+    {
+      "k": "11px/400/Avenir Next",
+      "total": 2,
+      "routes": 1
+    },
+    {
+      "k": "18px/700/Avenir Next",
+      "total": 1,
+      "routes": 1
+    }
+  ],
+  "radii": [
+    {
+      "k": "4px",
+      "total": 102,
+      "routes": 1
+    },
+    {
+      "k": "20px",
+      "total": 100,
+      "routes": 1
+    },
+    {
+      "k": "50px",
+      "total": 90,
+      "routes": 1
+    },
+    {
+      "k": "6px",
+      "total": 54,
+      "routes": 1
+    },
+    {
+      "k": "10px",
+      "total": 1,
+      "routes": 1
+    },
+    {
+      "k": "14px",
+      "total": 1,
+      "routes": 1
+    }
+  ],
+  "shadows": [
+    {
+      "k": "rgba(29, 39, 51, 0.06) 0px 1px 2px 0px",
+      "total": 1,
+      "routes": 1
+    }
+  ],
+  "fails": [],
+  "warns": [
+    "link variant used exactly once (\"全部\") — either promote it into the system or delete it: rgb(15, 76, 92) | rgb(255, 255, 255) | rgb(15, 76, 92) | 1b | 20r | 13/400 | 5x12 | noshadow",
+    "input variant used exactly once (\"textarea\") — either promote it into the system or delete it: rgb(247, 246, 242) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 10r | 14/400 | 10x12 | noshadow",
+    "input variant used exactly once (\"text\") — either promote it into the system or delete it: rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 7x11 | noshadow",
+    "select variant used exactly once (\"全部层级\n头部\n腰部\n尾部\") — either promote it into the system or delete it: rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 7x11 | noshadow",
+    "select variant used exactly once (\"达人库\") — either promote it into the system or delete it: rgb(255, 255, 255) | rgb(29, 39, 51) | rgb(212, 208, 199) | 1b | 6r | 13/400 | 8x11 | noshadow"
+  ]
+}

@@ -167,7 +167,7 @@ onMounted(async () => {
   border-right: 1px solid var(--line); background: var(--surface); padding: 12px; }
 .new-btn { display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 9px; border: none; border-radius: var(--r-sm); background: var(--brand);
-  color: #fff; font: inherit; font-weight: 600; cursor: pointer; margin-bottom: 12px;
+  color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 12px;
   transition: background 120ms ease-out; }
 .new-btn:hover { background: var(--brand-strong); }
 .new-btn:active { transform: translateY(1px); }
@@ -229,8 +229,8 @@ onMounted(async () => {
   padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-md);
   background: var(--paper); color: var(--ink); }
 .input:focus { outline: none; border-color: var(--brand); background: var(--surface); }
-.send-btn { display: flex; align-items: center; gap: 6px; padding: 10px 18px; border: none;
-  border-radius: var(--r-md); background: var(--brand); color: #fff; font: inherit;
+.send-btn { display: flex; align-items: center; gap: 6px; padding: 9px; border: none;
+  border-radius: var(--r-sm); background: var(--brand); color: #fff; font: inherit;
   font-weight: 600; cursor: pointer; transition: background 120ms ease-out; }
 .send-btn:hover:not(:disabled) { background: var(--brand-strong); }
 .send-btn:active:not(:disabled) { transform: translateY(1px); }

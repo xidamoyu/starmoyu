@@ -51,9 +51,9 @@ onMounted(load)
     <div class="toolbar">
       <div class="title">商单台账</div>
       <div class="filters">
-        <button class="chip-btn" :class="{ on: !stageFilter }" @click="stageFilter = ''; applyFilter()">全部</button>
-        <button v-for="s in STAGES" :key="s" class="chip-btn"
-                :class="{ on: stageFilter === s }" @click="stageFilter = s; applyFilter()">{{ s }}</button>
+        <a class="chip-btn" :class="{ on: !stageFilter }" @click="stageFilter = ''; applyFilter()">全部</a>
+        <a v-for="s in STAGES" :key="s" class="chip-btn"
+           :class="{ on: stageFilter === s }" @click="stageFilter = s; applyFilter()">{{ s }}</a>
       </div>
     </div>
 
@@ -91,9 +91,9 @@ onMounted(load)
 .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .title { font-size: 18px; font-weight: 700; }
 .filters { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip-btn { padding: 5px 12px; border: 1px solid var(--line-strong); border-radius: 20px;
+.chip-btn { display: inline-block; padding: 5px 12px; border: 1px solid var(--line-strong); border-radius: 20px;
   background: var(--surface); color: var(--ink-2); font: inherit; font-size: 12.5px; cursor: pointer;
-  transition: background 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out; }
+  text-decoration: none; transition: background 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out; }
 .chip-btn:hover { border-color: var(--brand); color: var(--brand-strong); }
 .chip-btn.on { background: var(--brand); border-color: var(--brand); color: #fff; }
 
