@@ -45,17 +45,38 @@ def _norm_trait(t: Any) -> dict | None:
     }
 
 
-def _resolve_kol(kol_id: str, kol_name: str) -> tuple[str, str] | None:
+def _resolve_kol(kol_id: str, kol_name: str):
+    """返回 (resolved, candidates)。
+
+    - kol_id：精确（ILIKE）匹配，命中即返回 (kol, None)
+    - kol_name：先精确；未命中再模糊。
+      * 模糊唯一命中 → 直接返回
+      * 模糊多命中 → 返回 (None, 候选列表)，由 Agent 向用户澄清，禁止瞎猜
+    """
     with storage.pg_connect() as conn:
         cur = conn.cursor()
         if kol_id:
-            cur.execute("SELECT kol_id, kol_name FROM kol_profile WHERE kol_id=%s", (kol_id,))
-        elif kol_name:
-            cur.execute("SELECT kol_id, kol_name FROM kol_profile WHERE kol_name=%s", (kol_name,))
-        else:
-            return None
-        row = cur.fetchone()
-        return (row[0], row[1]) if row else None
+            cur.execute("SELECT kol_id, kol_name FROM kol_profile WHERE kol_id ILIKE %s",
+                        (kol_id,))
+            row = cur.fetchone()
+            return ((row[0], row[1]), None) if row else (None, None)
+        if kol_name:
+            cur.execute("SELECT kol_id, kol_name FROM kol_profile WHERE kol_name=%s",
+                        (kol_name,))
+            row = cur.fetchone()
+            if row:
+                return (row[0], row[1]), None
+            cur.execute("""SELECT kol_id, kol_name, fans_count FROM kol_profile
+                           WHERE kol_name ILIKE %s
+                           ORDER BY fans_count DESC NULLS LAST LIMIT 5""",
+                        (f"%{kol_name}%",))
+            rows = cur.fetchall()
+            if len(rows) == 1:
+                return (rows[0][0], rows[0][1]), None
+            if len(rows) > 1:
+                return None, [{"kol_id": r[0], "kol_name": r[1], "fans": r[2]}
+                              for r in rows]
+        return None, None
 
 
 @tool
@@ -93,7 +114,12 @@ def save_interaction(
         if not text:
             return json.dumps({"error": "缺少原文：请传 raw_text（或 interaction_text/content）"},
                               ensure_ascii=False)
-        resolved = _resolve_kol(kol_id, kol_name)
+        resolved, candidates = _resolve_kol(kol_id, kol_name)
+        if candidates:
+            return json.dumps(
+                {"error": f"昵称「{kol_name}」匹配到多位达人，请用户澄清是哪一位",
+                 "candidates": candidates},
+                ensure_ascii=False)
         if not resolved:
             ident = kol_id or kol_name or "(未提供)"
             return json.dumps(
@@ -148,7 +174,12 @@ def save_interaction(
 @tool
 def list_kol_traits(kol_id: str = "", kol_name: str = "") -> str:
     """查询某达人的沉淀特质（verified 原文条目，零生成）。谈到达人时应主动调用展示。"""
-    resolved = _resolve_kol(kol_id, kol_name)
+    resolved, candidates = _resolve_kol(kol_id, kol_name)
+    if candidates:
+        return json.dumps(
+            {"error": f"昵称「{kol_name}」匹配到多位达人，请向用户澄清是哪一位",
+             "candidates": candidates, "n": 0, "items": []},
+            ensure_ascii=False)
     if not resolved:
         return json.dumps({"kol_id": kol_id or kol_name, "n": 0, "items": [],
                            "note": "达人不存在"}, ensure_ascii=False)
