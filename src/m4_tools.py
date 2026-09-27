@@ -20,6 +20,7 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
 from server.m4_service import IngestService, TraitService  # noqa: E402
+from server.m6_service import resolve_deal_id  # noqa: E402
 from server.service import FollowupService  # noqa: E402
 from starmoyu import storage  # noqa: E402
 
@@ -134,7 +135,8 @@ def save_interaction(
             {"field": "kol_name", "value": kname, "confidence": 1.0},
         ], created_by="agent")
 
-        # 2) 达人特质（跨单复用资产）
+        # 2) 达人特质（跨单复用资产；deal_id 优先 LLM 传值，缺省用会话钉住的商单）
+        eff_deal_id = resolve_deal_id(deal_id or None)
         trait_list = traits if isinstance(traits, list) else json.loads(traits or "[]")
         tids = []
         for t in trait_list:
@@ -145,12 +147,13 @@ def save_interaction(
                 "kol", kid, nt["trait_category"], nt["trait_content"],
                 source_quote=nt["source_quote"], severity=nt["severity"],
                 confidence=nt["confidence"], source_type="chat",
-                verified=True, created_by="agent"))
+                verified=True, deal_id=eff_deal_id, created_by="agent"))
 
-        # 3) 跟进记录（本单维度，可选）
+        # 3) 跟进记录（本单维度，可选；钉住商单时 LLM 没传 deal_id 也留痕）
         fid = None
-        if deal_id and note:
-            fid = FollowupService().create(deal_id, note, action_type="沉淀入库")
+        eff_note = note or (f"沉淀 {len(tids)} 条经验（会话钉住商单）" if eff_deal_id else "")
+        if eff_deal_id and eff_note:
+            fid = FollowupService().create(eff_deal_id, eff_note, action_type="沉淀入库")
 
         # staging 置 confirmed
         with storage.pg_connect() as conn:
@@ -162,8 +165,9 @@ def save_interaction(
 
         return json.dumps({
             "ok": True, "staging_id": sid, "kol_id": kid, "kol_name": kname,
-            "trait_ids": tids, "followup_id": fid,
+            "trait_ids": tids, "followup_id": fid, "deal_id": eff_deal_id,
             "message": f"已沉淀 {len(tids)} 条达人特质"
+                       + (f"（关联商单 {eff_deal_id}）" if eff_deal_id else "（未关联商单）")
                        + (" + 1 条跟进记录" if fid else "")
                        + f"。今后谈到 {kname} 时将自动提示这些经验。",
         }, ensure_ascii=False)

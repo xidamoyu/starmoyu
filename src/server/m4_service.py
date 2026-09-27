@@ -27,7 +27,7 @@ class TraitService:
     def add(self, party_type: str, party_id: str, trait_category: str,
             trait_content: str, source_quote: str = "", severity: str = "info",
             confidence: float = 1.0, source_type: str = "", verified: bool = False,
-            created_by: str | None = None) -> str:
+            deal_id: str | None = None, created_by: str | None = None) -> str:
         """写入一条 trait。LLM 抽取默认 verified=False，人工确认后置 TRUE。"""
         if trait_category not in self.CATEGORIES:
             raise ValueError(f"非法分类: {trait_category}")
@@ -37,10 +37,11 @@ class TraitService:
             cur.execute(
                 """INSERT INTO party_traits
                    (trait_id, party_type, party_id, trait_category, trait_content,
-                    source_quote, severity, confidence, verified, source_type, created_by)
-                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    source_quote, severity, confidence, verified, source_type, deal_id, created_by)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                 (tid, party_type, party_id, trait_category, trait_content,
-                 source_quote, severity, confidence, verified, source_type, created_by))
+                 source_quote, severity, confidence, verified, source_type, deal_id,
+                 created_by))
             conn.commit()
         return tid
 

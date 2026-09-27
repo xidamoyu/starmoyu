@@ -98,6 +98,7 @@ def me(sub: str = Depends(_jwt_sub)):
 class ChatBody(BaseModel):
     text: str = ""
     title: str | None = None
+    deal_id: str | None = None  # 会话钉住的商单（前端「关联」chip 传）
 
 
 @app.post("/api/conversations")
@@ -130,12 +131,30 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
     cs.ensure_conversation(conv_id, sub, body.title)
     cs.add_message(conv_id, "user", body.text)
 
+    # 会话钉住的商单（用户点「关联」时前端会持续传 deal_id；取库中现值兜底）
+    from server import m6_service as m6
+    if body.deal_id:
+        try:
+            m6.pin_deal(conv_id, body.deal_id, sub)
+        except ValueError:
+            pass  # 商单号无效时忽略，不阻断对话
+    pinned = m6.get_pinned(conv_id) if not body.deal_id else body.deal_id
+
     def gen():
         final_text_parts: list[str] = []
+        seen_deal_ids: set[str] = set()
         try:
-            for ev in agent.chat_stream(conv_id, body.text):
+            # 开场先推钉住状态（前端渲染关联 chip / 提示条）
+            yield f"event: deal_context\ndata: {json.dumps({'pinned_deal_id': pinned}, ensure_ascii=False)}\n\n"
+            for ev in agent.chat_stream(conv_id, body.text, pinned_deal_id=pinned):
                 if ev["type"] == "token":
                     final_text_parts.append(ev.get("text") or "")
+                if ev["type"] == "tool_result":
+                    # 确定性提取商单号 → 推给前端弹「关联」提示
+                    for did in m6.extract_deal_ids(ev.get("preview") or ""):
+                        if did not in seen_deal_ids and did != pinned:
+                            seen_deal_ids.add(did)
+                            yield f"event: deal_context\ndata: {json.dumps({'pinned_deal_id': pinned, 'detected_deal_id': did}, ensure_ascii=False)}\n\n"
                 yield f"event: {ev['type']}\ndata: {json.dumps(ev, ensure_ascii=False)}\n\n"
             cs.add_message(conv_id, "assistant", "".join(final_text_parts))
         except Exception as e:
@@ -352,3 +371,80 @@ async def admin_import(file: UploadFile, kind: str = "kols",
     else:
         raise HTTPException(422, f"暂不支持 kind={kind}")
     return {"ok": True, "rows_parsed": len(rows), "inserted": inserted}
+
+
+# ============================================================ M6: 商单钉住/路线图/结案表单
+
+class PinBody(BaseModel):
+    deal_id: str | None = None  # None = 取消钉住
+
+
+class StageBody(BaseModel):
+    stage: str
+    note: str = ""
+
+
+class TraitSpec(BaseModel):
+    kol_id: str
+    trait_category: str = "其他"
+    trait_content: str
+    source_quote: str = ""
+    severity: str = "info"
+
+
+class CloseDealBody(BaseModel):
+    roi: float | None = None
+    gmv: float | None = None
+    exposure: float | None = None
+    interaction: float | None = None
+    cpm: float | None = None
+    views: float | None = None
+    summary_note: str = ""
+    traits: list[TraitSpec] = []
+
+
+@app.patch("/api/conversations/{conv_id}/pin")
+def pin_conversation_deal(conv_id: str, body: PinBody, sub: str = Depends(_jwt_sub)):
+    """钉住/取消钉住商单到会话。"""
+    from server import m6_service as m6
+    try:
+        return m6.pin_deal(conv_id, body.deal_id, sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.get("/api/deals/{deal_id}/timeline")
+def deal_timeline(deal_id: str, sub: str = Depends(_jwt_sub)):
+    """商单路线图：stage 时间线 + 跟进流水 + 特质溯源。"""
+    from server import m6_service as m6
+    d = m6.deal_timeline(deal_id)
+    if not d:
+        raise HTTPException(404, f"商单不存在: {deal_id}")
+    return d
+
+
+@app.post("/api/deals/{deal_id}/stage")
+def set_deal_stage(deal_id: str, body: StageBody, sub: str = Depends(_jwt_sub)):
+    """修改商单阶段（写流水留痕）。"""
+    from server import m6_service as m6
+    try:
+        return m6.set_stage(deal_id, body.stage, sub, body.note)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.post("/api/deals/{deal_id}/close")
+def close_deal(deal_id: str, body: CloseDealBody, sub: str = Depends(_jwt_sub)):
+    """结案表单直调（UI 确定性路径，人工逐字段填写，不经 LLM 确认卡）。"""
+    from server import m6_service as m6
+    metrics = {k: v for k, v in {
+        "roi": body.roi, "gmv": body.gmv, "exposure": body.exposure,
+        "interaction": body.interaction, "cpm": body.cpm, "views": body.views,
+    }.items() if v is not None}
+    if not metrics:
+        raise HTTPException(422, "至少填写一个效果指标")
+    try:
+        return m6.close_deal_form(deal_id, metrics, body.summary_note,
+                                  [t.model_dump() for t in body.traits], operator=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))

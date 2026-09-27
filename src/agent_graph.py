@@ -148,16 +148,24 @@ class MCAgent:
         return g.compile(checkpointer=self.cp)
 
     # ---- 对外接口 ----
-    def chat(self, conv_id: str, user_text: str):
+    @staticmethod
+    def _cfg(conv_id: str, pinned_deal_id: str | None = None) -> dict:
+        """LangGraph 运行配置。钉住商单走 configurable（LangGraph 保证跨节点/线程传播，
+        工具内用 ensure_config() 读取 —— 替代 contextvar（SSE 生成器跨线程上下文不可靠）。"""
+        conf: dict = {"thread_id": conv_id}
+        if pinned_deal_id:
+            conf["pinned_deal_id"] = pinned_deal_id
+        return {"configurable": conf, "recursion_limit": MAX_STEPS}
+
+    def chat(self, conv_id: str, user_text: str, pinned_deal_id: str | None = None):
         """同步单轮：返回最终 state（含全部消息）。"""
-        cfg = {"configurable": {"thread_id": conv_id},
-               "recursion_limit": MAX_STEPS}
+        cfg = self._cfg(conv_id, pinned_deal_id)
         return self.graph.invoke({"messages": [("user", user_text)]}, cfg)
 
-    def chat_stream(self, conv_id: str, user_text: str):
+    def chat_stream(self, conv_id: str, user_text: str,
+                    pinned_deal_id: str | None = None):
         """流式：yield 事件字典，供 SSE 转发。"""
-        cfg = {"configurable": {"thread_id": conv_id},
-               "recursion_limit": MAX_STEPS}
+        cfg = self._cfg(conv_id, pinned_deal_id)
         for ev in self.graph.stream({"messages": [("user", user_text)]}, cfg,
                                     stream_mode="updates"):
             for node, update in ev.items():
