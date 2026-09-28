@@ -233,15 +233,23 @@ class Retriever:
 
     @staticmethod
     def dedupe_by_doc(r: "Retriever", cids: list[str], max_per_doc: int = 2) -> list[str]:
-        """按 doc_id 限流：避免同构文档用数量优势淹没高相关单篇文档。"""
+        """按 doc_id 限流：避免同构文档用数量优势淹没高相关单篇文档。
+        上限自适应文档大小：大文档（如 17-19 块的刊例大表）内部各块是互补内容，
+        固定 max_per_doc=2 会误杀深处块（v1 小文档时代遗留的死值），故取
+        max(max_per_doc, 文档总块数的一半)。跨文档限流逻辑不变。
+        """
         cnt: dict[str, int] = {}
+        doc_total: dict[str, int] = {}
+        for c in r.by_id.values():
+            doc_total[c.doc_id] = doc_total.get(c.doc_id, 0) + 1
         out: list[str] = []
         for cid in cids:
             c = r.by_id.get(cid)
             if c is None:
                 continue
             d = c.doc_id
-            if cnt.get(d, 0) >= max_per_doc:
+            cap = max(max_per_doc, doc_total.get(d, 1) // 2)
+            if cnt.get(d, 0) >= cap:
                 continue
             cnt[d] = cnt.get(d, 0) + 1
             out.append(cid)
