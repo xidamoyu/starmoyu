@@ -297,6 +297,8 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 
 ## 【v1→v2 复用】W2 · 消融实验 ✅ 已完成（8 组）
 
+> ⚠️ 历史实验记录（v1 语料 457 块 + 54 条评测集）。**当前有效指标见 R9 节与 `reports/检索评测报告.md`**（Hit@1 0.694 / MRR 0.788 @ 2063 块 / 98 条），两套数字不可横比。
+
 评测集：54 条带 ground-truth 标签问答对（从真实台账反向构造，标签客观）
 
 | 实验组 | Hit@1 | Hit@3 | Hit@5 | Hit@10 | Recall@5 | MRR | 耗时 |
