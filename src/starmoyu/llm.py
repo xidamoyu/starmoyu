@@ -47,7 +47,9 @@ ARK_API_KEY = os.environ.get("ARK_API_KEY", "")
 CHAT_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash-ga-260731")
 CHAT_MODEL_PRO = os.environ.get("DEEPSEEK_MODEL_PRO", "deepseek-v4-pro-ga-260813")
 
-OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+# 注：默认值必须用 127.0.0.1 而非 localhost——Windows 下 localhost 可能解析为
+# IPv6 ::1，而 Ollama 只监听 IPv4，SYN_SENT 永远悬起（消融进程曾因此卡死 25 分钟）。
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "bge-m3")
 EMBED_DIM = int(os.environ.get("EMBED_DIM", "1024"))
 EMBED_BATCH = int(os.environ.get("EMBED_BATCH", "16"))

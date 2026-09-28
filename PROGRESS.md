@@ -38,11 +38,11 @@
 | R2 业务闭环 | ✅ | 方案审批流(版本化) + 达人档期/排他 + Excel 导入 + 4 管理页面 | `verify_m2.py` 11/11 |
 | R4 沉淀流 | ✅ | party_traits 确认卡式经验入库 + 原文召回 + 歧义澄清 | `verify_m4.py` 7/7 × 3轮 + TDD 8/8 |
 | R5 全周期扩展 | ✅ | 结案复盘回流 + Brief 接单 + 主动简报 + 品牌特质 + 匹配器历史ROI | `verify_m5.py` 15/15 × 3轮 + TDD 7/7 |
-| R3 评测回归 | ✅ | 98条全链路消融重跑（真实语料 2142 块）+ RAGAS 生成质量 | `reports/ablation_v2.log` Hit@1 0.735/MRR 0.831 · `reports/ragas_v2.json` faithfulness 1.000 |
+| R3 评测回归 | ✅ | 98条全链路消融重跑（真实语料 2063 块）+ RAGAS 四指标 | `reports/ablation_v2.log` Hit@1 0.694/MRR 0.788 · `reports/ragas_v2.json` faithfulness 0.959/relevancy 0.794 |
 | R6 M6 会话关联 | ✅ | 会话钉住商单 + 特质 deal_id 溯源 + 商单路线图 + 结案表单端点 | `test_m6_service.py` + pytest |
 | R7 M7b 变更审批 | ✅ | 商单字段变更审批闭环（request_deal_change → 审批中心 → 批准写回+留痕） | `test_m7b_service.py` 4/4 |
 | R8 全库重建 | ✅ | 正式 Excel 重灌 14289 达人/400 商单/100 甲方（脱敏+错位解析+分成编码） | `reports/rebuild.log` + 全库复查干净 |
-| R9 RAG 语料重做 | ✅ | 真实数据渲染 70案例+68刊例+330在途 → 2142 块重入向量库 | `reports/reindex_rag.log` 结构表未动 |
+| R9 RAG 语料重做 | ✅ | 真实数据渲染 70案例+27刊例+330在途 → 2063 块重入向量库（类目归一化 68→30） | `reports/reindex_rag.log` 结构表未动 |
 
 ### 旧版（v1 已退役，历史记录）
 
@@ -225,10 +225,10 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 
 **管线**：`render_v2_docs.py`（从 PG 真实数据渲染）→ `reindex_rag.py`（**只重建 chunk 表+Milvus，绝不碰结构表**——v1 的 ingest.py 会 TRUNCATE kol_profile，已弃用）。
 
-**语料重做**：真实数据渲染 70 结案案例 + 330 在途单 + 刊例表（**类目归一化 68→30 干净大类**：复合词/截断词/错别字/ID 脏值清洗 233 行，碎片小类目 <3 达人不单独出表，`cooperation_level` 布尔泄漏修为「已挂靠/未挂靠」）→ **2142 块**（v1 457 块的 4.7×）。
+**语料重做**：真实数据渲染 70 结案案例 + 330 在途单 + 刊例表（**类目归一化 68→30 干净大类**：复合词/截断词/错别字/ID 脏值清洗 233 行，碎片小类目 <3 达人不单独出表，`cooperation_level` 布尔泄漏修为「已挂靠/未挂靠」）→ **2063 块**（v1 457 块的 4.7×）。
 
 **评测体系重组（报告独立成文）**：
-- **检索层** → `reports/检索评测报告.md`（8 组消融：完整链路 Hit@1 0.735 / MRR 0.831，vs 基线 +0.194/+0.164；Rerank 最大组件 +0.068；cand_k=10 大语料下有损弃用）
+- **检索层** → `reports/检索评测报告.md`（8 组消融：完整链路 Hit@1 0.694 / MRR 0.788，vs 基线 +0.143/+0.126；Rerank 最大组件 +0.044；cand_k=10 持平略优省 15% 已采用）
 - **生成层** → `reports/生成质量评估报告.md`（RAGAS 20 条抽样：faithfulness 1.000 零幻觉 / answer_relevancy 0.711，低分项为列表型回答的评分局限非幻觉）
 - **v1 评测已归档** → `reports/v1_archive/`（ablation_v1.md 等，历史对照用，不再对应当前系统）
 
