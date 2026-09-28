@@ -1,8 +1,9 @@
-# Starmoyu · MCN 商单资产智能助手
+# Starmoyu · MCN 商单资产智能助手（v2 · 对话式 Agent）
 
-> 基于 **LangGraph + RAG** 的私有商单资产助手：沉淀历史商单/刊例/案例，通过多步 Agent 编排完成
-> **需求解析 → 相似商单召回 → 达人匹配 → 构思方案生成 → 人工确认 → 定稿** 全链路，
-> 支持**引用溯源**与 **Human-in-the-Loop**。
+> 面向 MCN / 星图服务商的私有商单资产助手。核心是一个**真工具调用的对话式 Agent**（LangGraph `bind_tools` + ToolNode，LLM 自主选工具、结果回喂、多轮循环），把「翻历史单 + 拼方案 + 记跟进 + 走审批」的人工流程收敛进一次对话。
+> 前端 **Vue3 + FastAPI + SSE**，数据**对话内沉淀、确认卡把关、可追溯**，管理动作全部有**审批流闭环**。
+
+> 本项目经历过一次推倒重建：v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router），被判定为不合格后重建为当前 v2。检索资产（混合检索 + RRF + Rerank + 54 条评测集 + 8 组消融）从 v1 原样复用，见文末「历史消融背景」。
 
 ---
 
@@ -10,162 +11,70 @@
 
 | 层次 | 选型 | 运行位置 | 验证状态 |
 |---|---|---|---|
-| Agent 编排 | **LangGraph**（StateGraph + Checkpointer + `interrupt()`） | 本地 | ✅ 端到端跑通（跨进程续跑已验证） |
-| LLM | **DeepSeek**（火山方舟 ARK，`deepseek-v4-flash/pro`） | 云端 API | ✅ HTTP 200 |
-| Embedding | **bge-m3**（1024 维） | **本地 Ollama** | ✅ dim=1024 |
+| Agent 编排 | **LangGraph**（StateGraph + `bind_tools` + ToolNode + Checkpointer） | 本地 | ✅ 真 Agent 循环，LLM 自主调工具 |
+| LLM | **DeepSeek**（火山方舟 ARK，`deepseek-v4-flash`） | 云端 API | ✅ HTTP 200（max_tokens ≥8000 防 reasoning 吃光） |
+| Embedding | **bge-m3**（1024 维） | 本地 Ollama | ✅ dim=1024，零 API 成本 |
 | Rerank | **gte-rerank-v2**（阿里云 DashScope） | 云端 API | ✅ 35 ms/条（30 条候选 1051ms） |
 | 向量库 | **Milvus 3.0**（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | ✅ 457 条向量 |
-| 关系库 | **PostgreSQL 18.6** | 本地 Windows | ✅ 6 张表 |
-| 对象存储 | **MinIO**（S3 兼容） | 本地 WSL Docker | ✅ 104 原件 + 预签名直链 |
-| 前端 | Streamlit | 本地 | ✅ |
-
-### 为什么 Rerank 经历了「本地 → 云端」的迁移
-
-**第一阶段：本地推理（已废弃，但过程可讲）**
-
-Ollama **不支持 rerank**，三条证据：
-
-1. `POST /api/rerank` 返回 **404**，CLI 无任何 rerank 命令
-2. 官方模型库不含 `bge-reranker` 系列（CrossEncoder 结构无法通过 Ollama 的 `bert` 后端暴露打分接口）
-3. `registry.ollama.ai` 网络超时，`ollama pull` 失败
-
-因此改用 `sentence-transformers` 加载 `bge-reranker-v2-m3`。**实测 CPU 上 1126 ms/条**，
-一次 54 题消融需 60+ 分钟 —— 太慢，遂尝试 GPU 加速。
-
-**第二阶段：GPU 加速尝试（实测失败，数据如下）**
-
-| 配置 | 耗时 | 结论 |
-|---|---|---|
-| CPU fp32（基线） | 1126 ms/条 | 可用但慢 |
-| GPU fp32 | 未跑通 | 启动前显存仅 free 1.16G / 4.00G，不足以承载模型 fp32 权重 |
-| GPU fp16 | **3225 ms/条** | 比 CPU **慢 3 倍** |
-
-GPU 反而更慢的原因：本机 GTX 1650 Ti 只有 4GB 显存，实测**启动前可用仅 free 1.16G**
-（`reports/gpu_rerank_bench.log`，即桌面与系统组件已占用约 2.84G）。
-fp16 加载阶段显存被彻底吃满（`free 2.35G → free 0.00G`，`reports/gpu_fp16_bench.log`），
-推理时权重被迫在显存与宿主内存间反复搬运，PCIe 带宽成为瓶颈。
-**结论：该卡可用显存不足以承载 reranker，属硬件层面的限制。**
-
-**第三阶段：改用云端 Rerank API（当前方案）**
-
-改用阿里云 DashScope `gte-rerank-v2` 后：
-
-| 指标 | 本地 CPU CrossEncoder | DashScope gte-rerank-v2 |
-|---|---|---|
-| 单条耗时 | 1126 ms | **35 ms（32.1× 更快）** |
-| 消融总耗时 | 60+ 分钟 | 212 秒 |
-| 本地依赖 | torch + transformers（3.9GB） | **无（venv 从 1.3G 降至 660M）** |
-| Hit@1 | 0.741 | **0.778** |
-| MRR | 0.852 | **0.880** |
-
-云端方案不仅快 32 倍，**检索质量也更高**（gte-rerank-v2 的中文语义判断优于 bge-reranker-v2-m3
-在本机 CPU 上的表现），且彻底移除了 3.9GB 的 torch 依赖。
+| 关系库 | **PostgreSQL 18.6** | 本地 Windows | ✅ 14 张表 |
+| 对象存储 | **MinIO**（S3 兼容） | 本地 WSL Docker | ✅ 原件 + 预签名直链 |
+| 后端 | **FastAPI**（JWT + SSE 流式） | 本地 :8000 | ✅ 26 端点 |
+| 前端 | **Vue3 + Vite + TS + Element Plus + Pinia** | 本地 :5173 | ✅ 7 页面 |
 
 ---
 
-## 2. 存储层分工
+## 2. 架构
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      应用层 (Streamlit)                      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│              LangGraph 编排层（10 节点状态机）                │
-│  router → parse_requirement → retrieve_cases → match_kol     │
-│    → generate_proposal → human_review ─┬─→ finalize → END   │
-│                                        └─→ revise ──┘（≤3轮）│
-└───────┬──────────────────┬──────────────────┬───────────────┘
-        ▼                  ▼                  ▼
-┌───────────────┐  ┌───────────────┐  ┌───────────────┐
-│   Milvus      │  │ PostgreSQL 18 │  │     MinIO     │
-│  向量+元数据   │  │  关系型台账    │  │   原件 PDF    │
-│  dm_chunks    │  │ kol_profile   │  │  docs/**.md   │
-│  HNSW+COSINE  │  │ deal / brand  │  │  预签名直链    │
-│  5 倒排索引    │  │ chunk_meta    │  │  S3 兼容      │
-└───────────────┘  └───────────────┘  └───────────────┘
+┌────────────── Vue3 (Vite) 前端 :5173 ──────────────┐
+│ 对话(SSE流式+工具卡片) 商单台账 达人库 审批中心 导入  │
+└───────────────────────┬────────────────────────────┘
+                        │ REST + SSE
+┌───────────────────────▼────────────────────────────┐
+│              FastAPI 后端 :8000（26 端点）            │
+├────────────────────────────────────────────────────┤
+│ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
+│   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
+│   Checkpointer: SqliteSaver（跨进程对话持久化）       │
+├───────────────────────┬────────────────────────────┤
+│ RAG 层（retriever.py） │ Service 层（唯一写库者）      │
+└───────────┬───────────┴───────────┬────────────────┘
+            ▼                       ▼
+   Milvus(向量检索)      PostgreSQL(读+写, 14表)   MinIO(原件)
 ```
 
-- **Milvus**：语料块向量 + 标量元数据（类目/平台/量级/文档类型），负责语义检索与预过滤
-- **PostgreSQL**：达人档案、商单台账、跟进流水、父子块文本，负责 SQL 精确筛选与父块扩展
-- **MinIO**：合同/结案报告/刊例原件，支持预签名直链（原件不经应用服务器中转）
+**核心设计：Service 层是唯一写库者。** 业务写操作只允许发生在 Service 层，工具函数通过调用 Service 写库——对话、方案、跟进、沉淀、审批全部落库，解决「零沉淀」。
+
+**沉淀流确认卡（差异化）**：工单收尾时用户粘贴一段话 → Agent 抽取结构化条目 → 对话内确认卡 → 用户确认 → 原子写三处（原文留档 + `party_traits` verified=TRUE + 跟进记录）。确认前不落任何正式表，查询侧只列 verified 原文、零生成。
 
 ---
 
-## 3. 数据资产（W1 产出）
+## 3. Agent 能力（8 基座 + 2 沉淀 + 7 全周期 = 真实工具数）
+
+**基座工具（8）**：`search_knowledge`（知识库检索）/ `search_kols`（达人检索·含排他过滤与 CPM/均播）/ `get_deal_status`（商单在途）/ `match_kols_for_requirement`（预算约束组合建议）/ `create_proposal` / `update_proposal_status` / `create_followup`（跟进）/ **`request_deal_change`（商单字段变更→审批流）**
+
+**沉淀流（M4，2）**：`save_interaction`（经验确认卡入库）/ `list_kol_traits`（特质召回）
+
+**全生命周期（M5+M6，7）**：`save_deal_result`/`get_deal_result`（结案复盘）/ `save_brief`（Brief 接单）/ `get_today_briefing`（主动简报）/ `get_brand_traits`/`save_brand_traits`（品牌特质）/ `get_pending_traits`（待确认队列）
+
+**审批流闭环（M7b）**：对话内 Agent **无权限直改**商单主字段（预算/负责人/阶段等），调 `request_deal_change` 建申请（`deal_change_requests`，自动捕获旧值）→ 审批中心「商单变更」标签页显示 → 批准后**自动写回 deal + 跟进流水留痕**，驳回则不动 deal。**一商单可挂多个审批，互不影响。**
+
+---
+
+## 4. 数据资产（2026-09-28 全库重建）
+
+以正式 Excel（`data/raw/达人看板.xlsx`，双 sheet 含「组员达人看板」+「之前达人看板汇总」）全量重灌，含脱敏、汇总表错位位置感知解析、828/837 分成编码解析：
 
 | 资产 | 规模 | 说明 |
 |---|---|---|
-| 达人档案 | 120 条 | 类目/粉丝量/互动率/转化率/人群画像/评级/刊例价 |
-| 广告主 | 40 个 | 品牌名与类目严格对齐 |
-| 商单台账 | 90 条 | 含 45 条在途；结案单 ROI 中位数 1.09、CPM 25-60 元 |
-| 跟进流水 | 173 条 | 阶段流转记录 |
-| 可检索语料 | 104 篇 / 457 块 / 427 父块 | 全部由结构化数据渲染，文档与台账天然一致 |
+| 达人档案 `kol_profile` | **14289 条** | 32→33 列；手机号前3后4、微信号 sha1 前8 脱敏；CPM 锚定星图区间 15-72 生成；明文手机号 0 |
+| 商单台账 `deal` | **400 条** | budget 对齐需求口径；category 无数字；结案带 ROI/GMV/实际CPM |
+| 广告主 `brand` | **100 家**（30 品类） | note 列生成内容全删 |
+| 跟进流水 `deal_followup` | **~1600 条** | 含真实进度反馈（随阶段详情显示） |
+| 变更审批 `deal_change_requests` | 按业务产生 | 一商单多审批 |
+| RAG 语料 chunk | 457 子块 / 427 父块 | M1 文档，不绑达人，不受重建影响 |
 
-> 关键设计：**语料由结构化数据渲染生成**，保证「引用溯源」可验证，不会出现文档与台账对不上的假数据。
-
----
-
-## 4. 检索链路与消融实验
-
-```
-Query → 意图路由 → 多路召回（Milvus 向量 ∥ BM25）→ 元数据预过滤
-      → 文档级去重 → RRF 融合 → 文档类型先验 → 类型配额保底
-      → Rerank（gte-rerank-v2）→ 引用组装
-```
-
-评测集：**54 条**带 ground-truth 标签的问答对（从真实数据反向生成，标签客观）
-
-| 实验组 | Hit@1 | Hit@5 | Recall@5 | MRR | 耗时 |
-|---|---|---|---|---|---|
-| ① 纯向量召回 (Baseline) | 0.667 | 0.907 | 0.880 | 0.784 | 139.3s |
-| ② + BM25 多路召回 (RRF) | 0.667 | 0.926 | 0.883 | 0.781 | 137.3s |
-| ③ + 文档级去重 | 0.667 | 0.907 | 0.894 | 0.780 | 137.8s |
-| ④ + 元数据预过滤 | 0.667 | 0.907 | 0.884 | 0.773 | 138.6s |
-| ⑤ + 文档类型先验 | 0.685 | 1.000 | 0.963 | 0.802 | 149.9s |
-| ⑥ + 类型配额保底 | 0.741 | 1.000 | 0.963 | 0.849 | 152.1s |
-| ⑦ **+ Rerank（完整链路）** | **0.778** | 1.000 | 0.981 | **0.880** | 212.4s |
-| ⑧ **+ 收窄重排候选 (cand_k=10)** | **0.778** | 1.000 | **0.986** | **0.883** | **177.2s** |
-
-完整链路相对基线：**MRR +0.099、Hit@1 +0.111、Recall@5 +0.106**
-
-### ⑧ 组：一个「零成本」的工程优化
-
-原设计把召回池的全部 30 条候选都送进 reranker。实测发现
-**ground-truth 文档在重排前的候选池 top-5 内命中率已是 54/54 = 100%** ——
-意味着候选池中大部分条目对最终 Top-K 毫无贡献，却要付出等量重排开销。
-
-> 该统计由 `scripts/verify_rerank_candk.py` 计算并落盘（`reports/rerank_candk_evidence.log`，
-> 关闭 rerank 后逐条检查 GT 文档在候选池中的排名）：
-> top-1 74.1% / top-3 96.3% / **top-5 100%** / top-10 100%；`rerank_cand_k` 取 10 或 30 均覆盖 GT 54/54。
-
-于是新增 `rerank_cand_k` 参数，只收窄送入 reranker 的候选数（不动召回池宽度 `cand_k`）。
-结果：**耗时 -16.6%（212.4s → 177.2s），且 MRR / Recall@5 反而微升**。
-
-> 该参数默认从环境变量 `RERANK_CAND_K` 读取，生产默认 10。
-
-> 完整 8 组数据与分问题类型明细见 `reports/ablation.md`（脚本自动生成，无手工誊抄）。
-
-### 人工介入与 Checkpointer 语义
-
-`human_review` 节点用 LangGraph `interrupt()` 让图**真正挂起**（实测 `next=('human_review',)`），
-不是模拟等待。**但能否跨进程恢复，取决于注入的 Checkpointer**：
-
-| 实现 | 触发条件 | 跨进程恢复 |
-|---|---|---|
-| `SqliteSaver` | 设置 `LANGGRAPH_CHECKPOINT_SQLITE=<path>` | ✅ 是 |
-| `MemorySaver` | 默认兜底 | ❌ 否，进程退出即丢 |
-
-已用**三个独立进程**验证持久化路径（`scripts/demo_cross_process_resume.py` → `reports/cross_process_resume.log`）：
-
-```
-进程 A  生成方案 → 在 human_review 挂起(NEXT=('human_review',), 2943字) → 退出
-进程 B  新进程读取    → FOUND_STATE=True，方案 2943 字完整存活
-进程 C  新进程恢复执行 → revision_count=1，方案被改写为 2444 字，再次挂起
-结论：A挂起=True / B跨进程读状态=True / C跨进程恢复=True ✅
-```
-
-> 若用 `MemorySaver`，进程 B 会读不到任何状态 —— 这也是本项目此前文档的一处不实表述，现已修正。
+> 脱敏红线：Excel 原始数据绝不存原文、绝不提交 git。
 
 ---
 
@@ -173,32 +82,13 @@ Query → 意图路由 → 多路召回（Milvus 向量 ∥ BM25）→ 元数据
 
 ```bash
 cd starmoyu
-export PYTHONPATH="$PWD/src"
+export LANGGRAPH_CHECKPOINT_SQLITE="C:/.../starmoyu/data/checkpoints.db"
 
-# -1) 安装依赖（前置：uv；Rerank 走云端，无需 torch）
-uv venv .venv --python 3.11
-uv pip install --python .venv/Scripts/python.exe -r requirements.txt
-# 另需本地 embedding 模型：ollama pull bge-m3
+# 后端（26 端点）
+.venv/Scripts/python.exe -m uvicorn server.api:app --port 8000 --app-dir src
 
-# 0) 环境自检（三存储 + 三通道）
-.venv/Scripts/python.exe -c "import sys;sys.path.insert(0,'src');from starmoyu import storage,llm;print(storage.health());print(llm.channels_health())"
-
-# 1) 生成数据资产
-.venv/Scripts/python.exe scripts/gen_data.py
-
-# 2) 入库（三库写入）
-.venv/Scripts/python.exe src/starmoyu/ingest.py
-
-# 3) 消融实验（8 组，云端 rerank 约 3 分钟）
-.venv/Scripts/python.exe scripts/evaluate.py
-.venv/Scripts/python.exe scripts/render_report.py    # 生成 reports/ablation.md
-
-# 4) 端到端验收（16 项断言）
-.venv/Scripts/python.exe scripts/e2e_check.py
-
-# 5) 前端验证 + 启动
-.venv/Scripts/python.exe scripts/ui_apptest.py       # 13 项 AppTest 断言
-.venv/Scripts/python.exe -m streamlit run app.py     # http://localhost:8501
+# 前端（Vue3）
+cd frontend && npm run dev    # http://localhost:5173
 ```
 
 ### 依赖服务
@@ -206,49 +96,62 @@ uv pip install --python .venv/Scripts/python.exe -r requirements.txt
 | 服务 | 地址 | 凭据 |
 |---|---|---|
 | Milvus | `127.0.0.1:19530` | 无（WSL Docker） |
-| MinIO API | `127.0.0.1:9000` | `starmoyu` / `starmoyu123` |
-| MinIO 控制台 | `http://127.0.0.1:9001` | 同上 |
 | PostgreSQL | `127.0.0.1:5432` | 见 `.env` |
+| MinIO | `127.0.0.1:9000` / `:9001` | `starmoyu` / `starmoyu123` |
 | Ollama | `http://localhost:11434` | 无 |
+
+### 验收脚本（v2）
+
+```bash
+.venv/Scripts/python.exe scripts/verify_m1.py        # Agent 后端 8/8
+.venv/Scripts/python.exe scripts/verify_m2.py        # 业务闭环 11/11
+.venv/Scripts/python.exe scripts/verify_m4.py        # 沉淀流 7/7 ×3轮
+.venv/Scripts/python.exe scripts/verify_m5.py        # 全生命周期 15/15 ×3轮
+.venv/Scripts/python.exe scripts/verify_m3_eval.py   # 检索回归 54条
+.venv/Scripts/python.exe -m pytest scripts/test_m7b_service.py -q   # M7b 审批 4/4
+```
 
 ---
 
-## 6. 目录结构
+## 6. 历史消融背景（v1 检索资产，现仍复用）
+
+检索链路 `多路召回(Milvus向量 ∥ BM25) → 元数据预过滤 → 文档级去重 → RRF 融合 → 文档类型先验 → 类型配额保底 → Rerank(gte-rerank-v2) → 引用组装`，54 条带 ground-truth 评测集做 8 组消融：
+
+| 实验组 | Hit@1 | Hit@5 | Recall@5 | MRR |
+|---|---|---|---|---|
+| ① 纯向量召回（基线） | 0.667 | 0.907 | 0.880 | 0.784 |
+| ⑧ **完整链路（cand_k=10）** | **0.778** | **1.000** | **0.986** | **0.883** |
+
+完整链路相对基线：**MRR +0.099、Hit@1 +0.111、Recall@5 +0.106**。v2 重建后复测 0.796 / 0.892 / 0.977，与 v1 基线持平（评测集不绑达人名，重建不影响）。
+
+> 完整 8 组数据见 `reports/ablation.md`。Rerank 选型（本地 CPU 1126ms → GPU 失败 → 云端 35ms/条 32×）详见该报告与 `reports/bench_rerank.log`。
+
+---
+
+## 7. 目录结构
 
 ```
 starmoyu/
-├── src/starmoyu/
-│   ├── llm.py         # 三通道：DeepSeek(ARK) / Ollama Embed / DashScope Rerank
-│   ├── storage.py     # 三存储：Milvus / PostgreSQL / MinIO
-│   ├── ingest.py      # 入库管线（父子切分/打标/向量化/三库写入）
-│   ├── retriever.py   # 混合检索 + RRF + Rerank + 元数据过滤 + 类型配额
-│   ├── assistant.py   # RAG 问答 / 方案生成 / 达人检索 / 跟进分析 + 5 个提示词
-│   └── graph.py       # LangGraph 状态机 + 人工介入 + 断点续跑
-├── scripts/
-│   ├── gen_data.py           # 数据构造（seed=20260924）
-│   ├── evaluate.py           # 8 组消融实验
-│   ├── render_report.py      # 生成 reports/ablation.md
-│   ├── e2e_check.py          # 端到端验收（16 项）
-│   ├── ui_apptest.py         # 前端元素级验证（13 项）
-│   ├── ui_smoke.py           # 前端业务逻辑冒烟（12 项）
-│   ├── bench_rerank.py       # Rerank 延迟基准（本地 vs 云端，同口径）
-│   ├── verify_rerank_candk.py# rerank_cand_k 裁剪的安全边界验证
-│   ├── demo_cross_process_resume.py  # 三进程演示人工介入跨进程续跑
-│   ├── compare_embedding.py  # Embedding 方案对比
-│   └── probe_*.py            # 环境探测脚本
-├── app.py             # Streamlit 前端（三 tab）
-├── docs/
-│   ├── MCN商单资产智能助手-开发说明书.md   # ★ 标准开发说明书（背景/架构/功能/数据/Prompt）
-│   └── RESUME.md                           # 简历条目 + 面试问答
-├── reports/           # 实验日志与自动生成的报告
-└── .env               # 配置（勿提交）
+├── src/
+│   ├── starmoyu/         # LLM三通道 / 三存储 / 检索 / 入库 / assistant
+│   ├── agent_graph.py    # 真 Agent 循环（bind_tools + ToolNode + Checkpointer）
+│   ├── agent_tools.py    # 基座 8 工具
+│   ├── m4_tools.py / m5_tools.py  # 沉淀 + 全生命周期工具
+│   └── server/           # FastAPI(api.py) + Service 层(m4/m5/m6/m7b_service.py)
+├── frontend/src/         # Vue3 页面 + Pinia stores + api 封装
+├── scripts/              # 验收脚本 + 数据重建(import_rebuild.py) + 单测
+├── docs/                 # REBUILD-PLAN / 开发说明书 / RESUME
+├── reports/              # 实验日志与自动生成报告
+├── data/raw/达人看板.xlsx # 原始 Excel（未脱敏，不提交 git）
+└── PROGRESS.md           # 开发进度（权威进度源）
 ```
 
-## 7. 文档索引
+## 8. 文档索引
 
 | 文档 | 内容 |
 |---|---|
-| `docs/MCN商单资产智能助手-开发说明书.md` | **标准开发说明书**：项目背景 / 技术架构 / 核心功能 / 数据结构 / Prompt 设计 |
-| `docs/RESUME.md` | 简历条目写法 + 10 组面试问答准备 |
-| `reports/ablation.md` | 8 组消融实验报告（脚本自动生成，无手工誊抄） |
-| `PROGRESS.md` | 开发进度与验收记录 |
+| `PROGRESS.md` | **开发进度与验收记录（权威进度源）** |
+| `docs/REBUILD-PLAN.md` | v1→v2 重建规划 |
+| `docs/MCN商单资产智能助手-开发说明书.md` | 标准开发说明书 |
+| `docs/RESUME.md` | 简历条目 + 面试问答（v1 消融背景） |
+| `reports/ablation.md` | 8 组消融实验报告（脚本自动生成） |

@@ -135,7 +135,9 @@
 
 ## R4 · 数据库现状
 
-PG **13 张表**（v1 的 6 张 + v2 新增 7 张）：brand / chunk_meta / deal / deal_followup / kol_profile / parent_chunk / **conversations / messages / proposals / proposal_versions / users / party_traits / ingest_staging**（另有 kol_profile 与 deal 的档期/报价扩展列）。
+PG **14 张表**（v1 的 6 张 + v2 新增 8 张）：brand / chunk_meta / deal / deal_followup / kol_profile / parent_chunk / **conversations / messages / proposals / proposal_versions / users / party_traits / ingest_staging / deal_change_requests**（另有 kol_profile 与 deal 的档期/报价/分成扩展列）。
+
+> 2026-09-28 全库重建后规模（以正式 Excel 重灌）：kol_profile **14289** ｜ deal **400** ｜ brand **100**（30 品类）｜ deal_followup **~1600**（含真实进度反馈）。M1 RAG 语料 chunk_meta/parent_chunk 457/427 不受重建影响（不绑达人）。
 
 ## R · 待办
 
