@@ -39,6 +39,7 @@ HEADERS = ['序号','日期','内容类型','账号昵称','账号ID','联系方
 
 # ---------------------------------------------------------------- 清洗
 def clean_w(s):
+    """'100W'/'28.7w'/'3.08w' -> int(支持带w价格)。空/异常返回 None。"""
     if s is None: return None
     s = str(s).strip().upper().replace(',', '')
     m = re.match(r'^(\d+(?:\.\d+)?)\s*[W万]$', s)
@@ -130,6 +131,9 @@ REGIONS = ['华东','华南','华北','西南','华中','东北']
 CATS = ['美妆','母婴','游戏','剧情搞笑','生活','美食','旅行','二次元','三农','时尚',
         '影视娱乐','运动健身','汽车','家居','萌宠','测评','教育培训','艺术文化','情感',
         '颜值','才艺','科技数码','口播','带货','穿搭']
+# 汇总表自适应解析: 类目白名单 + 挂靠词
+CATWORDS = set(CATS) | {'美妆护肤','美妆探店','美食探店','生活家居','亲子','母婴亲子','舞蹈','教育'}
+AFFWORDS = {'野生','青年力量','有机构','机构','个人','挂靠'}
 BRAND_ROOTS = ['美','雅','贝','植','洛','云','溪','町','慕','梵','岚','汀','蔻','妍','茉',
                '鹿','森','禾','星','月','晴','风','谷','泉','木','石','光','初','本','然']
 BRANDS = [('欧莱雅','美妆','护肤'),('飞鹤奶粉','母婴','奶粉'),('追觅科技','家电','清洁电器'),
@@ -154,36 +158,81 @@ def all_brands(n=100):
         i += 1
     return pool[:n]
 
+def _norm(x): return re.sub(r'\s+', '', str(x)) if x is not None else ''
+def _is_w(x): return bool(re.match(r'^\d+(\.\d+)?[wW万]\s*$', str(x).strip())) if x else False
+def _is_px(x): return bool(re.match(r'^\d{3,7}\s*$', str(x).strip())) if x else False
+def _is_dt(x): return bool(re.match(r'^\d{1,2}\.\d{1,2}\s*$', str(x).strip())) if x else False
+def _is_cn(x): return bool(x) and bool(re.search(r'[\u4e00-\u9fff]', str(x))) and not _is_w(x)
+
+def parse_summary_row(r):
+    """之前达人看看板汇总: 多子表拼接列错位, 位置感知解析。
+    - 列角色按单元格特征识别, 不依赖固定位置
+    - 价格/粉丝均可带w (1.2w=12000)
+    - 块编号(如45393)非有效价格/粉丝, 剔除
+    - 账号ID 丢弃不解析"""
+    cells = [_norm(x) for x in r[:12]]
+    rec = {k: None for k in ('kol_name','contact','price','fans','category','passed','affiliate','feedback')}
+    used = set()
+    for i, c in enumerate(cells):
+        if _is_w(c): rec['fans'] = c; used.add(i); break          # 带w的是粉丝
+    for i, c in enumerate(cells):                                   # 价格: 带w 或 3-7位数字; 剔除块编号/日期
+        if i in used or not c: continue
+        if _is_px(c):
+            if _is_dt(c) or int(c) > 200000: continue  # 日期或块编号(>20万)跳过
+            if i == 0 and int(c) > 10000: continue  # 行首大块编号(段首序号列)
+            rec['price'] = c; used.add(i); break
+        if _is_w(c) and rec['fans'] is None:  # 带w但粉丝已取->可能是价格
+            rec['price'] = c; used.add(i); break
+    for i, c in enumerate(cells):                                   # 通过: 是/否/通过/x
+        if i not in used and c in ('是','否','通过'): rec['passed'] = '是' if c in ('是','通过') else '否'; used.add(i); break
+    for i, c in enumerate(cells):
+        if i not in used and c in AFFWORDS: rec['affiliate'] = c; used.add(i); break
+    for i, c in enumerate(cells):
+        if i not in used and c and c in CATWORDS: rec['category'] = c; used.add(i); break
+    for i, c in enumerate(cells):                                   # 联系方式: 字母数字串/手机号(排除纯数字价格)
+        if i not in used and c and not re.match(r'^\d+$', c) and (re.match(r'^[A-Za-z0-9_\-]{3,}$', c) or re.match(r'^1[3-9]\d{9}$', c)):
+            rec['contact'] = c; used.add(i); break
+    cn = [(i, c) for i, c in enumerate(cells)                        # 昵称: 剩余里最长含中文(>=2字, 非类目/通过/数字)
+          if i not in used and _is_cn(c) and not _is_dt(c) and not re.match(r'^\d+$', c)
+          and c not in ('是','否','通过','x') and c not in CATWORDS and len(c) >= 2]
+    if cn:
+        i, c = max(cn, key=lambda x: len(x[1])); rec['kol_name'] = c; used.add(i)
+    return rec
+
 def load_rows(limit=None):
     wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
     rows = []
     seen = set()
-    # sheet1 组员达人看板: 两级表头(R1分组/R2列名), 数据从 R3, 16列
     ws = wb['组员达人看板']
     for r in ws.iter_rows(min_row=3, values_only=True):
         d = dict(zip(HEADERS, r[:16]))
-        nm = re.sub(r'\s+', '', str(d['账号昵称'])).strip() if d['账号昵称'] else ''
+        nm = _norm(d['账号昵称'])
         if nm and nm not in seen:
             seen.add(nm); rows.append(d)
         if limit and len(rows) >= limit: break
-    if not limit:  # 全量才合并汇总 sheet(11列无表头, 无'是否通过')
-        ws2 = wb['之前达人看板汇总']
-        H2 = ['序号','日期','内容类型','账号昵称','账号ID','联系方式','挂靠状态','60S价格',
-              '粉丝数','是否通过','进度反馈']
-        for r in ws2.iter_rows(min_row=1, values_only=True):
-            d = dict(zip(H2, r[:11]))
-            nm = re.sub(r'\s+', '', str(d['账号昵称'])).strip() if d['账号昵称'] else ''
+    if not limit:  # 全量才合并汇总 sheet(多子表错位, 用自适应解析)
+        for r in wb['之前达人看板汇总'].iter_rows(min_row=1, values_only=True):
+            rec = parse_summary_row(r)
+            nm = rec['kol_name']
             if nm and nm not in seen:
-                seen.add(nm); rows.append(d)
+                seen.add(nm)
+                rows.append({'账号昵称': nm, '内容类型': rec['category'], '联系方式': rec['contact'],
+                             '60S价格': rec['price'], '粉丝数': rec['fans'], '是否通过': rec['passed'],
+                             '挂靠状态': rec['affiliate'], '进度反馈': rec['feedback']})
     wb.close()
     return rows
 
 def build_kol(d, idx):
-    fans = clean_w(d['粉丝数']); price = clean_int(d['60S价格'])
-    cat, sub = split_category(d['内容类型']); mode, rate = parse_share(d.get('分成方式'))
+    fans = clean_w(d.get('粉丝数')); price = clean_int(d.get('60S价格'))
+    # 合理性过滤: 汇总表错位可能残留错误值
+    if price is not None and not (100 <= price <= 1_000_000): price = None
+    if fans is not None and not (300 <= fans <= 50_000_000): fans = None
+    cat, sub = split_category(d.get('内容类型')); mode, rate = parse_share(d.get('分成方式'))
     platform = '抖音' if random.random() < 0.9 else random.choice(['快手','小红书'])
+    aff_raw = d.get('挂靠状态')
+    if aff_raw and str(aff_raw).strip() not in AFFWORDS: aff_raw = None  # 汇总表挂靠词才收
     return {
-        'kol_id': f'K{idx:05d}', 'kol_name': re.sub(r'\s+','',str(d['账号昵称'])).strip(),
+        'kol_id': f'K{idx:05d}', 'kol_name': _norm(d.get('账号昵称')),
         'platform': platform, 'category': cat, 'sub_category': sub,
         'fans_count': fans, 'tier': tier_of(fans), 'interact_rate': interact_rate_of(fans),
         'cpm': cpm_of(price, fans), 'price_21_60s': price,
@@ -192,7 +241,7 @@ def build_kol(d, idx):
         'affiliate_v': yn(d.get('挂v合作')) if d.get('挂v合作') and str(d.get('挂v合作')).strip() else (True if random.random()<0.05 else None),
         'profit_coop': yn(d.get('利润合作')),
         'on_rate_card': yn(d.get('是否上刊例')),
-        'affiliate_status': clean_str(d.get('挂靠状态')),
+        'affiliate_status': clean_str(aff_raw),
         'cooperation_level': yn(d.get('是否通过')),
         'progress_feedback': clean_str(d.get('进度反馈')),
         'contact_mask': mask_contact(d.get('联系方式')),
