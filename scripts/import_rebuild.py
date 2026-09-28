@@ -89,13 +89,14 @@ SUB_OF = {'游戏':'游戏', '剧情搞笑':'剧情搞笑', '生活':'生活记�
           '测评':'好物测评', '教育培训':'知识付费', '艺术文化':'艺术', '情感':'情感语录', '颜值达人':'颜值',
           '母婴宠物':'母婴', '才艺技能':'才艺', '科技数码':'数码', '测评美妆':'美妆', '亲子':'母婴'}
 def split_category(s):
+    """内容类型 -> (主类目, 子类目)。纯数字(误取到序号列)->(None,None)；取最长有效token为主类目；子类目归一。"""
     if s is None: return (None, None)
-    parts = [p for p in re.split(r'[\s、,，/]+', str(s).strip()) if p]
+    raw = str(s).strip()
+    if not raw or re.match(r'^\d+$', raw): return (None, None)  # 数字是序号列串位
+    parts = [p for p in re.split(r'[\s、,，/]+', raw) if p and not re.match(r'^\d+$', p)]
     if not parts: return (None, None)
-    main = parts[0]
-    if main not in SUB_OF:  # 命中第二个 token
-        for p in parts:
-            if p in SUB_OF: main = p; break
+    valid = [p for p in parts if p in SUB_OF]
+    main = max(valid, key=len) if valid else max(parts, key=len)
     return (main, SUB_OF.get(main))
 
 def tier_of(fans):
@@ -125,27 +126,61 @@ def cpm_of(price, fans):
 
 MCNS = ['无忧传媒','遥望科技','快美','OST传媒','papitube','蜂群文化','古麦嘉禾']
 REGIONS = ['华东','华南','华北','西南','华中','东北']
+# 甲方词库: 真实品牌 + (品牌, 品类) 词根, 覆盖所有达人品类, 扩到 100 家
+CATS = ['美妆','母婴','游戏','剧情搞笑','生活','美食','旅行','二次元','三农','时尚',
+        '影视娱乐','运动健身','汽车','家居','萌宠','测评','教育培训','艺术文化','情感',
+        '颜值','才艺','科技数码','口播','带货','穿搭']
+BRAND_ROOTS = ['美','雅','贝','植','洛','云','溪','町','慕','梵','岚','汀','蔻','妍','茉',
+               '鹿','森','禾','星','月','晴','风','谷','泉','木','石','光','初','本','然']
 BRANDS = [('欧莱雅','美妆','护肤'),('飞鹤奶粉','母婴','奶粉'),('追觅科技','家电','清洁电器'),
           ('波司登','服饰','羽绒服'),('三只松鼠','食品','零食'),('完美日记','美妆','彩妆'),
           ('babycare','母婴','用品'),('usmile','个护','电动牙刷'),('SKG','个护','按摩仪'),
           ('网易严选','电商','家居'),('认养一头牛','食品','乳品'),('Colorkey','美妆','彩妆'),
-          ('戴可思','母婴','洗护'),('石头科技','家电','扫地机'),('王小卤','食品','卤味')]
+          ('戴可思','母婴','洗护'),('石头科技','家电','扫地机'),('王小卤','食品','卤味'),
+          ('黑神话','游戏','游戏周边'),('米哈游','游戏','二次元'),('王者荣耀','游戏','电竞'),
+          ('快手小店','电商','带货'),('哔哩哔哩','影视娱乐','视频'),('Keep','运动健身','健身'),
+          ('蓝河','母婴','奶粉'),('可复美','美妆','护肤'),('追光','科技数码','硬件'),
+          ('三只狼','三农','农产品'),('途牛','旅行','旅游'),('橘朵','美妆','彩妆')]
+
+def all_brands(n=100):
+    """生成 n 家甲方, 覆盖全部 CATS 品类。note 一律 NULL(不生成甲方内容)。"""
+    pool = list(BRANDS)
+    i = 0
+    while len(pool) < n:
+        cat = CATS[i % len(CATS)]
+        root = BRAND_ROOTS[i % len(BRAND_ROOTS)]
+        suffix = random.choice(['记','集','坊','社','堂','家','屋','岛','湾','选'])
+        pool.append((f'{root}{suffix}', cat, cat))  # 虚拟品牌, 品类对齐
+        i += 1
+    return pool[:n]
 
 def load_rows(limit=None):
     wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
-    ws = wb[SHEET]
     rows = []
+    seen = set()
+    # sheet1 组员达人看板: 两级表头(R1分组/R2列名), 数据从 R3, 16列
+    ws = wb['组员达人看板']
     for r in ws.iter_rows(min_row=3, values_only=True):
         d = dict(zip(HEADERS, r[:16]))
-        if d['账号昵称'] and str(d['账号昵称']).strip():
-            rows.append(d)
+        nm = re.sub(r'\s+', '', str(d['账号昵称'])).strip() if d['账号昵称'] else ''
+        if nm and nm not in seen:
+            seen.add(nm); rows.append(d)
         if limit and len(rows) >= limit: break
+    if not limit:  # 全量才合并汇总 sheet(11列无表头, 无'是否通过')
+        ws2 = wb['之前达人看板汇总']
+        H2 = ['序号','日期','内容类型','账号昵称','账号ID','联系方式','挂靠状态','60S价格',
+              '粉丝数','是否通过','进度反馈']
+        for r in ws2.iter_rows(min_row=1, values_only=True):
+            d = dict(zip(H2, r[:11]))
+            nm = re.sub(r'\s+', '', str(d['账号昵称'])).strip() if d['账号昵称'] else ''
+            if nm and nm not in seen:
+                seen.add(nm); rows.append(d)
     wb.close()
     return rows
 
 def build_kol(d, idx):
     fans = clean_w(d['粉丝数']); price = clean_int(d['60S价格'])
-    cat, sub = split_category(d['内容类型']); mode, rate = parse_share(d['分成方式'])
+    cat, sub = split_category(d['内容类型']); mode, rate = parse_share(d.get('分成方式'))
     platform = '抖音' if random.random() < 0.9 else random.choice(['快手','小红书'])
     return {
         'kol_id': f'K{idx:05d}', 'kol_name': re.sub(r'\s+','',str(d['账号昵称'])).strip(),
@@ -153,18 +188,19 @@ def build_kol(d, idx):
         'fans_count': fans, 'tier': tier_of(fans), 'interact_rate': interact_rate_of(fans),
         'cpm': cpm_of(price, fans), 'price_21_60s': price,
         'share_mode': mode, 'share_rate': rate,
-        'affiliate_coop': yn(d['挂靠合作']) if d['挂靠合作'] and str(d['挂靠合作']).strip() else (True if random.random()<0.08 else None),
-        'affiliate_v': yn(d['挂v合作']) if d['挂v合作'] and str(d['挂v合作']).strip() else (True if random.random()<0.05 else None),
-        'profit_coop': yn(d['利润合作']),
-        'on_rate_card': yn(d['是否上刊例']),
-        'affiliate_status': clean_str(d['挂靠状态']),
-        'cooperation_level': yn(d['是否通过']),
-        'progress_feedback': clean_str(d['进度反馈']),
-        'contact_mask': mask_contact(d['联系方式']),
+        'affiliate_coop': yn(d.get('挂靠合作')) if d.get('挂靠合作') and str(d.get('挂靠合作')).strip() else (True if random.random()<0.08 else None),
+        'affiliate_v': yn(d.get('挂v合作')) if d.get('挂v合作') and str(d.get('挂v合作')).strip() else (True if random.random()<0.05 else None),
+        'profit_coop': yn(d.get('利润合作')),
+        'on_rate_card': yn(d.get('是否上刊例')),
+        'affiliate_status': clean_str(d.get('挂靠状态')),
+        'cooperation_level': yn(d.get('是否通过')),
+        'progress_feedback': clean_str(d.get('进度反馈')),
+        'contact_mask': mask_contact(d.get('联系方式')),
         'mcn_name': random.choice(MCNS), 'region': random.choice(REGIONS),
         'price_1_20s': int(price*0.6) if price else None,
         'price_live': int(price*1.5) if price else None,
-        'quote_embed_60s': price, 'avg_views': None,   # 均播不存
+        # 统一命名: cpm / share_mode / price_21_60s / contact_mask; 不写历史重复列
+        # (coop_models/cpm_21_60s/quote_embed_60s/affiliation_type/share_model/account_uid 均废弃)
     }
 
 # ---------------------------------------------------------------- 建表(加列)
@@ -183,6 +219,10 @@ ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS contact_mask text;
 
 def ensure_columns(cur):
     cur.execute(DDL)
+    # 幂等删除历史重复/错别字/废弃列(每次重建都保证干净)
+    for col in ['coop_models','cpm_21_60s','quote_embed_15s','quote_embed_30s','quote_embed_60s',
+                'quote_custom','affiliation_type','share_model','account_uid']:
+        cur.execute(f'ALTER TABLE kol_profile DROP COLUMN IF EXISTS {col}')
 
 def wipe(cur):
     for t in ['deal_followup','party_traits','deal','brand','kol_profile']:
@@ -210,22 +250,23 @@ def dry_run(limit):
 
 STAGES = ['需求沟通','提案','签约','执行','结案','丢单']
 
-def gen_brands(cur, n=25):
+def gen_brands(cur, n=100):
+    """n 家甲方覆盖全品类, note 一律 NULL(不生成甲方内容)。"""
     bids = []
-    pool = BRANDS + [(f'虚拟品牌{i}','美妆','护肤') for i in range(n - len(BRANDS))]
-    for i in range(n):
-        name, cat, sub = pool[i]
+    for i, (name, cat, sub) in enumerate(all_brands(n)):
         bid = f'B{i+1:03d}'; bids.append(bid)
-        cur.execute("INSERT INTO brand (brand_id,brand_name,industry,category,sub_category,cooperation_count,history_budget_total,contact_mask,note) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-            (bid, name, cat, cat, sub, random.randint(1,8), round(random.uniform(20,800)*10000,0),
-             'bd:'+hashlib.sha1(name.encode()).hexdigest()[:6], '自动生成甲方'))
+        cur.execute("INSERT INTO brand (brand_id,brand_name,industry,category,sub_category,cooperation_count,history_budget_total,contact_mask,note) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,NULL)",
+            (bid, name, cat, cat, sub, random.randint(1,10), round(random.uniform(20,1500)*10000,0),
+             'bd:'+hashlib.sha1(name.encode()).hexdigest()[:6]))
     return bids
 
 def gen_deal(cur, did, brand_id, brand_name, kols, category, price_cap, cpm_target, platform):
+    """budget = 达人单价上限(与 demand_desc 口径一致, 不再乘人数); platform_req 含完整需求。"""
     stage = random.choice(STAGES)
     nk = random.randint(2,5)
     kol_pick = random.sample(kols, min(nk, len(kols)))
-    kol_ids = [k[0] for k in kol_pick]
+    def _kid(x): return x[0] if isinstance(x, (tuple, list)) else (x.get('kol_id') if isinstance(x, dict) else x)
+    kol_ids = [_kid(k) for k in kol_pick]
     start = random.randint(1, 300)
     result = None
     if stage == '结案':
@@ -236,13 +277,15 @@ def gen_deal(cur, did, brand_id, brand_name, kols, category, price_cap, cpm_targ
     dur = random.randint(14, 45)
     sd = datetime.date.today() - datetime.timedelta(days=start)
     ed = sd + datetime.timedelta(days=dur)
+    budget = round(price_cap * random.uniform(0.9, 1.1), 0)  # = 单价上限, 对齐 demand_desc
+    demand = f"预算{budget/10000:.0f}万内, CPM≤{cpm_target}, {platform}投放"
+    platform_req = f"{platform} / 达人单价≤{budget/10000:.0f}万 / CPM≤{cpm_target}"
     cur.execute("INSERT INTO deal (deal_id,brand_id,brand_name,category,sub_category,goal,budget,stage,demand_desc,kol_ids,start_date,end_date,owner,result_metrics,coop_mode,platform_req,cpm_target,note) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
         (did, brand_id, brand_name, category, None, random.choice(['新品推广','种草带货','品牌曝光','口碑测评']),
-         round(price_cap * nk * random.uniform(0.9,1.3), 0), stage,
-         f"预算{price_cap/10000:.0f}万内, CPM≤{cpm_target}, {platform}投放",
+         budget, stage, demand,
          json.dumps(kol_ids, ensure_ascii=False), sd, ed,
          random.choice(['张伟','李娜','王强','刘洋']),
-         result, random.choice(['一口价','利润分成','返点']), platform, cpm_target, '自动商单'))
+         result, random.choice(['一口价','利润分成','返点']), platform_req, cpm_target, '自动商单'))
     # 进度时间线: 按 stage 推进生成流水
     idx = STAGES.index(stage) if stage in STAGES else 0
     seq = STAGES[:idx+1] if stage != '丢单' else ['需求沟通','提案','丢单']
@@ -268,22 +311,21 @@ def write_all():
         by_cat = defaultdict(list)
         for k in kol_rows:
             if k['category']: by_cat[k['category']].append((k['kol_id'], k['fans_count'], k['platform']))
-        # 甲方 + 商单
-        bids = gen_brands(cur, 25)
-        cur.execute('SELECT brand_id,brand_name,industry FROM brand')
+        # 甲方(100家覆盖全品类) + 商单(400, category取品牌品类避免数字串位)
+        gen_brands(cur, 100)
+        cur.execute('SELECT brand_id,brand_name,industry,category FROM brand')
         brand_info = cur.fetchall()
-        cat_list = [c2 for c2 in by_cat.keys() if by_cat[c2]]
         dids = []
-        for i in range(1, 201):
-            bid, bname, ind = random.choice(brand_info)
-            cat = random.choice(cat_list) if cat_list else ind
+        for i in range(1, 401):
+            bid, bname, ind, bcat = random.choice(brand_info)
+            cat = bcat if (bcat and not re.match(r'^\d+$', bcat)) else random.choice([c2 for c2 in by_cat if by_cat[c2]])
             cands = by_cat.get(cat) or kol_rows
             price_cap = random.choice([3,5,8,10,15,20,30]) * 10000  # 达人单价上限
             platform = '抖音' if random.random()<0.7 else random.choice(['哔哩哔哩','小红书'])
             cpm_target = round(random.uniform(25,55) if platform=='抖音' else (random.uniform(20,45) if platform=='哔哩哔哩' else random.uniform(18,40)),1)
             did = f'DC2025{i:04d}'; dids.append(did)
             gen_deal(cur, did, bid, bname, list(cands), cat, price_cap, cpm_target, platform)
-        print(f'  商单写入 200, 甲方 25')
+        print(f'  商单写入 400, 甲方 100')
         # 进度反馈 -> 跟进流水 (关联到含该达人的商单, 没有则挂到随机在途商单)
         n_follow = 0
         kol_by_id = {k['kol_id']: k for k in kol_rows}
