@@ -9,3 +9,4 @@ frontend/dist/
 frontend/npm-install.log
 frontend/tsc.log
 frontend/vite-dev.log
+*.xlsx

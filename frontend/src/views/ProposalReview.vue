@@ -8,15 +8,27 @@ interface Proposal {
   proposal_id: string; requirement_text: string; status: string
   content: string; created_at: string; updated_at: string
 }
+interface DealChange {
+  request_id: string; deal_id: string; field_name: string
+  old_value: string; new_value: string; change_summary: string
+  status: string; created_by: string; reviewed_by: string; created_at: string
+}
 
+const tab = ref<'proposal' | 'deal'>('proposal')
 const STATUS: Record<string, { label: string; cls: string }> = {
   draft: { label: '草稿', cls: 'st-draft' },
   pending_review: { label: '待审批', cls: 'st-pending' },
+  pending: { label: '待审批', cls: 'st-pending' },
   approved: { label: '已通过', cls: 'st-approved' },
   rejected: { label: '已驳回', cls: 'st-rejected' },
 }
+const FIELD_LABEL: Record<string, string> = {
+  budget: '预算', owner: '负责人', stage: '阶段', demand_desc: '需求描述',
+  goal: '投放目标', cpm_target: 'CPM目标', platform_req: '平台要求',
+}
 
 const items = ref<Proposal[]>([])
+const changes = ref<DealChange[]>([])
 const loading = ref(false)
 const drawerVisible = ref(false)
 const detail = ref<Proposal | null>(null)
@@ -25,8 +37,11 @@ const versions = ref<{ version_no: number; content: string; comment: string; cha
 async function load() {
   loading.value = true
   try {
-    const r = await api.get('/proposals')
-    items.value = r.data.items
+    const [p, d] = await Promise.all([
+      api.get('/proposals'), api.get('/deal-changes'),
+    ])
+    items.value = p.data.items
+    changes.value = d.data.items
   } finally {
     loading.value = false
   }
@@ -48,17 +63,35 @@ async function review(p: Proposal, action: string) {
   await load()
 }
 
+async function reviewChange(c: DealChange, action: 'approve' | 'reject') {
+  const url = action === 'approve'
+    ? `/deal-changes/${c.request_id}/approve` : `/deal-changes/${c.request_id}/reject`
+  await api.post(url, { comment: action === 'approve' ? '通过' : '维持原值' })
+  ElMessage.success(action === 'approve' ? '已批准, 商单已更新' : '已驳回')
+  await load()
+}
+
 const stCls = (s: string) => STATUS[s]?.cls ?? 'st-draft'
 const stLabel = (s: string) => STATUS[s]?.label ?? s
+const fldLabel = (f: string) => FIELD_LABEL[f] ?? f
 
 onMounted(load)
 </script>
 
 <template>
   <div class="page">
-    <div class="toolbar"><div class="title">审批中心</div></div>
+    <div class="toolbar">
+      <div class="title">审批中心</div>
+      <div class="tabs">
+        <button class="tab" :class="{ on: tab === 'proposal' }" @click="tab = 'proposal'">方案审批</button>
+        <button class="tab" :class="{ on: tab === 'deal' }" @click="tab = 'deal'">
+          商单变更<span v-if="changes.filter(c => c.status === 'pending').length" class="badge">{{ changes.filter(c => c.status === 'pending').length }}</span>
+        </button>
+      </div>
+    </div>
 
-    <div class="table-wrap" v-loading="loading">
+    <!-- 方案审批 -->
+    <div v-show="tab === 'proposal'" class="table-wrap" v-loading="loading">
       <table class="grid">
         <thead>
           <tr><th>方案号</th><th>需求</th><th>状态</th><th>更新时间</th><th></th></tr>
@@ -82,6 +115,32 @@ onMounted(load)
       </table>
     </div>
 
+    <!-- 商单变更审批 -->
+    <div v-show="tab === 'deal'" class="table-wrap" v-loading="loading">
+      <table class="grid">
+        <thead>
+          <tr><th>申请号</th><th>商单</th><th>字段</th><th>原值 → 新值</th><th>说明</th><th>状态</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr v-if="!loading && !changes.length"><td colspan="7" class="empty-cell">暂无变更申请</td></tr>
+          <tr v-for="c in changes" :key="c.request_id">
+            <td class="mono">{{ c.request_id.slice(-8) }}</td>
+            <td class="mono">{{ c.deal_id }}</td>
+            <td class="fld">{{ fldLabel(c.field_name) }}</td>
+            <td class="chg"><span class="old">{{ c.old_value || '—' }}</span> → <span class="new">{{ c.new_value }}</span></td>
+            <td class="req">{{ c.change_summary || '—' }}</td>
+            <td><span class="st" :class="stCls(c.status)"><i class="dot" />{{ stLabel(c.status) }}</span></td>
+            <td class="ops">
+              <template v-if="c.status === 'pending'">
+                <button class="link ok" @click="reviewChange(c, 'approve')">批准</button>
+                <button class="link no" @click="reviewChange(c, 'reject')">驳回</button>
+              </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <el-drawer v-model="drawerVisible" size="56%" :with-header="false" class="prop-drawer">
       <div v-if="detail" class="detail">
         <div class="d-head">
@@ -91,7 +150,6 @@ onMounted(load)
         <div class="d-req">{{ detail.requirement_text }}</div>
 
         <div class="d-sec-title">方案正文</div>
-        <!-- Markdown 渲染：表格/加粗/列表正常 -->
         <div class="d-content"><Md :text="detail.content || '_（空）_'" /></div>
 
         <div class="d-sec-title">版本历史（{{ versions.length }}）</div>
@@ -111,8 +169,12 @@ onMounted(load)
 
 <style scoped>
 .page { padding: 18px 20px; height: 100%; display: flex; flex-direction: column; }
-.toolbar { margin-bottom: 14px; }
+.toolbar { margin-bottom: 14px; display: flex; align-items: center; gap: 18px; }
 .title { font-size: 18px; font-weight: 700; }
+.tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: var(--r-md); }
+.tab { border: none; background: transparent; padding: 6px 14px; border-radius: var(--r-sm); font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tab.on { background: var(--surface); color: var(--brand); box-shadow: var(--shadow-1); }
+.badge { background: var(--danger); color: #fff; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; }
 
 .table-wrap { flex: 1; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1); }
 .grid { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
@@ -123,7 +185,11 @@ onMounted(load)
 .grid tbody tr:nth-child(even) { background: #fbfaf7; }
 .grid tbody tr:hover { background: var(--brand-softer); }
 .mono { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
-.req { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.req { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); }
+.fld { font-weight: 600; white-space: nowrap; }
+.chg { font-size: 12.5px; white-space: nowrap; }
+.chg .old { color: var(--ink-3); text-decoration: line-through; }
+.chg .new { color: var(--brand); font-weight: 600; }
 .date { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
 .empty-cell { text-align: center; color: var(--ink-3); padding: 40px 0; }
 .ops { white-space: nowrap; }

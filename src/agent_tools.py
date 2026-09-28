@@ -332,6 +332,35 @@ def create_followup(deal_id: str, note: str, action_type: str = "其他") -> str
                           ensure_ascii=False)
 
 
+@tool
+def request_deal_change(deal_id: str, field_name: str, new_value: str,
+                        change_summary: str = "", conv_id: str = "") -> str:
+    """发起商单字段变更审批申请（写入 deal_change_requests，status=pending）。
+
+    何时使用：用户在对话中告知商单内容变更（预算改 X 万、负责人换成 X 等），
+    但我没有权限直接改 deal 主表 —— 用这个工具把变更申请送进审批流，
+    由审批中心批准后才真正落 deal 表。一商单可挂多条变更。
+    Args:
+        deal_id: 商单编号，如 DC20260028
+        field_name: 要改的字段，可选 budget/owner/stage/demand_desc/goal/cpm_target/platform_req
+        new_value: 新值（budget/cpm_target 传数字，其余传文本）
+        change_summary: 变更说明（用户原话，便于审批人理解）
+        conv_id: 当前会话 ID（可选，溯源用）
+    """
+    try:
+        from server.m7b_service import DealChangeService
+        r = DealChangeService().create(deal_id, field_name, new_value,
+                                       change_summary, conv_id, created_by="agent")
+        return json.dumps({
+            "ok": True, "request_id": r["request_id"], "status": r["status"],
+            "field": r["field_name"], "old_value": r["old_value"], "new_value": r["new_value"],
+            "hint": "变更申请已进审批流(pending)，审批中心批准后才真正生效。"},
+            ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"ok": False, "error": f"变更申请失败 {type(e).__name__}: {e}"},
+                          ensure_ascii=False)
+
+
 AGENT_TOOLS = [search_knowledge, search_kols, get_deal_status,
                match_kols_for_requirement, create_proposal,
-               update_proposal_status, create_followup]
+               update_proposal_status, create_followup, request_deal_change]

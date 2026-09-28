@@ -220,6 +220,18 @@ class ReviewBody(BaseModel):
     comment: str = ""
 
 
+class DealChangeCreateBody(BaseModel):
+    deal_id: str
+    field_name: str
+    new_value: str
+    change_summary: str = ""
+    conv_id: str = ""
+
+
+class DealChangeReviewBody(BaseModel):
+    comment: str = ""
+
+
 @app.post("/api/proposals/{proposal_id}/review")
 def review_proposal(proposal_id: str, body: ReviewBody, sub: str = Depends(_jwt_sub)):
     try:
@@ -228,6 +240,55 @@ def review_proposal(proposal_id: str, body: ReviewBody, sub: str = Depends(_jwt_
     except ValueError as e:
         raise HTTPException(422, str(e))
     return {"ok": True, "status": ProposalService().get(proposal_id)["status"]}
+
+
+# ============================================================ M7b：商单字段变更审批
+# 对话内 Agent 识别商单变更 → request_deal_change 工具 → 本端点审批 → 批准自动改 deal
+
+@app.post("/api/deal-changes")
+def create_deal_change(body: DealChangeCreateBody, sub: str = Depends(_jwt_sub)):
+    from server import m7b_service as m7b
+    try:
+        return m7b.DealChangeService().create(
+            deal_id=body.deal_id, field_name=body.field_name,
+            new_value=body.new_value, change_summary=body.change_summary,
+            conv_id=body.conv_id, created_by=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.get("/api/deal-changes")
+def list_deal_changes(sub: str = Depends(_jwt_sub), status: str = "",
+                      deal_id: str = "", limit: int = 100):
+    from server import m7b_service as m7b
+    return {"items": m7b.DealChangeService().list(status=status, deal_id=deal_id, limit=limit)}
+
+
+@app.get("/api/deal-changes/{request_id}")
+def get_deal_change(request_id: str, sub: str = Depends(_jwt_sub)):
+    from server import m7b_service as m7b
+    r = m7b.DealChangeService().get(request_id)
+    if not r:
+        raise HTTPException(404, "变更申请不存在")
+    return r
+
+
+@app.post("/api/deal-changes/{request_id}/approve")
+def approve_deal_change(request_id: str, body: DealChangeReviewBody, sub: str = Depends(_jwt_sub)):
+    from server import m7b_service as m7b
+    try:
+        return m7b.DealChangeService().approve(request_id, sub, body.comment)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.post("/api/deal-changes/{request_id}/reject")
+def reject_deal_change(request_id: str, body: DealChangeReviewBody, sub: str = Depends(_jwt_sub)):
+    from server import m7b_service as m7b
+    try:
+        return m7b.DealChangeService().reject(request_id, sub, body.comment)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
 
 
 # ============================================================ M2：达人库（含档期/排他）
