@@ -176,140 +176,396 @@
     "difficulty": "hard"
   },
   {
-    "query": "沐光护肤那个精华护肤的商单是什么预算，ROI 多少？",
+    "query": "溪选那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260081_案例.md"
+      "deal_cases/DC20250005_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "轻氧CLEAIR那个精华护肤的商单是什么预算，ROI 多少？",
+    "query": "汀岛那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20250001_案例.md"
+      "deal_cases/DC20250330_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "初见童鞋那个奶粉辅食的商单是什么预算，ROI 多少？",
+    "query": "梵堂那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260002_案例.md"
+      "deal_cases/DC20250006_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "初见童鞋那个奶粉辅食的商单是什么预算，ROI 多少？",
+    "query": "町社那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20250060_案例.md"
+      "deal_cases/DC20250017_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "果小茶那个乳制品的商单是什么预算，ROI 多少？",
+    "query": "初记那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260031_案例.md"
+      "deal_cases/DC20250397_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "果小茶那个乳制品的商单是什么预算，ROI 多少？",
+    "query": "戴可思那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260004_案例.md"
+      "deal_cases/DC20250024_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "轻联数码那个手机的商单是什么预算，ROI 多少？",
+    "query": "风岛那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260035_案例.md"
+      "deal_cases/DC20250232_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "声浪音频那个耳机音频的商单是什么预算，ROI 多少？",
+    "query": "洛岛那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260034_案例.md"
+      "deal_cases/DC20250278_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "环球轮胎那个轮胎养护的商单是什么预算，ROI 多少？",
+    "query": "梵选那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20250088_案例.md"
+      "deal_cases/DC20250026_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "途安车品那个车险服务的商单是什么预算，ROI 多少？",
+    "query": "波司登那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20250007_案例.md"
+      "deal_cases/DC20250321_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "净博士那个清洁用品的商单是什么预算，ROI 多少？",
+    "query": "波司登那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260013_案例.md"
+      "deal_cases/DC20250030_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "木野家具那个收纳整理的商单是什么预算，ROI 多少？",
+    "query": "町记那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260029_案例.md"
+      "deal_cases/DC20250048_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "风行鞋业那个女装的商单是什么预算，ROI 多少？",
+    "query": "贝社那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260076_案例.md"
+      "deal_cases/DC20250341_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "简棉服饰那个男装的商单是什么预算，ROI 多少？",
+    "query": "橘朵那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20250021_案例.md"
+      "deal_cases/DC20250154_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "疾风游戏那个端游推广的商单是什么预算，ROI 多少？",
+    "query": "可复美那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260053_案例.md"
+      "deal_cases/DC20250378_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "掌趣互娱那个端游推广的商单是什么预算，ROI 多少？",
+    "query": "鹿家那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260090_案例.md"
+      "deal_cases/DC20250061_案例.md"
     ],
     "type": "案例详情",
     "difficulty": "hard"
   },
   {
-    "query": "我们做过哪些美妆类目的成功案例，效果怎么样？",
+    "query": "鹿家那个None的商单是什么预算，ROI 多少？",
     "labels": [
-      "deal_cases/DC20260003_案例.md",
-      "deal_cases/DC20260081_案例.md",
-      "deal_cases/DC20250001_案例.md",
-      "deal_cases/DC20260012_案例.md"
+      "deal_cases/DC20250099_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "雅坊那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250386_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "溪家那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250251_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "谷堂那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250113_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "禾集那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250260_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "木集那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250212_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "月湾那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250141_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "美家那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250161_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "云记那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250267_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "美岛那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250240_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "岚岛那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250377_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "木堂那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250325_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "木堂那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250183_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "慕家那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250186_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "慕家那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250233_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "初选那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250189_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "岚屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250215_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "岚屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250300_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "梵堂那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250216_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "梵堂那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250262_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "本集那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250280_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "泉屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250234_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "认养一头牛那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250258_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "王小卤那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250296_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "蔻屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250265_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "风屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250327_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "汀记那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250281_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "途牛那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250338_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "雅屋那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250307_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "石头科技那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250340_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "慕选那个None的商单是什么预算，ROI 多少？",
+    "labels": [
+      "deal_cases/DC20250371_案例.md"
+    ],
+    "type": "案例详情",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些教育培训类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250005_案例.md",
+      "deal_cases/DC20250330_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些二次元类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250387_案例.md",
+      "deal_cases/DC20250017_案例.md",
+      "deal_cases/DC20250397_案例.md"
     ],
     "type": "案例聚合",
     "difficulty": "hard"
@@ -317,53 +573,18 @@
   {
     "query": "我们做过哪些母婴类目的成功案例，效果怎么样？",
     "labels": [
-      "deal_cases/DC20260056_案例.md",
-      "deal_cases/DC20250060_案例.md",
-      "deal_cases/DC20260073_案例.md",
-      "deal_cases/DC20260002_案例.md"
+      "deal_cases/DC20250024_案例.md",
+      "deal_cases/DC20250232_案例.md"
     ],
     "type": "案例聚合",
     "difficulty": "hard"
   },
   {
-    "query": "我们做过哪些食品饮料类目的成功案例，效果怎么样？",
+    "query": "我们做过哪些时尚类目的成功案例，效果怎么样？",
     "labels": [
-      "deal_cases/DC20260031_案例.md",
-      "deal_cases/DC20260061_案例.md",
-      "deal_cases/DC20260004_案例.md"
-    ],
-    "type": "案例聚合",
-    "difficulty": "hard"
-  },
-  {
-    "query": "我们做过哪些3C数码类目的成功案例，效果怎么样？",
-    "labels": [
-      "deal_cases/DC20260034_案例.md",
-      "deal_cases/DC20260054_案例.md",
-      "deal_cases/DC20260052_案例.md",
-      "deal_cases/DC20250078_案例.md"
-    ],
-    "type": "案例聚合",
-    "difficulty": "hard"
-  },
-  {
-    "query": "我们做过哪些汽车类目的成功案例，效果怎么样？",
-    "labels": [
-      "deal_cases/DC20260015_案例.md",
-      "deal_cases/DC20250088_案例.md",
-      "deal_cases/DC20250040_案例.md",
-      "deal_cases/DC20250007_案例.md"
-    ],
-    "type": "案例聚合",
-    "difficulty": "hard"
-  },
-  {
-    "query": "我们做过哪些家居类目的成功案例，效果怎么样？",
-    "labels": [
-      "deal_cases/DC20260013_案例.md",
-      "deal_cases/DC20250023_案例.md",
-      "deal_cases/DC20250067_案例.md",
-      "deal_cases/DC20260029_案例.md"
+      "deal_cases/DC20250036_案例.md",
+      "deal_cases/DC20250278_案例.md",
+      "deal_cases/DC20250026_案例.md"
     ],
     "type": "案例聚合",
     "difficulty": "hard"
@@ -371,84 +592,231 @@
   {
     "query": "我们做过哪些服饰类目的成功案例，效果怎么样？",
     "labels": [
-      "deal_cases/DC20260059_案例.md",
-      "deal_cases/DC20250079_案例.md",
-      "deal_cases/DC20250021_案例.md",
-      "deal_cases/DC20250039_案例.md"
+      "deal_cases/DC20250030_案例.md",
+      "deal_cases/DC20250321_案例.md"
     ],
     "type": "案例聚合",
     "difficulty": "hard"
   },
   {
-    "query": "我们做过哪些游戏类目的成功案例，效果怎么样？",
+    "query": "我们做过哪些汽车类目的成功案例，效果怎么样？",
     "labels": [
-      "deal_cases/DC20260090_案例.md",
-      "deal_cases/DC20260053_案例.md",
-      "deal_cases/DC20260064_案例.md"
+      "deal_cases/DC20250306_案例.md",
+      "deal_cases/DC20250048_案例.md",
+      "deal_cases/DC20250266_案例.md",
+      "deal_cases/DC20250341_案例.md"
     ],
     "type": "案例聚合",
     "difficulty": "hard"
   },
   {
-    "query": "声take声当前在途商单进行到哪个阶段了？",
+    "query": "我们做过哪些美妆类目的成功案例，效果怎么样？",
     "labels": [
-      "deal_cases/inflight/DC20260017_跟踪单.md"
+      "deal_cases/DC20250150_案例.md",
+      "deal_cases/DC20250154_案例.md",
+      "deal_cases/DC20250112_案例.md",
+      "deal_cases/DC20250366_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些测评类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250099_案例.md",
+      "deal_cases/DC20250061_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些运动健身类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250386_案例.md",
+      "deal_cases/DC20250245_案例.md",
+      "deal_cases/DC20250246_案例.md",
+      "deal_cases/DC20250251_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些口播类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250113_案例.md",
+      "deal_cases/DC20250335_案例.md",
+      "deal_cases/DC20250260_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些穿搭类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250212_案例.md",
+      "deal_cases/DC20250171_案例.md",
+      "deal_cases/DC20250344_案例.md",
+      "deal_cases/DC20250141_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些美食类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250161_案例.md",
+      "deal_cases/DC20250267_案例.md",
+      "deal_cases/DC20250334_案例.md",
+      "deal_cases/DC20250147_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些影视娱乐类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250377_案例.md",
+      "deal_cases/DC20250240_案例.md",
+      "deal_cases/DC20250165_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些生活类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250331_案例.md",
+      "deal_cases/DC20250325_案例.md",
+      "deal_cases/DC20250183_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些情感类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250233_案例.md",
+      "deal_cases/DC20250186_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些才艺类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250215_案例.md",
+      "deal_cases/DC20250300_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些萌宠类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250297_案例.md",
+      "deal_cases/DC20250262_案例.md",
+      "deal_cases/DC20250216_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些剧情搞笑类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250280_案例.md",
+      "deal_cases/DC20250234_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些食品类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250258_案例.md",
+      "deal_cases/DC20250296_案例.md",
+      "deal_cases/DC20250343_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些科技数码类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250281_案例.md",
+      "deal_cases/DC20250327_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "我们做过哪些旅行类目的成功案例，效果怎么样？",
+    "labels": [
+      "deal_cases/DC20250307_案例.md",
+      "deal_cases/DC20250338_案例.md"
+    ],
+    "type": "案例聚合",
+    "difficulty": "hard"
+  },
+  {
+    "query": "光岛当前在途商单进行到哪个阶段了？",
+    "labels": [
+      "deal_cases/inflight/DC20250329_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "云朵母婴当前在途商单进行到哪个阶段了？",
+    "query": "木堂当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260070_跟踪单.md"
+      "deal_cases/inflight/DC20250053_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "速食星球当前在途商单进行到哪个阶段了？",
+    "query": "王者荣耀当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20250041_跟踪单.md"
+      "deal_cases/inflight/DC20250294_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "素冉当前在途商单进行到哪个阶段了？",
+    "query": "星岛当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260084_跟踪单.md"
+      "deal_cases/inflight/DC20250291_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "米兔童装当前在途商单进行到哪个阶段了？",
+    "query": "妍家当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260080_跟踪单.md"
+      "deal_cases/inflight/DC20250370_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "果小茶当前在途商单进行到哪个阶段了？",
+    "query": "美集当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260046_跟踪单.md"
+      "deal_cases/inflight/DC20250188_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "罗纹内衣当前在途商单进行到哪个阶段了？",
+    "query": "光湾当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260072_跟踪单.md"
+      "deal_cases/inflight/DC20250014_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"
   },
   {
-    "query": "途安车品当前在途商单进行到哪个阶段了？",
+    "query": "町记当前在途商单进行到哪个阶段了？",
     "labels": [
-      "deal_cases/inflight/DC20260027_跟踪单.md"
+      "deal_cases/inflight/DC20250086_跟踪单.md"
     ],
     "type": "在途跟进",
     "difficulty": "medium"

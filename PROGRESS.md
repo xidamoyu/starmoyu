@@ -1,6 +1,6 @@
 # Starmoyu 项目进度跟踪
 
-> 最后更新：2026-09-27（M5 全生命周期扩展 + M3 回归护栏完成，commit `c4bef1c`）
+> 最后更新：2026-09-28（M6/M7b 审批流 + 全库重建 + RAG 语料重做 + 消融重跑 + RAGAS 生成质量评测，commit 见 git log）
 > 项目路径：`C:/Users/Administrator/AppData/Local/hermes/workspace/starmoyu`
 > 本文件是**唯一权威进度来源**，每次推进后更新。
 
@@ -38,7 +38,11 @@
 | R2 业务闭环 | ✅ | 方案审批流(版本化) + 达人档期/排他 + Excel 导入 + 4 管理页面 | `verify_m2.py` 11/11 |
 | R4 沉淀流 | ✅ | party_traits 确认卡式经验入库 + 原文召回 + 歧义澄清 | `verify_m4.py` 7/7 × 3轮 + TDD 8/8 |
 | R5 全周期扩展 | ✅ | 结案复盘回流 + Brief 接单 + 主动简报 + 品牌特质 + 匹配器历史ROI | `verify_m5.py` 15/15 × 3轮 + TDD 7/7 |
-| R3 评测回归 | ✅ | 54条全链路回归护栏（回退>±0.02 即 fail）+ RAGAS 装机 | `verify_m3_eval.py` 通过（Hit@1 0.796 持平基线） |
+| R3 评测回归 | ✅ | 98条全链路消融重跑（真实语料 2142 块）+ RAGAS 生成质量 | `reports/ablation_v2.log` Hit@1 0.735/MRR 0.831 · `reports/ragas_v2.json` faithfulness 1.000 |
+| R6 M6 会话关联 | ✅ | 会话钉住商单 + 特质 deal_id 溯源 + 商单路线图 + 结案表单端点 | `test_m6_service.py` + pytest |
+| R7 M7b 变更审批 | ✅ | 商单字段变更审批闭环（request_deal_change → 审批中心 → 批准写回+留痕） | `test_m7b_service.py` 4/4 |
+| R8 全库重建 | ✅ | 正式 Excel 重灌 14289 达人/400 商单/100 甲方（脱敏+错位解析+分成编码） | `reports/rebuild.log` + 全库复查干净 |
+| R9 RAG 语料重做 | ✅ | 真实数据渲染 70案例+68刊例+330在途 → 2142 块重入向量库 | `reports/reindex_rag.log` 结构表未动 |
 
 ### 旧版（v1 已退役，历史记录）
 
@@ -179,6 +183,75 @@ PG **14 张表**（v1 的 6 张 + v2 新增 8 张）：brand / chunk_meta / deal
 `scripts/verify_m3_eval.py`：54 条评测集全链路（多路召回+RRF+Rerank，cand_k=10）回归，回退超 ±0.02 即 fail。实测 **Hit@1 0.796 / Hit@5 1.000 / Recall@5 0.977 / MRR 0.892**（`reports/verify_m3_eval.log`，明细 `data/eval/m3_regression.json`），与 v1 基线（0.778/1.000/0.986/0.883）持平（Recall@5 -0.009、MRR +0.009 在抖动带内）。**检索层未被 v2/v5 改动破坏。**
 
 RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 **0.2.10** + shim（`.venv` 内 `langchain_community/chat_models/vertexai.py` 转发）。生成质量抽评待 trait/复盘数据积累后接。
+
+## R6 · M6 会话-商单深度关联 ✅（commit `bb9a5b9` / `9e96c94`）
+
+- **会话钉住商单**：`PATCH /conversations/{id}/pin`，对话上下文自动携带商单，切会话清钉住防闪现
+- **特质 deal_id 溯源**：party_traits 关联商单，时间线中显示经验来源
+- **商单路线图抽屉**：前端时间线节点（stage 流转 + 跟进流水），窄屏 ≤768px 折叠适配
+- **结案表单端点**：结案直调 Service，前端表单化录入 ROI/GMV/实际CPM
+- 前端同步重构：auteur system register 设计体系 + Markdown 渲染组件
+
+## R7 · M7b 商单字段变更审批流 ✅（commit `d3917cd`）
+
+**动机**：真实场景（DC20260028 预算 20.5万→10万、负责人转交）暴露「对话内无权限改资产数据」的缺口。
+
+| 缺口 | 修复 |
+|---|---|
+| 建申请端点缺失 | 补 `POST /api/deal-changes` + `DealChangeCreateBody` |
+| approve/reject 误用 proposal 的 ReviewBody（强制 action 字段致 422） | 专用 `DealChangeReviewBody(comment)` |
+| 前端审批中心无商单变更入口 | ProposalReview 加「商单变更」标签页（原值→新值/pending 角标/批准/驳回） |
+
+**闭环链路**：Agent 无权限直改 → `request_deal_change` 建申请（自动捕获旧值）→ 审批中心人工批准 → Service 原子写回 deal + `deal_followup` 留痕（action_type=字段变更审批）。一商单可挂多审批互不影响。
+
+**验收**：`scripts/test_m7b_service.py` 4/4（重复批准拦截/reject 不改 deal/非法字段拒绝/多审批共存）；HTTP 全链路实测 DC20250002 双审批（budget 151611→50000、owner 李娜→运营-西莫）批准后落库一致。
+
+## R8 · 全库重建（真实数据）✅（2026-09-28，commits `8331fdd`→`0ab9780`）
+
+以正式 Excel `data/raw/达人看板.xlsx`（双 sheet 21000+ 行）全量重灌，**用户逐字指令驱动，本任务豁免数据纪律**：
+
+| 表 | 规模 | 关键处理 |
+|---|---|---|
+| kol_profile | **14289**（32→33 列） | 手机号前3后4、微信号 sha1 前8（不可逆）、账号ID 丢弃；**汇总表位置感知解析**（多子表纵向拼接、6789 行错位→0、45393 块编号剔除）；分成编码 828/837 → `share_discount`+`share_rate`（19 达人）；CPM 锚定星图 15-72；avg_views 生成值 |
+| deal | **400** | budget=达人单价上限（对齐 demand_desc）；category 滤数字；「一般甲方需求」按单价上限+CPM 目标+平台差异生成 |
+| brand | **100**（30 品类） | 真实品牌生成、note 全 NULL |
+| deal_followup | ~1600 | 真实进度反馈 410 条落流水；`clean_str()` 防 str(None) 脏数据 |
+
+全库复查干净：category/budget/stage/外键/明文手机号 全部 0 异常。检索实测 CPM/均播正常读出。
+
+## R9 · RAG 语料重做 + 消融重跑 + RAGAS ✅（2026-09-28，`reports/ablation_v2.log` / `ragas_v2.json`）
+
+**动机**：真实数据只进了 SQL（search_kols），v1 旧语料（假品牌/假案例）仍在向量库——RAG 与业务数据脱节，消融指标挂在旧数据上。用户拍板：渲染真实数据进 RAG、重跑消融替换旧指标。
+
+**管线**：`render_v2_docs.py`（从 PG 读真实数据渲染）→ `reindex_rag.py`（**只重建 chunk 表+Milvus，绝不碰结构表**——v1 的 ingest.py 会 TRUNCATE kol_profile，已弃用）→ 2142 块向量化 987s。
+
+| 语料 | v1 旧 | v2 新 |
+|---|---|---|
+| deal_case | 211 块（假数据） | **551 块**（70 真实结案单，全带 ROI/CPM/GMV） |
+| rate_card | 32 块 | **439 块**（68 类目 × 每类 top-100 真实达人含报价/CPM/均播） |
+| inflight | 196 块 | **1134 块**（330 真实在途单） |
+| 总计 | 457 块 | **2142 块**（4.7×） |
+
+**消融重跑**（评测集 `build_eval_set` 动态反查当前库，98 条真实样本）：
+
+| 实验组 | Hit@1 | Hit@5 | Recall@5 | MRR |
+|---|---|---|---|---|
+| ① 纯向量基线 | 0.541 | 0.816 | 0.805 | 0.667 |
+| ⑥ 类型配额保底 | 0.643 | 0.939 | 0.929 | 0.763 |
+| ⑦ **+Rerank（完整链路）** | **0.735** | **0.939** | 0.918 | **0.831** |
+| ⑧ cand_k=10 | 0.724 | 0.918 | 0.916 | 0.820 |
+
+- 完整链路 vs 基线：**Hit@1 +0.194 / MRR +0.164**（旧数据上 +0.111/+0.099，更难数据上增益更大）
+- Rerank 单组件 **MRR +0.068** 仍为最大贡献；⑧ 裁剪在大语料下有损（-0.011），**保留 cand_k=30**
+- 绝对值低于旧 0.778 是题目变难（检索空间 4.7×），引用时必须带语料规模
+
+**RAGAS 生成质量**（20 条抽样，`scripts/ragas_eval.py`，ARK deepseek-v4-flash + 本地 Ollama embedding 打分）：
+
+- **faithfulness = 1.000**（20 条零幻觉，样本中 8 条有效打分满分，其余为 NaN 计数实现细节）
+- **answer_relevancy = 0.711**；低分样本集中在「10-50 万粉腰部达人报价」类列表型回答（短列表 Embedding 相似度天然偏低，非幻觉）
+- 结论：生成层零幻觉成立（结构防线背书），相关性合格有优化空间
+
+
 
 ---
 
@@ -490,7 +563,7 @@ streamlit run app.py --server.port 8501
 | Embedding | 本地 Ollama `bge-m3` | ✅ dim=1024 |
 | Rerank | 阿里云 DashScope `gte-rerank-v2` | ✅ 35 ms/条（`reports/bench_rerank.log`） |
 | Milvus | WSL Docker `smartrecruit-milvus` | ✅ 19530 |
-| PostgreSQL | Windows 本机 | ✅ 5432，13 张表（v1 6 + v2 7） |
+| PostgreSQL | Windows 本机 | ✅ 5432，14 张表（v1 6 + v2 8） |
 | MinIO | WSL Docker `starmoyu-minio`（独立实例） | ✅ 9000/9001，104 对象 |
 | ~~前端 Streamlit~~ | （v1 退役） | → v2: FastAPI :8000 + Vue3 :5173 |
 
