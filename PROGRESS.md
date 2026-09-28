@@ -229,7 +229,7 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 
 **评测体系重组（报告独立成文）**：
 - **检索层** → `reports/检索评测报告.md`（8 组消融：完整链路 Hit@1 0.694 / MRR 0.788，vs 基线 +0.143/+0.126；Rerank 最大组件 +0.044；cand_k=10 持平略优省 15% 已采用）
-- **生成层** → `reports/生成质量评估报告.md`（RAGAS 20 条抽样：faithfulness 1.000 零幻觉 / answer_relevancy 0.711，低分项为列表型回答的评分局限非幻觉）
+- **生成层** → `reports/生成质量评估报告.md`（RAGAS 四指标 20 条抽样：faithfulness 0.959 近零幻觉 / relevancy 0.794 / ctx_precision 0.705 / ctx_recall 0.559，低分项已逐条归因）
 - **v1 评测已归档** → `reports/v1_archive/`（ablation_v1.md 等，历史对照用，不再对应当前系统）
 
 **数据细节**：语料/评测集/指标明细/与 v1 对照表全部在两份报告内，本节不再重复。
