@@ -197,6 +197,7 @@ def build_kol(d, idx):
         'progress_feedback': clean_str(d.get('进度反馈')),
         'contact_mask': mask_contact(d.get('联系方式')),
         'mcn_name': random.choice(MCNS), 'region': random.choice(REGIONS),
+        'avg_views': int(fans * random.uniform(0.25, 0.5)) if fans else (int(price * random.uniform(18, 45)) if price else None),  # 均播≈粉丝×0.25~0.5, 无粉丝时用价反推
         'price_1_20s': int(price*0.6) if price else None,
         'price_live': int(price*1.5) if price else None,
         # 统一命名: cpm / share_mode / price_21_60s / contact_mask; 不写历史重复列

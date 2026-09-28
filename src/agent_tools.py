@@ -104,7 +104,7 @@ def search_kols(category: str = "", tier: str = "", fans_min: int = 0,
         if price_max:
             conds.append("price_21_60s <= %s"); args.append(price_max)
         sql = f"""SELECT kol_id, kol_name, category, sub_category, fans_count, tier,
-                         avg_views, interact_rate, price_21_60s,
+                         avg_views, interact_rate, price_21_60s, cpm,
                          exclusive_until, available_from, blacklist
                   FROM kol_profile WHERE {' AND '.join(conds)}
                   ORDER BY interact_rate DESC NULLS LAST LIMIT %s"""
@@ -133,7 +133,7 @@ def search_kols(category: str = "", tier: str = "", fans_min: int = 0,
                  "category": f"{x['category']}/{x['sub_category']}",
                  "tier": x["tier"], "fans": x["fans_count"],
                  "interact": x["interact_rate"], "price": x["price_21_60s"],
-                 "avg_views": x["avg_views"]} for x in rows]
+                 "avg_views": x["avg_views"], "cpm": x.get("cpm")} for x in rows]
         return json.dumps({"n": len(slim), "kols": slim,
                            "excluded_by_conflict": len(conflicts),
                            "conflicts": [{"kol_id": c["kol_id"], "reason": c["conflict_reason"]}

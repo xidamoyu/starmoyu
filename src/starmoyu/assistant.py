@@ -234,11 +234,15 @@ class DealAssistant:
             except Exception:
                 pass
         for x in rows[:top_k]:
+            cpm = x.get('cpm')
+            cpm_s = f"；CPM ¥{cpm:,.0f}" if isinstance(cpm, (int, float)) else ""
+            av = x.get('avg_views')
+            av_s = f"；均播 {av/10000:.1f}w" if isinstance(av, (int, float)) else ""
             x["match_reason"] = (
                 f"{x['category']}/{x['sub_category']} 类目匹配；{x['tier']}达（{x['fans_count']/10000:.1f}w 粉）；"
                 f"标签 {'、'.join(_as_list(x.get('tags')))}；"
                 f"互动率 {x['interact_rate']*100:.2f}%；合作评级 {x['cooperation_level']}；"
-                f"刊例 ¥{x['price_21_60s']:,}")
+                f"刊例 ¥{x['price_21_60s']:,}{cpm_s}{av_s}")
         return rows[:top_k]
 
     def proposal(self, requirement: str, top_k: int = 5) -> dict:
@@ -253,7 +257,8 @@ class DealAssistant:
         kol_text = "\n".join(
             f"- {k['kol_id']} {k['kol_name']} | {k['tier']} | {k['fans_count']/10000:.1f}w粉 | "
             f"{k['category']}/{k['sub_category']} | 标签{'、'.join(_as_list(k.get('tags')))} | "
-            f"刊例¥{k['price_21_60s']:,} | 互动率{k['interact_rate']*100:.2f}%" for k in kols) or "（无候选达人）"
+            f"刊例¥{k['price_21_60s']:,} | CPM¥{k['cpm']:,.0f} | 均播{k['avg_views']/10000:.1f}w | "
+            f"互动率{k['interact_rate']*100:.2f}%" for k in kols) or "（无候选达人）"
 
         prompt = (f"<context>\n{ctx}\n</context>\n\n"
                   f"<candidate_kols>\n{kol_text}\n</candidate_kols>\n\n"
