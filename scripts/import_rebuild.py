@@ -73,15 +73,26 @@ def mask_contact(s):
     return 'wx:' + hashlib.sha1(s.encode('utf-8')).hexdigest()[:8]
 
 def parse_share(s):
-    if s is None: return (None, None)
+    """分成方式 -> (mode, rate, discount)。
+    - '整体46'->(整体分成, 0.46, None)
+    - '返35%'->(返点, 0.35, None)
+    - '828'/'837'->(报价折扣+分成, 0.7, 0.8)  编码: 前两位=报价折扣(8折), 后两位=分成(三七分)
+    - '带项目谈'->(按项目谈, None, None)"""
+    if s is None: return (None, None, None)
     s = str(s).strip()
-    if not s: return (None, None)
+    if not s: return (None, None, None)
+    m = re.match(r'^(\d)(\d{2})(\d?)$', s)  # 编码: 第1位=报价折扣, 后两位=分成比例(如 828=8折+28分)
+    if m and len(s) in (3, 4) and s.isdigit():
+        discount = int(m.group(1)) / 10.0           # 8 -> 0.8 (打八折)
+        ratio_code = m.group(2)                      # 28 / 37
+        ratio = {'28': 0.8, '37': 0.7, '46': 0.6, '55': 0.5, '19': 0.9, '91': 0.1}.get(ratio_code, 0.7)
+        return ('报价折扣+分成', ratio, discount)
     m = re.search(r'整体\s*(\d{1,2})', s)
-    if m: return ('整体分成', int(m.group(1)) / 100.0)
+    if m: return ('整体分成', int(m.group(1)) / 100.0, None)
     m = re.search(r'返\s*(\d{1,2})\s*%?', s)
-    if m: return ('返点', int(m.group(1)) / 100.0)
-    if '项目' in s: return ('按项目谈', None)
-    return (s[:10], None)
+    if m: return ('返点', int(m.group(1)) / 100.0, None)
+    if '项目' in s: return ('按项目谈', None, None)
+    return (s[:10], None, None)
 
 # 主类目 + 子类目映射
 SUB_OF = {'游戏':'游戏', '剧情搞笑':'剧情搞笑', '生活':'生活记录', '美食':'美食探店', '旅行':'旅行vlog',
@@ -227,7 +238,7 @@ def build_kol(d, idx):
     # 合理性过滤: 汇总表错位可能残留错误值
     if price is not None and not (100 <= price <= 1_000_000): price = None
     if fans is not None and not (300 <= fans <= 50_000_000): fans = None
-    cat, sub = split_category(d.get('内容类型')); mode, rate = parse_share(d.get('分成方式'))
+    cat, sub = split_category(d.get('内容类型')); mode, rate, discount = parse_share(d.get('分成方式'))
     platform = '抖音' if random.random() < 0.9 else random.choice(['快手','小红书'])
     aff_raw = d.get('挂靠状态')
     if aff_raw and str(aff_raw).strip() not in AFFWORDS: aff_raw = None  # 汇总表挂靠词才收
@@ -236,7 +247,7 @@ def build_kol(d, idx):
         'platform': platform, 'category': cat, 'sub_category': sub,
         'fans_count': fans, 'tier': tier_of(fans), 'interact_rate': interact_rate_of(fans),
         'cpm': cpm_of(price, fans), 'price_21_60s': price,
-        'share_mode': mode, 'share_rate': rate,
+        'share_mode': mode, 'share_rate': rate, 'share_discount': discount,
         'affiliate_coop': yn(d.get('挂靠合作')) if d.get('挂靠合作') and str(d.get('挂靠合作')).strip() else (True if random.random()<0.08 else None),
         'affiliate_v': yn(d.get('挂v合作')) if d.get('挂v合作') and str(d.get('挂v合作')).strip() else (True if random.random()<0.05 else None),
         'profit_coop': yn(d.get('利润合作')),
@@ -265,6 +276,7 @@ ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS on_rate_card boolean;
 ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS affiliate_status text;
 ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS cooperation_level boolean;
 ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS contact_mask text;
+ALTER TABLE kol_profile ADD COLUMN IF NOT EXISTS share_discount real;
 """
 
 def ensure_columns(cur):
