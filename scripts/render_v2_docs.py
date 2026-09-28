@@ -40,7 +40,7 @@ def render_rate_cards():
                   FROM kol_profile WHERE category=%s ORDER BY fans_count DESC NULLS LAST LIMIT %s""",
                (cat, RATE_CARD_PER_CAT))
         if len(ks) < 3:
-            continue  # 小类目（<3 达人）不单独出表，避免碎片文档
+            continue  # 迷你类目的达人已随类目归一化并入大类（normalize_category.py），不单独出表
         title = f"{cat}类目达人刊例表（2026 Q3）"
         L = [f"# {title}", "",
              f"适用类目：{cat}｜有效期：2026-07-01 至 2026-12-31｜币种：人民币", "",
