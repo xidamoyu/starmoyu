@@ -232,28 +232,29 @@ class Retriever:
         return score
 
     @staticmethod
-    def dedupe_by_doc(r: "Retriever", cids: list[str], max_per_doc: int = 2) -> list[str]:
-        """按 doc_id 限流：避免同构文档用数量优势淹没高相关单篇文档。
-        上限自适应文档大小：大文档（如 17-19 块的刊例大表）内部各块是互补内容，
-        固定 max_per_doc=2 会误杀深处块（v1 小文档时代遗留的死值），故取
-        max(max_per_doc, 文档总块数的一半)。跨文档限流逻辑不变。
+    def dedupe_by_doc(cids: list[str], r: "Retriever", max_per_doc: int = 2) -> list[str]:
+        """文档多样性限流（作用在 RRF 融合之后的候选池上）。
+
+        v2 修正记录：旧版作用在融合前的两路列表上（前 N 块保留、其余丢弃/移队尾），
+        会改变各路原始排名、污染 RRF 分数——正确文档整体沉底（消融③组 Hit@1
+        从 0.633 崩到 0.316 的根因）。新版在融合后做「保序+溢出移队尾」：
+        每个 doc_id 前 max_per_doc 块保持原位，其余块移到候选池队尾
+        （不丢弃，rerank 仍可见），既防同构文档刷屏又不破坏融合分数。
         """
         cnt: dict[str, int] = {}
-        doc_total: dict[str, int] = {}
-        for c in r.by_id.values():
-            doc_total[c.doc_id] = doc_total.get(c.doc_id, 0) + 1
-        out: list[str] = []
+        keep: list[str] = []
+        overflow: list[str] = []
         for cid in cids:
             c = r.by_id.get(cid)
             if c is None:
                 continue
             d = c.doc_id
-            cap = max(max_per_doc, doc_total.get(d, 1) // 2)
-            if cnt.get(d, 0) >= cap:
-                continue
-            cnt[d] = cnt.get(d, 0) + 1
-            out.append(cid)
-        return out
+            if cnt.get(d, 0) < max_per_doc:
+                cnt[d] = cnt.get(d, 0) + 1
+                keep.append(cid)
+            else:
+                overflow.append(cid)
+        return keep + overflow
 
     # ---- 云端 Rerank（DashScope gte-rerank-v2）
     def rerank(self, query: str, candidates: list[str], top_n: int) -> tuple[list[str], bool]:
@@ -324,10 +325,8 @@ class Retriever:
             if cid in self.by_id:
                 self.by_id[cid].rank_bm25 = i + 1
 
-        if use_dedupe:
-            vec_list = self.dedupe_by_doc(self, vec_list, max_per_doc=max_per_doc)
-            bm_list = self.dedupe_by_doc(self, bm_list, max_per_doc=max_per_doc)
-            info["after_dedupe"] = {"vector": len(vec_list), "bm25": len(bm_list)}
+        # dedupe 移到融合之后：见 dedupe_by_doc docstring 的 v2 修正记录。
+        # 融合前不再对两路列表做任何 surgery，保住 RRF 的原始排名输入。
 
         if use_vector and use_bm25 and use_rrf:
             fused = self.rrf([vec_list, bm_list])
@@ -345,6 +344,13 @@ class Retriever:
             if prior:
                 base = {c: 1.0 / (i + 1) for i, c in enumerate(cands)}
                 cands = sorted(cands, key=lambda c: -base[c] * prior.get(self.by_id[c].doc_type, 0.35))
+
+        if use_dedupe:
+            # 文档多样性限流：融合+先验之后的候选池上做（每 doc 前 N 块保序、
+            # 溢出块移队尾不丢弃）。放在这里而不是融合前，避免污染 RRF 输入排名
+            # （旧版在融合前做，曾致消融③组 Hit@1 崩至 0.316）。
+            cands = self.dedupe_by_doc(cands, self, max_per_doc=max_per_doc)
+            info["after_dedupe"] = len(cands)
 
         # 类型配额：先验高优先的类型必须进入候选窗口。
         # 原因：当某类同构文档（如大量在途跟踪单）以数量占满候选窗口时，

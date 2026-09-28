@@ -49,7 +49,8 @@ def main():
     # 适配 ragas 0.2.10: 需要 langchain LLM 包装（用 ARK OpenAI 兼容端点）
     from langchain_openai import ChatOpenAI
     eval_llm = ChatOpenAI(model=llm.CHAT_MODEL, api_key=llm.ARK_API_KEY,
-                          base_url=llm.ARK_BASE_URL, temperature=0, max_tokens=2000)
+                          base_url=llm.ARK_BASE_URL, temperature=0,
+                          max_tokens=8000)  # ARK reasoning 模型思考链吃 token，2000 会 LLMDidNotFinish
     # answer_relevancy 需要 embedding —— 用本地 Ollama 的 OpenAI 兼容接口
     from langchain_community.embeddings import OllamaEmbeddings
     eval_embeddings = OllamaEmbeddings(model=llm.EMBED_MODEL, base_url=llm.OLLAMA_BASE_URL)
