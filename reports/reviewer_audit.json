@@ -1,3 +1,0 @@
-{
-  "verdict_original_requirement": "三条分别判定。\n\n①【高含金量、可写进简历】——部分达到，能过初筛但不构成强竞争力。它不是壳：retriever.py 里声称的链路除顺序与文档不符外每一步都有真实代码（向量∥BM25 → meta_filter → dedupe_by_doc → RRF → doc_type_prior → 类型配额 → rerank → build_context），graph.py 确实用了 StateGraph + interrupt() + Command(resume=)（我实测 get_graph() 得 10 个业务节点 + __start__/__end__），54 条评测集与 8 组消融是从数据反向生成并落盘的，不是手工誊抄。我逐项复核：Milvus row_count=457 / 16 字段 / 6 个索引（5 个标量倒排 + embedding）、PG 6 表、MinIO 104 对象、venv 660M、KOL 120/Brand 40/Deal 90/Followup 173、语料 104 篇/457 子块/427 父块、ROI 中位 1.09、CPM 25.1–59.87、在途 45（高18/中16/正常11，我按代码规则独立重算逐字一致）、e2e 16/16（日志 + e2e_report.jso …(+3396 chars)"
-}
