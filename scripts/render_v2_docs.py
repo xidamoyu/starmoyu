@@ -39,8 +39,8 @@ def render_rate_cards():
                          price_21_60s,cpm,avg_views,cooperation_level
                   FROM kol_profile WHERE category=%s ORDER BY fans_count DESC NULLS LAST LIMIT %s""",
                (cat, RATE_CARD_PER_CAT))
-        if not ks:
-            continue
+        if len(ks) < 3:
+            continue  # 小类目（<3 达人）不单独出表，避免碎片文档
         title = f"{cat}类目达人刊例表（2026 Q3）"
         L = [f"# {title}", "",
              f"适用类目：{cat}｜有效期：2026-07-01 至 2026-12-31｜币种：人民币", "",
@@ -52,7 +52,7 @@ def render_rate_cards():
             ir = f"{k['interact_rate']*100:.2f}%" if k['interact_rate'] else "-"
             cpm = f"¥{k['cpm']:.0f}" if k.get('cpm') else "-"
             av = f"{k['avg_views']/10000:.1f}w" if k.get('avg_views') else "-"
-            coop = k.get('cooperation_level') or "-"
+            coop = {"true": "已挂靠", "false": "未挂靠"}.get(str(k.get('cooperation_level') or "").lower(), "-")
             L.append(f"| {k['kol_id']} | @{k['kol_name']} | {k['platform'] or '-'} | {k['tier'] or '-'} | "
                      f"{fans} | {k['sub_category'] or '-'} | {price} | {ir} | {cpm} | {av} | {coop} |")
         L += ["", "> 说明：以上为标准刊例价。定制内容上浮 20%-50%；打包 3 位以上达人可享 10%-20% 折扣；复购合作可谈至刊例 70%-85%。"]
