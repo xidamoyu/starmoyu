@@ -3,6 +3,9 @@
 > 版本：v1.0 ｜ 项目路径：`C:/Users/Administrator/AppData/Local/hermes/workspace/starmoyu`
 > 本文档为**标准开发说明书**，含项目背景 / 技术架构 / 核心功能 / 数据结构 / Prompt 设计五部分。
 > 所有数字均来自实测日志（`reports/*.log`、`data/eval/*.json`），无估算值。
+>
+> ⚠️ **历史版本声明（2026-09-28）**：本文写于 v1→v2 重建期，文内消融表/指标数字对应当时的语料与评测集。
+> **当前有效指标以 `reports/检索评测报告.md` 和 `reports/生成质量评估报告.md` 为准**（Hit@1 0.694 / MRR 0.788 / RAGAS faithfulness 0.959）。
 
 ---
 
