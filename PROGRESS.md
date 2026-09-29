@@ -146,7 +146,8 @@ PG **14 张表**（v1 的 6 张 + v2 新增 8 张）：brand / chunk_meta / deal
 ## R · 待办
 
 - 前端 Markdown 渲染（当前表格/加粗显示原始语法，影响可读性）
-- RAGAS 生成质量抽评（ragas 0.2.10 已装，等 trait/复盘数据积累）
+- ~~RAGAS 生成质量抽评~~ ✅ R9 完成（四指标，见生成质量评估报告）
+- 沉淀流真实使用积累：party_traits 仍为 0，需日常对话使用产生数据（功能已就绪）
 - LLM 服从性 100% 确定性方案（state 确定性分发；max_tokens 修复后波动已大减）
 - C 对齐清单（等 trait 数据积累后接，半天活）
 - v1 遗留 P1：评测集与语料同源偏乐观、presigned_url 未接前端
@@ -235,6 +236,22 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 **数据细节**：语料/评测集/指标明细/与 v1 对照表全部在两份报告内，本节不再重复。
 
 
+
+## R10 · 结案沉淀闭环 P1-P4 全量实现 ✅（commit `f6a4e4b`）
+
+**动机**：盘点发现「数据飞轮」停在话术——party_traits=0、ingest_staging=2、语料回流是一次性脚本，业务使用对语料的增量为 0。用户拍板四通道全做。
+
+**交互协议（用户定案）**：结案 → **主动提醒**沉淀（不等用户想到）→ 用户同意 → 出预览（自动提炼跟进流水经验）→ 用户确认（可补充要点）→ 入库。两次确认，不允许跳过预览直接入库。
+
+**四通道**：
+- **P1 案例回流**：`sediment_service.render_case_md`（结案数据+跟进大事记+复盘经验区渲染）→ `ingest_document_incremental`（单文档切块→embed→PG 按 source_file 先删后插幂等→Milvus upsert，6 块秒级，不清库不重跑）
+- **P2 经验抽取**：`extract_lessons` 正则提炼流水中的拒绝原因/返点/档期/改稿（11 字碎片→结构化经验要点），写进案例「复盘结论」区；用户确认时可补 `extra_lessons`
+- **P3 trait 通道激活**：`save_trait` 工具（评价性语言→trait 草稿→确认卡→`party_traits` verified）
+- **P4 跟进富化**：`create_followup` docstring 引导 + 返回 hint（主动追问拒绝原因/返点情况）
+
+**接线**：API 3 端点（`POST /deals/{id}/sediment/preview|confirm`、`GET /sediment/stats`）；`save_deal_result`/结案表单返回「建议沉淀」hint；`sediment_case`/`save_trait` 入 AGENT_TOOLS（8→10）；agent_graph 系统提示加「结案沉淀流」；前端 DealDrawer 结案成功后 ElMessageBox 提醒→预览→确认入库（vue-tsc 过）；ChatView 工具标签。
+
+**验证（真实跑通）**：DC20250005 全链路 preview(1084 字)→confirm→6 块替换旧 6 块入库，`/sediment/stats` deal_case 552；单测 3/3（经验提炼/渲染/幂等——二次入库总块数稳定 2064）；M7b 回归 4/4。
 
 ---
 

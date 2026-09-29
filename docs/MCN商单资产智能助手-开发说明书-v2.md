@@ -60,7 +60,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 └───────────────────────┬────────────────────────────┘
                         │ REST + SSE
 ┌───────────────────────▼────────────────────────────┐
-│              FastAPI 后端 :8000（26 端点）            │
+│              FastAPI 后端 :8000（29 端点）            │
 ├────────────────────────────────────────────────────┤
 │ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
 │   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
@@ -83,7 +83,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 | 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2063 条向量 |
 | 关系库 | PostgreSQL 18.6 | 本地 Windows | 14 张表 |
 | 对象存储 | MinIO（S3 兼容） | 本地 WSL Docker | 原件 + 预签名直链 |
-| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 26 端点 |
+| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 29 端点 |
 | 前端 | Vue3 + Vite + TS + Element Plus + Pinia | 本地 :5173 | 6 业务页面 |
 
 ### 2.3 核心设计：Service 层是唯一写库者
@@ -113,7 +113,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 ### 3.1 Agent 循环（真工具调用）
 
 ```python
-tools = AGENT_TOOLS + M4_TOOLS + M5_TOOLS        # 17 个
+tools = AGENT_TOOLS + M4_TOOLS + M5_TOOLS        # 19 个
 llm = chat_model.bind_tools(tools)
 # agent_node: 调 LLM → 返回 AIMessage（可能含 tool_calls）
 # should_continue: last.tool_calls 非空 → "tools"，否则 END
@@ -125,7 +125,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 - **防失控**：`recursion_limit=12`；工具全程 try/except 返回**结构化错误字符串**（LLM 可读可纠正），不抛异常。
 - **持久化**：`LANGGRAPH_CHECKPOINT_SQLITE` 环境变量指向 sqlite 文件即切 `SqliteSaver`（thread_id=会话 ID，跨进程续跑）；不设兜底 `MemorySaver`。
 
-### 3.2 工具清单（17 个，实测计数：基座 8 + 沉淀 2 + 全周期 7）
+### 3.2 工具清单（19 个，实测计数：基座 10 + 沉淀 2 + 全周期 7）
 
 | 类 | 工具 | 作用 | 写库 |
 |---|---|---|---|
@@ -137,6 +137,8 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 | 基座 | `update_proposal_status` | 审批通过/驳回/修改（版本化） | ✅ |
 | 基座 | `create_followup` | 记录跟进动作 | ✅ |
 | 基座 | `request_deal_change` | 商单字段变更 → 审批流（不直改） | ✅ |
+| 基座 | `sediment_case` | 结案案例沉淀：预览→确认→增量回流 RAG（两次确认） | ✅ |
+| 基座 | `save_trait` | 合作画像沉淀 → 确认卡 → `party_traits` verified | ✅ |
 | 沉淀 | `save_interaction` | 经验确认卡入库（原子写三处） | ✅ |
 | 沉淀 | `list_kol_traits` | 达人特质召回（只列原文） | 只读 |
 | 全周期 | `save_deal_result` / `get_deal_result` | 结案复盘归档 / 查询 | ✅ / 读 |
@@ -145,7 +147,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 | 全周期 | `get_brand_traits` / `save_brand_traits` | 品牌特质查询 / 沉淀 | 读 / ✅ |
 | 全周期 | `get_pending_traits` | 待确认特质队列 | 只读 |
 
-> **勘误**：`README.md §1`、`RESUME.md`、`PROGRESS.md R1` 仍写「16 工具」——`request_deal_change`（M7b 新增）加入后 `AGENT_TOOLS` 由 7 → 8，实际总数 **17**（源码 `AGENT_TOOLS`/`M4_TOOLS`/`M5_TOOLS` 三列表逐项计数）。
+> **勘误（R10 后更新）**：工具总数 **19**（基座 10 + 沉淀 2 + 全周期 7，源码三列表逐项计数）。`sediment_case`/`save_trait`（R10 新增）入 `AGENT_TOOLS`（8→10）；FastAPI 端点 **29**（沉淀 preview/confirm/stats 3 个）。README/RESUME 已同步。
 
 ### 3.3 三条「确认卡」流（核心差异化）
 
@@ -166,6 +168,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 - **主动简报**（`get_today_briefing`）：开场打招呼必调，汇报档期临期 / 待审批方案 / 3 天未跟进 / 黑名单撞单四类事实。
 - **数据飞轮**：`match_kols_for_requirement` 组合建议带 `hist_deals`（历史结案单数）+ `avg_roi`（平均 ROI，`deal.result_metrics` 原值）。实测：美妆 10 万预算 → 小美妆记 2 单 avg ROI 1.59 / 是美妆日常 2 单 0.98 / 老美妆说 0 单 null。**沉淀越多，推荐越准。**
+- **结案沉淀闭环（R10）**：结案 → 主动提醒 → 案例预览（`extract_lessons` 从跟进流水提炼拒绝原因/返点/档期/改稿经验）→ 两次确认 → `ingest_document_incremental` 增量入库（PG 按 source_file 先删后插幂等 + Milvus upsert，6 块秒级）→ 知识库即时可检索。前端结案表单同步接线。
 
 ---
 
@@ -374,4 +377,4 @@ cd frontend && npm run dev     # http://localhost:5173
 - context_recall 0.559 仅统计有 ground_truth 的 14 条。
 - 语料/评测集一变，上述绝对值即作废——引用时必须带语料规模与样本量。
 
-**本文档数字勘误**（相对现有 README/RESUME/PROGRESS）：工具数 **16 → 17**（`request_deal_change` 加入）；RAG 语料 **457 子块/427 父块 → 2063 子块/1724 父块**（R9 重做后实时 `count(*)`）。其余 26 端点、14 表、14289/400/100 达人/商单/甲方均与实时库一致。
+**本文档数字勘误（R10 后）**：工具数 **19**（基座 10 + 沉淀 2 + 全周期 7）；端点 **29**；RAG 语料 **2064 子块**（2063 + 结案沉淀 DC20250005 6 块增量，Milvus 2076 向量）。其余 14 表、14289/400/100 达人/商单/甲方均与实时库一致。
