@@ -9,4 +9,5 @@ frontend/dist/
 frontend/npm-install.log
 frontend/tsc.log
 frontend/vite-dev.log
-*.xlsxdata/raw/imports/
+*.xlsx
+data/raw/imports/
