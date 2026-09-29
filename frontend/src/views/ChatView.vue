@@ -29,6 +29,8 @@ const TOOL_LABELS: Record<string, string> = {
   save_brand_traits: '🏷️ 沉淀品牌特质',
   get_brand_traits: '🏷️ 查询品牌特质',
   get_pending_traits: '⏳ 待确认沉淀',
+  sediment_case: '♻️ 案例沉淀回流',
+  save_trait: '🧩 沉淀合作画像',
 }
 
 async function scrollBottom() {

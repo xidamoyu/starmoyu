@@ -157,4 +157,6 @@ def close_deal_form(deal_id: str, metrics: dict, summary_note: str = "",
             severity=spec.get("severity", "info"), confidence=1.0,
             source_type="screenshot", verified=True, deal_id=deal_id,
             created_by=operator))
-    return {"ok": True, "deal_result": result, "trait_ids": tids}
+    return {"ok": True, "deal_result": result, "trait_ids": tids,
+            "hint": "结案已落库。建议沉淀：本单可渲染成案例文档回流知识库（复盘经验+跟进大事记），"
+                    "向用户确认后调用 sediment_case 工具出预览，用户同意后入库。"}

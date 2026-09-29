@@ -325,7 +325,9 @@ def create_followup(deal_id: str, note: str, action_type: str = "其他") -> str
         from server.service import FollowupService
         fid = FollowupService().create(deal_id, note, action_type)
         return json.dumps({"ok": True, "followup_id": fid,
-                           "hint": "跟进已落库。"},
+                           "hint": "跟进已落库。若本次跟进包含拒绝原因、返点、档期、"
+                                   "改稿要求等关键信息，建议补充到 note 里（一句话即可）——"
+                                   "结案复盘时这些要点会自动提炼进案例文档。"},
                           ensure_ascii=False)
     except Exception as e:
         return json.dumps({"ok": False, "error": f"跟进落库失败 {type(e).__name__}: {e}"},
@@ -361,6 +363,77 @@ def request_deal_change(deal_id: str, field_name: str, new_value: str,
                           ensure_ascii=False)
 
 
+@tool
+def sediment_case(deal_id: str, extra_lessons: str = "", confirm: bool = False) -> str:
+    """结案沉淀：把已结案商单渲染成案例文档回流 RAG 知识库（需用户确认后才入库）。
+
+    何时使用：结案动作完成后（结案确认卡/表单返回的 hint 会提醒），
+    **主动向用户提议沉淀**；或用户主动说「沉淀」「复盘一下」「存进知识库」。
+    交互协议（严格按顺序）：
+      1. 结案落地 → Agent 主动提醒用户"建议沉淀成本单案例"
+      2. 用户同意沉淀 → 调本工具 confirm=false 出预览（草稿+提炼的复盘要点）
+      3. 用户看过预览、同意入库 → 调本工具 confirm=true 增量入库
+    未经用户两次同意（同意沉淀 + 同意预览内容），不得 confirm=true。
+    Args:
+        deal_id: 已结案的商单编号，如 DC20250005
+        extra_lessons: 用户在预览时补充的经验要点，多条用分号分隔（可选）
+        confirm: false=出预览草稿；true=用户确认预览内容后正式入库
+    """
+    try:
+        from server.sediment_service import sediment_closed_deal, confirm_sediment
+        lessons = [s.strip() for s in extra_lessons.split("；") if s.strip()] if extra_lessons else []
+        if confirm:
+            r = confirm_sediment(deal_id, lessons, confirmed_by="agent")
+            ing = r["sediment"]
+            return json.dumps({
+                "ok": True, "deal_id": deal_id, "file": ing["doc_id"],
+                "chunks": ing["chunks"], "replaced_old": ing["replaced_old"],
+                "hint": f"案例已增量入库（{ing['chunks']} 块，替换旧 {ing['replaced_old']} 块），现在可以被检索了。"},
+                ensure_ascii=False)
+        r = sediment_closed_deal(deal_id, lessons)
+        return json.dumps({
+            "ok": True, "deal_id": deal_id, "title": r["title"],
+            "char_len": r["char_len"], "preview": r["preview"],
+            "hint": "以上是案例文档草稿。请向用户确认（复盘要点是否准确、是否补充经验），"
+                    "确认后带 confirm=true 再次调用本工具正式入库。"},
+            ensure_ascii=False)
+    except ValueError as e:
+        return json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"ok": False, "error": f"沉淀失败 {type(e).__name__}: {e}"},
+                          ensure_ascii=False)
+
+
+@tool
+def save_trait(party_type: str, party_id: str, trait_category: str,
+               trait_content: str, source_quote: str = "") -> str:
+    """沉淀合作画像（party_traits）：达人/品牌的合作经验，如档期习惯、沟通偏好、付款要求。
+
+    何时使用：对话中出现对某达人/品牌的评价性信息（"这个达人档期很紧""该品牌总压价"），
+    用户确认后调用本工具沉淀，未来合作决策时可直接引用。
+    Args:
+        party_type: "kol" 或 "brand"
+        party_id: 达人ID（K开头）或品牌名
+        trait_category: 沟通偏好/改稿态度/排期习惯/付款要求/内容尺度/其他
+        trait_content: 画像内容（一句话）
+        source_quote: 原话引用（溯源用，可选）
+    """
+    try:
+        from server.m4_service import TraitService
+        tid = TraitService().add(party_type, party_id, trait_category, trait_content,
+                                 source_quote=source_quote, source_type="conversation",
+                                 verified=False, created_by="agent")
+        return json.dumps({
+            "ok": True, "trait_id": tid, "verified": False,
+            "hint": "画像已暂存（待确认）。请在对话中向用户展示内容，用户同意后"
+                    "通过 POST /api/traits/{id}/confirm 或管理界面确认生效。"},
+            ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"ok": False, "error": f"画像沉淀失败 {type(e).__name__}: {e}"},
+                          ensure_ascii=False)
+
+
 AGENT_TOOLS = [search_knowledge, search_kols, get_deal_status,
                match_kols_for_requirement, create_proposal,
-               update_proposal_status, create_followup, request_deal_change]
+               update_proposal_status, create_followup, request_deal_change,
+               sediment_case, save_trait]

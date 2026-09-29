@@ -91,7 +91,9 @@ class DealResultService:
                    WHERE staging_id=%s""", (reviewer or "agent", staging_id))
             conn.commit()
         return {"deal_id": deal_id, "written": merged, "followup_id": str(fid),
-                "staging_id": staging_id}
+                "staging_id": staging_id,
+                "hint": "结案已落库。建议沉淀：可把本单渲染成案例文档回流知识库，"
+                        "向用户确认后调用 sediment_case 工具出预览，用户同意后入库。"}
 
     def get_result(self, deal_id: str) -> dict | None:
         with storage.pg_connect() as conn:

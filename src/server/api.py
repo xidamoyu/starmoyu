@@ -527,3 +527,59 @@ def close_deal(deal_id: str, body: CloseDealBody, sub: str = Depends(_jwt_sub)):
                                   [t.model_dump() for t in body.traits], operator=sub)
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+# ---------------------------------------------------------------- 沉淀流（P1+P2）
+
+class SedimentBody(BaseModel):
+    extra_lessons: list[str] = []   # 用户在确认卡补充的经验要点
+
+
+@app.post("/api/deals/{deal_id}/sediment/preview")
+def sediment_preview(deal_id: str, body: SedimentBody, sub: str = Depends(_jwt_sub)):
+    """结案沉淀第一步：渲染案例文档草稿（含流水提炼的复盘经验），供确认卡预览。"""
+    from server.sediment_service import sediment_closed_deal
+    try:
+        return sediment_closed_deal(deal_id, body.extra_lessons, created_by=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.post("/api/deals/{deal_id}/sediment/confirm")
+def sediment_confirm(deal_id: str, body: SedimentBody, sub: str = Depends(_jwt_sub)):
+    """结案沉淀第二步：确认卡批准 → 增量切块嵌入 → 入 PG chunk 表 + Milvus。"""
+    from server.sediment_service import confirm_sediment
+    try:
+        return confirm_sediment(deal_id, body.extra_lessons, confirmed_by=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.post("/api/traits/{trait_id}/confirm")
+def confirm_trait(trait_id: str, sub: str = Depends(_jwt_sub)):
+    """确认画像（verified=TRUE）——沉淀流 P3 的人工关口。"""
+    from server.m4_service import TraitService
+    ok = TraitService().confirm(trait_id, reviewer=sub)
+    if not ok:
+        raise HTTPException(404, f"画像不存在: {trait_id}")
+    return {"ok": True, "trait_id": trait_id, "verified": True}
+
+
+@app.get("/api/traits/pending")
+def pending_traits(sub: str = Depends(_jwt_sub)):
+    """待确认画像列表。"""
+    from server.m4_service import TraitService
+    return TraitService().pending_review(limit=50)
+
+
+@app.get("/api/sediment/stats")
+def sediment_stats(sub: str = Depends(_jwt_sub)):
+    """沉淀流看板：各通道的累积量（体现 RAG 随业务运转生长）。"""
+    from server.sediment_service import _q
+    n_deal_case = _q("SELECT count(*) AS n FROM chunk_meta WHERE doc_type='deal_case'")[0]["n"]
+    n_closed = _q("SELECT count(*) AS n FROM deal WHERE stage='结案'")[0]["n"]
+    n_traits = _q("SELECT count(*) AS n FROM party_traits WHERE verified=TRUE")[0]["n"]
+    n_followup = _q("SELECT count(*) AS n FROM deal_followup")[0]["n"]
+    return {"chunks_by_type": {"deal_case": n_deal_case},
+            "deals_closed": n_closed, "traits_verified": n_traits,
+            "followups": n_followup}

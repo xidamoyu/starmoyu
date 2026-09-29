@@ -2,9 +2,9 @@
 /** M6 商单路线图抽屉：stage 时间线 + 跟进流水 + 改阶段 + 跟进备注 + 结案表单。
  *  数据源 GET /api/deals/{id}/timeline。截图抽取能力置灰（视觉未验证）。 */
 import { computed, ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  dealTimeline, setDealStage, addFollowup, closeDeal,
+  dealTimeline, setDealStage, addFollowup, closeDeal, sedimentPreview, sedimentConfirm,
   type Timeline,
 } from '../api'
 
@@ -108,6 +108,20 @@ async function saveClose() {
     ElMessage.success('已结案归档')
     closeDlg.value = false
     await load(); emit('changed')
+    // 结案沉淀流：主动提醒 → 预览 → 确认入库（两次确认）
+    try {
+      await ElMessageBox.confirm('本单已结案。建议沉淀成案例文档进知识库（会自动提炼跟进流水里的复盘经验），先出预览吗？',
+        '沉淀提醒', { confirmButtonText: '出预览', cancelButtonText: '暂不', type: 'info' })
+      const pv = await sedimentPreview(props.dealId)
+      await ElMessageBox.alert(
+        `<pre style="white-space:pre-wrap;max-height:50vh;overflow:auto;font-size:12px">${pv.preview.replace(/</g,'&lt;')}</pre>`,
+        pv.title, { dangerouslyUseHTMLString: true, confirmButtonText: '确认入库',
+                    distinguishCancelAndClose: true, cancelButtonText: '补充说明后入库' })
+        .then(() => sedimentConfirm(props.dealId))
+        .then(r => ElMessage.success(`已入库：${r.sediment.chunks} 块（替换旧 ${r.sediment.replaced_old}），知识库即时可检索`))
+        .catch(a => { if (a === 'cancel') ElMessage.info('可在对话里让助手补充经验要点后沉淀'); })
+    } catch { /* 用户选暂不 */ }
+
   } finally { closeSaving.value = false }
 }
 </script>

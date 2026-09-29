@@ -119,6 +119,17 @@ export async function closeDeal(dealId: string, payload: CloseDealPayload) {
   return r.data as { ok: boolean; deal_result: Record<string, unknown>; trait_ids: string[] }
 }
 
+/** 沉淀流：出案例预览（不入库） */
+export async function sedimentPreview(dealId: string, extraLessons: string[] = []) {
+  const r = await api.post(`/deals/${dealId}/sediment/preview`, { extra_lessons: extraLessons })
+  return r.data as { deal_id: string; rel_path: string; title: string; char_len: number; preview: string }
+}
+/** 沉淀流：确认入库（增量嵌入回流知识库） */
+export async function sedimentConfirm(dealId: string, extraLessons: string[] = []) {
+  const r = await api.post(`/deals/${dealId}/sediment/confirm`, { extra_lessons: extraLessons })
+  return r.data as { ok: boolean; deal_id: string; sediment: { chunks: number; replaced_old: number } }
+}
+
 /** 视觉抽取能力是否可用（后端探测；当前置灰） */
 export async function visionEnabled() {
   try {
