@@ -80,7 +80,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 | LLM | DeepSeek（火山方舟 ARK，`deepseek-v4-flash-ga-260731`） | 云端 API | HTTP 200；`max_tokens=8000` 防 reasoning 吃光 |
 | Embedding | bge-m3（1024 维） | 本地 Ollama | dim=1024，零 API 成本 |
 | Rerank | gte-rerank-v2（阿里云 DashScope） | 云端 API | 35 ms/条（32.1×） |
-| 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2063 条向量 |
+| 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2078 条向量（2026-09-29 实测） |
 | 关系库 | PostgreSQL 18.6 | 本地 Windows | 14 张表 |
 | 对象存储 | MinIO（S3 兼容） | 本地 WSL Docker | 原件 + 预签名直链 |
 | 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 35 端点 |
@@ -93,7 +93,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 ### 2.4 结构化 / 非结构化双路检索
 
 - **结构化精查**（`search_kols` / `get_deal_status` 等）：14289 达人、400 商单走 **SQL**——类目/量级/粉丝区间/报价上限/排他期过滤是精确过滤问题，向量检索既慢又不准。
-- **非结构化召回**（`search_knowledge`）：案例/刊例/方法论/跟踪单 2063 块走 **向量 + BM25 混合检索**。
+- **非结构化召回**（`search_knowledge`）：案例/刊例/方法论/跟踪单 **2068 块**（2026-09-29 实测；消融实验于 2063 块口径）走 **向量 + BM25 混合检索**。
 - **路由交给 LLM**：工具 docstring 写清「何时该调我」，模型按用户问题自主决定查哪一路——路由本身是涌现的，不靠穷举分支。
 
 ### 2.5 Rerank 选型决策（用数据否掉「看似更专业」的方案）
@@ -110,6 +110,8 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 
 ## 三、核心功能
 
+> **先看全局**：一单商单的端到端闭环总图（知识进入三入口→执行主链→知识回流）见 `PROGRESS.md`「★ 业务闭环总图」。本章按模块拆开讲实现。
+
 ### 3.1 Agent 循环（真工具调用）
 
 ```python
@@ -122,7 +124,8 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 ```
 
 - **自主选工具**：用户问价 → 模型自己调 `search_knowledge`；说「记录跟进」→ 自己调 `create_followup`；混合意图（查达人→出方案→记跟进→提审批）一次对话串起来。
-- **防失控**：`recursion_limit=12`；工具全程 try/except 返回**结构化错误字符串**（LLM 可读可纠正），不抛异常。
+- **防失控**：`recursion_limit=25`（初版 12 在真 Agent 多轮连环调用下必爆 `GraphRecursionError`——verify_all F2b 连环工具调用实测暴露，属产品缺陷非测试问题，提额修复）；工具全程 try/except 返回**结构化错误字符串**（LLM 可读可自行纠正后重试），不向对话抛裸异常。
+- **工具可见性**：`bind_tools` 必须绑**全部 19 个**——ToolNode 里有实现 ≠ 模型签名可见，漏绑的工具模型只能靠 system prompt 幻觉调用（verify_all F9c 实测暴露：M4/M5 的 11 个工具曾长期漏绑，"验收通过"实为侥幸）。
 - **持久化**：`LANGGRAPH_CHECKPOINT_SQLITE` 环境变量指向 sqlite 文件即切 `SqliteSaver`（thread_id=会话 ID，跨进程续跑）；不设兜底 `MemorySaver`。
 
 ### 3.2 工具清单（19 个，实测计数：基座 10 + 沉淀 2 + 全周期 7）
@@ -149,6 +152,39 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 > **勘误（R10 后更新）**：工具总数 **19**（基座 10 + 沉淀 2 + 全周期 7，源码三列表逐项计数）。`sediment_case`/`save_trait`（R10 新增）入 `AGENT_TOOLS`（8→10）；FastAPI 端点 **35**（R10 沉淀 3 个 + R11 导入三通道/暂存区双审 6 个、识图附件流等）。README/RESUME 已同步。
 
+### 3.3 三条「确认卡」流（核心差异化）
+
+**统一交互契约**：用户给出材料（工单收尾一段话 / 结案数字 / Brief 口头需求）→ Agent 用 LLM 抽取结构化条目 → 对话内渲染**确认卡**（逐条列出、附原文引用）→ 用户回复「确认」（可增删改条目，改后重新出卡）→ 调 `save_*` 工具**原子入库**。
+
+**铁律**：
+- **确认前不落任何正式表**（验收断言 `party_traits=0 AND ingest_staging=0`）——抽取失败/用户不确认，除了对话记录什么都不留；
+- **查询侧只列 verified 原文，零生成**——`list_kol_traits`/`get_brand_traits` 输出的每个字都能溯源到用户确认过的原文，杜绝「Agent 替用户总结」引入的失真；
+- Agent **不重复推销**：提醒一次沉淀后用户不响应即止，不打断业务。
+
+| 流 | 触发时机 | 工具 | 抽取内容 | 原子写（一次事务） |
+|---|---|---|---|---|
+| 经验沉淀 | 工单收尾/谈判结束 | `save_interaction` | 分类/内容/原文引用/严重度 | 原文留档 + `party_traits`(verified=TRUE) + 跟进记录 |
+| 结案复盘 | 结案动作 | `save_deal_result` | ROI/GMV/曝光/互动等数字 | merge 写 `deal.result_metrics`（**不覆盖未提及字段**）+ `stage='结案'` + 跟进留痕 |
+| Brief 接单 | 新需求进入 | `save_brief` | 品类/预算/人数/档期/要求 | `proposals` 草稿 + `proposal_versions` v1 版本痕 + 组合建议 |
+
+**实测样例**（R10 DC20250005）：结案数据落库 → Agent 主动提醒 → 预览含 4 条经验（其中「小红书报价 20% 谈价空间」来自跟进流水）→ 确认 → 6 块增量嵌入 → 立即检索命中 top1。
+
+### 3.4 审批流闭环（Human-in-the-Loop 从「方案确认」扩展到「数据变更」）
+
+1. **方案审批（R2）**：`create_proposal`/`save_brief` 产草稿 → 审批中心 → `update_proposal_status`（approve/reject/revise 三动作）。
+   - **版本化**：每次 revise 落 `proposal_versions` 新版本，可回溯任意历史版；
+   - **状态机防呆**：`draft→submit→pending_review→approve/reject` 单向流转，approved 不可 reject（非法转移 → HTTP 422，实测 verify_all F4e 验证）。
+2. **商单字段变更审批（M7b/R7）**：Agent **无权限直改** deal 主字段（预算/负责人/阶段等）→ 调 `request_deal_change` 建申请 → `deal_change_requests` 记录**旧值快照**（审计可对照）→ 审批中心「商单变更」页批准 → Service **原子写回 deal + 跟进流水留痕**，驳回则不动 deal。
+   - 一商单可挂多审批，互不影响（实测 26 条申请并存）；
+   - 为什么不让 Agent 直改：LLM 数字抽取有非零错误率，主数据变更必须人把关——这是「Agent 提效率，人担责任」的边界。
+
+### 3.5 主动简报与数据飞轮
+
+- **主动简报**（`get_today_briefing`）：开场打招呼必调，汇报四类**事实**（只报查证过的数据，不预测）：① 档期临期 ② 待审批方案 ③ 3 天未跟进 ④ 黑名单撞单。
+- **数据飞轮**（读侧）：`match_kols_for_requirement` 组合建议带 `hist_deals`（历史结案单数）+ `avg_roi`（平均 ROI，取 `deal.result_metrics` 原值，**非生成**）。实测：美妆 10 万预算 → 小美妆记 2 单 avg ROI 1.59 / 是美妆日常 2 单 0.98 / 老美妆说 0 单 null（如实返回空，不编数）。
+- **结案沉淀闭环（R10）**：结案 → Agent 主动提醒 → 案例预览（`extract_lessons` 从跟进流水提炼拒绝原因/返点/档期/改稿经验，DC20250005 渲染 1080 字含 4 条经验）→ 两次确认 → `ingest_document_incremental` 增量入库（PG 按 `source_file` 先删后插幂等 + Milvus upsert，6 块秒级，**不动存量语料**）→ 知识库即时可检索。前端 DealDrawer 结案表单同步接线（结案成功 → ElMessageBox 提醒 → 预览 → 确认入库）。
+- **幂等性实测**：同一案例二次入库总块数稳定（2064→2064），重复结案/误触确认不会污染语料。
+
 ### 3.6 图片识图沉淀流（R11，截图 → 经验入库全链路）
 
 **问题**：商务谈判多发生在微信里，经验锁在聊天截图里打不了字也进不了库。v2 早期方案是「诚实降级」（图片只留档、请用户文字补充），R11 升级为**真识图**。
@@ -169,6 +205,12 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 **诚实边界**：识图失败（网络/格式）时如实告知用户并请文字补充，**不编造图片内容**；转写与用户口述冲突时（如截图人名 vs 用户给的达人编号）Agent 主动标注不一致等用户裁决。
 
+**错误可见性（连带修复的两个 422）**：
+1. FastAPI 校验错误 `detail` 是 `[{loc,msg}...]` 数组，前端 `ElMessage` 直接渲染成 `[object Object]`（用户截图抓到）→ 后端加全局 `RequestValidationError` handler 转可读字符串 + 前端 `_fmt_detail()` 双保险；
+2. 前端附件字段 camelCase `dataBase64` vs Pydantic 契约 `data_base64`，不转换必然 422 `Field required`——正是靠修复 1 后弹窗报出真实字段名才定位的（错误可见性救了第二次调试）。
+
+**验收**：拖 `data/raw/import_test/聊天截图-达人A美妆合作谈判.png` + 一句「帮我沉淀这次合作的经验」→ Agent 直接从转写抽 4 条特质（付款 50%/尾款 7 天、档期 20 号后、剧情 3 秒无特写+露出 ≥25 秒、干脆让价 9.8→8.8 万，均附原文引用），并主动标注截图人名（李雯）与用户给定额（李祉默 K03658）不一致。
+
 ### 3.7 导入三通道 + Agent/管理员双审（R11）
 
 **问题**：原导入页只有达人库 csv 直导；业务笔记/SOP 等非结构化知识、新商单台账都进不来，且无质检关口。
@@ -185,26 +227,9 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 **E2E 实测**：正常商单 pass；预算 -20000 脏数据被 Agent 抓出 reject；8 行 csv 全走暂存不直写 deal 表；`ingest_staging.suggested_kind` CHECK 约束同步扩枚举。
 
-### 3.3 三条「确认卡」流（核心差异化）
+**暂存表结构**（`ingest_staging`）：`suggested_kind`（import_deal/import_doc，CHECK 枚举已 ALTER 扩展）/ `raw_payload`（原始行）/ `extracted`（Agent 预审 verdict+issues JSON）/ `status`（pending/confirmed/rejected）。**confirm 商单前前端弹 JSON 编辑框**——管理员可在落库前修正字段，Agent 预审不是唯一关口而是第一道。
 
-工单收尾时用户粘贴一段话，Agent 抽取结构化条目 → 对话内展示**确认卡** → 用户回复「确认」→ 调 `save_*` 工具原子入库。**确认前不落任何正式表**（验收断言 `traits=0 AND staging=0`）；查询侧**只列 verified 原文，零生成**。
-
-| 流 | 工具 | 抽取内容 | 原子写 |
-|---|---|---|---|
-| 经验沉淀 | `save_interaction` | 分类/内容/原文引用/严重度 | 原文留档 + `party_traits`(verified=TRUE) + 跟进记录 |
-| 结案复盘 | `save_deal_result` | ROI/GMV/曝光/互动等数字 | merge 写 `deal.result_metrics`（不覆盖未提及字段）+ `stage='结案'` + 跟进留痕 |
-| Brief 接单 | `save_brief` | 品类/预算/人数/档期/要求 | `proposals` 草稿 + `proposal_versions` v1 版本痕 + 组合建议 |
-
-### 3.4 审批流闭环（Human-in-the-Loop 从「方案确认」扩展到「数据变更」）
-
-1. **方案审批**：`create_proposal`/`save_brief` 产草稿 → 审批中心 → `update_proposal_status`（approve/reject/revise），版本化可回溯，状态机防呆（approved 不可 reject → HTTP 422）。
-2. **商单字段变更审批（M7b）**：Agent **无权限直改** deal 主字段（预算/负责人/阶段等）→ 调 `request_deal_change` 建申请（自动捕获旧值快照）→ 审批中心「商单变更」页批准 → Service **原子写回 deal + 跟进流水留痕**，驳回则不动 deal。一商单可挂多审批，互不影响。
-
-### 3.5 主动简报与数据飞轮
-
-- **主动简报**（`get_today_briefing`）：开场打招呼必调，汇报档期临期 / 待审批方案 / 3 天未跟进 / 黑名单撞单四类事实。
-- **数据飞轮**：`match_kols_for_requirement` 组合建议带 `hist_deals`（历史结案单数）+ `avg_roi`（平均 ROI，`deal.result_metrics` 原值）。实测：美妆 10 万预算 → 小美妆记 2 单 avg ROI 1.59 / 是美妆日常 2 单 0.98 / 老美妆说 0 单 null。**沉淀越多，推荐越准。**
-- **结案沉淀闭环（R10）**：结案 → 主动提醒 → 案例预览（`extract_lessons` 从跟进流水提炼拒绝原因/返点/档期/改稿经验）→ 两次确认 → `ingest_document_incremental` 增量入库（PG 按 source_file 先删后插幂等 + Milvus upsert，6 块秒级）→ 知识库即时可检索。前端结案表单同步接线。
+**测试素材**：`data/raw/import_test/`（谈判复盘 md / 微信截图 / 8 行台账 csv 含 1 行预算 -20000 脏数据 / 测试剧本）；csv 用 **UTF-8 with BOM**（Windows Excel 按 GBK 解无 BOM 的 UTF-8 会乱码——实测踩坑后重生）。
 
 ---
 
@@ -214,7 +239,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 | 存储 | 承载内容 | 实测规模 |
 |---|---|---|
-| Milvus `dm_chunks` | 子块向量 + 元数据（混合检索 + 过滤） | 2063 条向量 |
+| Milvus `dm_chunks` | 子块向量 + 元数据（混合检索 + 过滤） | **2078** 条向量（含 8 孤儿，检索按 doc_id 过滤不碍事） |
 | PostgreSQL | 台账 + 会话/消息 + 父子块 + 特质/审批 | 14 张表 |
 | MinIO `starmoyu-raw` | 文档原件（预签名直链供「查看原文」） | — |
 
@@ -225,13 +250,13 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 | `kol_profile` | **14289** | 33 列；手机号前3后4、微信号 sha1 前8 脱敏；CPM 锚定星图 15-72 |
 | `deal` | **400** | budget=达人单价上限（对齐 demand_desc）；结案带 ROI/GMV/实际CPM |
 | `brand` | **100**（30 品类） | note 生成内容全删 |
-| `deal_followup` | **1599**（≈1600） | 含真实进度反馈 |
-| `chunk_meta` | **2063 子块** | RAG 语料（deal_case 551 + inflight 1134 + 27 刊例表 + 规则/方法论） |
+| `deal_followup` | **1613** | 含真实进度反馈（测试运行后实测） |
+| `chunk_meta` | **2068 子块** | RAG 语料（结案案例 424（70 单）+ 在途跟踪单 1261 + 刊例 360 + policies/playbook 18 + 导入文档 5 + 27 刊例表 + 规则/方法论 + 导入文档） |
 | `parent_chunk` | **1724 父块** | 生成粒度上下文 |
 | `deal_change_requests` | 按业务产生 | 一商单多审批 |
 | 其余 | `users` / `conversations` / `messages` / `proposals` / `proposal_versions` / `party_traits` / `ingest_staging` | v2 新增会话/方案/特质体系 |
 
-> **勘误**：`README.md §4` 表格仍写「RAG 语料 chunk 457 子块 / 427 父块」——这是 v1 旧值；R9 语料重做后实时 `count(*)` 为 **2063 子块 / 1724 父块**。
+> **勘误**：`README.md §4` 表格仍写「RAG 语料 chunk 457 子块 / 427 父块」——这是 v1 旧值；R9 语料重做后实时 `count(*)` 为 **2063 子块 / 1724 父块**（R9 时点）；2026-09-29 实测已增至 **2068 子块**（含 R10 沉淀与 R11 导入文档回流）。
 
 ### 4.3 14 张表清单（`information_schema` 实查）
 
