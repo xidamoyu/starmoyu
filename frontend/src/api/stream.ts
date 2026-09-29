@@ -41,7 +41,12 @@ export async function streamChat(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
     },
-    body: JSON.stringify({ text, deal_id: dealId, attachments: attachments ?? [] }),
+    body: JSON.stringify({
+      text,
+      deal_id: dealId,
+      // 后端 ChatAttachment 要 snake_case data_base64；前端内部用 camelCase，这里转换
+      attachments: (attachments ?? []).map((a) => ({ name: a.name, data_base64: a.dataBase64 })),
+    }),
   })
   if (!resp.ok || !resp.body) {
     let detail = `HTTP ${resp.status}`
