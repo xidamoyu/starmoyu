@@ -43,6 +43,8 @@
 | R7 M7b 变更审批 | ✅ | 商单字段变更审批闭环（request_deal_change → 审批中心 → 批准写回+留痕） | `test_m7b_service.py` 4/4 |
 | R8 全库重建 | ✅ | 正式 Excel 重灌 14289 达人/400 商单/100 甲方（脱敏+错位解析+分成编码） | `reports/rebuild.log` + 全库复查干净 |
 | R9 RAG 语料重做 | ✅ | 真实数据渲染 70案例+27刊例+330在途 → 2063 块重入向量库（类目归一化 68→30） | `reports/reindex_rag.log` 结构表未动 |
+| R10 结案沉淀闭环 | ✅ | P1-P4：结案→主动提醒→预览→两次确认→单文档增量回流（幂等）→即时可检索 | `test_sediment_service.py` 3/3 + DC20250005 全链路 |
+| R11 识图+导入双审 | ✅ | qwen-vl 截图转写→特质确认卡入库；导入三通道→Agent 预审→管理员确认/驳回 | 识图 E2E（4 特质抽取）+ 脏数据 reject 实测 |
 
 ### 旧版（v1 已退役，历史记录）
 
@@ -61,6 +63,65 @@
 | W7 独立审计与整改 | ✅ 完成 | reviewer 发现 9 处漏项，全部整改（含 3 处代码真修复） |
 
 图例：✅ 完成并验证 ｜ 🟡 进行中 ｜ 🔴 有问题 ｜ ⚪ 未开始 ｜ ⚠️ 含已废弃部分
+
+## ★ 业务闭环总图（一单商单的完整生命周期 · 全部实测）
+
+> 按「一单商单从哪来、怎么执行、怎么结束、结束后留下什么」端到端串起来；每步标注所属迭代与验证方式。**所有知识入口有闸门，所有写库动作有确认或审批。**
+
+### A. 知识/资产进入（三个入口，三个闸门）
+
+```
+①存量批量导入   csv/md → AdminImport 上传 → 暂存区 ingest_staging（不落正式表）
+                → Agent 预审（LLM 质检：缺字段/异常值/脱敏 → pass/warn/reject）
+                → 管理员确认/驳回（reject 强制入库需二次确认）              [R11]
+②日常对话沉淀   微信谈判截图拖入对话 → qwen-vl 转写 → Agent 抽特质（附原文引用）
+                → 确认卡 → 用户「确认」→ save_interaction 入库            [R11]
+③业务过程自积累 跟进流水 create_followup（Agent 主动富化引导）
+                → 结案时 extract_lessons 从流水自动提炼经验               [R10]
+```
+
+### B. 商单执行主链（对话驱动，Agent 只读直查、写必过闸）
+
+```
+接单   Brief 接单 save_brief → proposals 草稿 + 版本痕 + 组合建议     [R5]
+         ↓
+简报   get_today_briefing 主动汇报：临期/待审/失联/撞单                [R5]
+         ↓
+选人   search_kols（SQL 精查：类目/量级/报价/排他期/黑名单过滤）
+       match_kols_for_requirement（预算约束组合 + hist_deals/avg_roi 历史复盘）[R1/R5]
+         ↓
+出方案 create_proposal 草稿 → 审批中心 update_proposal_status
+       （版本化状态机：draft→submit→pending_review→approve，防呆 422）[R2]
+         ↓
+执行   create_followup 跟进留痕（商单台账页可查）；会话钉住商单（M6 溯源）[R4/R6]
+         ↓
+变更   预算/负责人/阶段等主字段：Agent 无权直改
+       → request_deal_change（自动捕获旧值）→ 审批中心 → 批准写回+流水留痕 [R7]
+         ↓
+结案   save_deal_result（ROI/GMV/曝光 merge 写 result_metrics，不覆盖未提及字段）
+       → stage='结案' → Agent 主动提醒沉淀                             [R5/R10]
+```
+
+### C. 知识回流（飞轮闭合）
+
+```
+结案案例沉淀   sediment_case：结案 → 主动提醒 → 案例预览（流水提炼拒绝原因/返点/档期）
+               → 两次确认（禁跳过预览）→ ingest_document_incremental 单文档增量嵌入
+               （source_file 幂等，6 块秒级）→ 知识库即时可检索             [R10]
+经验沉淀回流   确认卡入库 → party_traits(verified) → list_kol_traits 只列 verified 原文
+               （下次谈判同类达人时 Agent 主动召回）                        [R4]
+飞轮效果       沉淀越多 → match 建议的 avg_roi 越准 → 下单决策越准          [R5 实测]
+```
+
+### 闭环的「闸门」纪律（贯穿全程）
+
+| 动作 | 闸门 |
+|---|---|
+| 外部数据进正式表 | Agent 预审 + 管理员确认（导入双审） |
+| 对话经验入库 | 确认卡两次确认，确认前零落库 |
+| 结案案例回流 | 预览 → 确认，禁跳步 |
+| 商单主字段变更 | 审批流，Agent 无权直改 |
+| 查询侧 | 只列 verified 原文，零生成 |
 
 ---
 
