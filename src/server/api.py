@@ -148,13 +148,15 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
     agent = get_agent()
     cs.ensure_conversation(conv_id, sub, body.title)
 
-    # 图片附件 → MinIO 留档（沉淀流图片输入路径；当前模型无可靠视觉能力，
-    # 不假装抽取——附件只留档并在对话里可见，视觉模型接入后可回溯抽取）
+    # 图片附件 → MinIO 留档 + qwen-vl 识图抽取文字（沉淀流图片输入路径）。
+    # 注意 ARK 主模型 deepseek-v4-flash 是纯文本模型，识图必须走 llm.chat_vision（qwen-vl）。
     attachment_notes: list[str] = []
     attachment_meta: list[dict] = []
     if body.attachments:
         import base64 as _b64
         import datetime as _dt
+        from starmoyu import llm as _llm
+        _imgs_ok: list[tuple[int, str, str]] = []  # (i, name, b64)
         for i, att in enumerate(body.attachments):
             try:
                 raw = _b64.b64decode(att.data_base64)
@@ -168,16 +170,27 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
                 storage.upload_object(tmp, key)
                 os.unlink(tmp)
                 attachment_meta.append({"name": att.name, "object_key": key, "size": len(raw)})
-                attachment_notes.append(f"[图片附件 {i + 1}: {att.name}，已留档 {key}]")
+                _imgs_ok.append((i, att.name, att.data_base64))
             except Exception:
                 attachment_notes.append(f"[图片附件 {i + 1}: {att.name}，上传失败]")
+        if _imgs_ok:
+            try:
+                _names = "、".join(n for _, n, _ in _imgs_ok)
+                _desc = _llm.chat_vision(
+                    "这是用户发来的聊天记录/业务截图。请完整转写图中的文字内容（对话逐条列出、"
+                    "保留人名与数字），如有表格数据也原样转出。只输出转写内容，不要加评价。",
+                    [b for _, _, b in _imgs_ok])
+                attachment_notes.append(
+                    f"[图片附件已识图（{_names}），转写内容如下——沉淀/录入时以这些内容为准：\n{_desc}\n"
+                    f"图片原件已留档 {attachment_meta[0]['object_key']} 等]")
+            except Exception as _ve:
+                attachment_notes.append(
+                    f"[图片附件 {_names} 已留档，但识图失败：{_ve}。请让用户文字补充关键信息，不要编造图片内容]")
 
     user_text = body.text or ""
     if attachment_notes:
-        suffix = ("\n（用户附了聊天记录/凭证截图。当前无法识别图片内容，请如实说明，"
-                  "并请用户把关键信息用文字补充——不要编造图片里的内容。）")
         user_text = (user_text + "\n" if user_text else "") + \
-            "\n".join(attachment_notes) + suffix
+            "\n".join(attachment_notes)
     cs.add_message(conv_id, "user", user_text)
 
     # 会话钉住的商单（用户点「关联」时前端会持续传 deal_id；取库中现值兜底）
@@ -204,7 +217,7 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
                 if did != pinned:
                     seen_deal_ids.add(did)
                     yield f"event: deal_context\ndata: {json.dumps({'pinned_deal_id': pinned, 'detected_deal_id': did}, ensure_ascii=False)}\n\n"
-            for ev in agent.chat_stream(conv_id, body.text, pinned_deal_id=pinned):
+            for ev in agent.chat_stream(conv_id, user_text, pinned_deal_id=pinned):
                 if ev["type"] == "token":
                     final_text_parts.append(ev.get("text") or "")
                 if ev["type"] == "tool_result":

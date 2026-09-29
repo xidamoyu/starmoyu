@@ -69,6 +69,36 @@ class LLMError(RuntimeError):
     pass
 
 
+# ---------------------------------------------------------------- Vision（qwen-vl，DashScope OpenAI 兼容模式）
+
+VISION_MODEL = os.environ.get("VISION_MODEL", "qwen-vl-plus")
+DASHSCOPE_CHAT_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+
+
+def chat_vision(prompt: str, images_b64: list[str], max_tokens: int = 1500) -> str:
+    """读图：qwen-vl（DashScope compatible-mode）。images_b64 为纯 base64（不含 data: 前缀）。
+
+    ARK plan 通道的 deepseek-v4-flash 是纯文本模型，image_url 会被静默丢弃
+    （实测 prompt_tokens 仅 +104，模型答"无法识别"）——视觉必须走这条通道。
+    """
+    if not DASHSCOPE_API_KEY:
+        raise LLMError("QWEN_API_KEY 未设置（qwen-vl 视觉通道）")
+    content: list[dict] = [{"type": "text", "text": prompt}]
+    for b64 in images_b64:
+        content.append({"type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{b64}"}})
+    payload = {"model": VISION_MODEL,
+               "messages": [{"role": "user", "content": content}],
+               "max_tokens": max_tokens}
+    data = _post(DASHSCOPE_CHAT_URL, payload,
+                 {"Content-Type": "application/json", "Authorization": f"Bearer {DASHSCOPE_API_KEY}"},
+                 timeout=180.0)
+    try:
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError) as e:
+        raise LLMError(f"vision 响应结构异常: {json.dumps(data, ensure_ascii=False)[:300]}") from e
+
+
 # ---------------------------------------------------------------- Chat（DeepSeek / ARK）
 
 def _post(url: str, payload: dict, headers: dict, timeout: float = 120.0, retries: int = 4) -> dict:
