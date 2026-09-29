@@ -237,6 +237,24 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 
 
 
+## R11 · 图片识图沉淀 + 导入三通道双审 + 前端体验修复 ✅（commit `8aaac57`…）
+
+**识图沉淀流（用户批评「我配的模型不是可以读图吗」后重建）**：
+- 实测定位：ARK `deepseek-v4-flash` 纯文本模型，image_url **静默丢弃**（带图 prompt_tokens 仅 +104，答「无法识别」）→ 视觉必须走 **qwen-vl-plus（DashScope compatible-mode）**，`llm.chat_vision()` 新增；实测 760×1400 截图准确读出「8万8/预付50%/10月22日20点」
+- `api.py` 附件链路：MinIO 留档 → qwen-vl 完整转写 → 拼进 Agent 输入（连带修 bug：`chat_stream` 原传 `body.text`，转写根本没进 Agent）
+- E2E：拖微信谈判截图 + 「帮我沉淀这次合作的经验」→ Agent 直接从转写抽 4 条特质（付款/排期/内容尺度/沟通偏好，附原文引用）→ 确认卡 → 回「确认」入库；全程无需用户手动补文字
+
+**导入三通道 + 双审**：
+- kols 直导 / deals csv→staging→双审→deal / docs→staging→双审→`ingest_document_incremental`
+- Agent 预审（verdict pass/warn/reject + issues 存 extracted）：实测正常单 pass、预算 -20000 抓出 reject；reject 强制入库二次确认弹窗；`ingest_staging.suggested_kind` CHECK 扩枚举；`_parse_rows` io 遮蔽修
+- E2E：导入「商务谈判 SOP」确认后检索命中第 2 位；前端 AdminImport.vue 重写 266 行
+
+**错误可见性**（用户截图 `[object Object]`）：422 detail 数组转可读字符串（后端全局 exception_handler + 前端 `_fmt_detail` 双保险）；附件字段 camelCase→snake_case（前端 `dataBase64` vs Pydantic `data_base64` 必 422）
+
+**数字实测（2026-09-29）**：FastAPI 端点 **35**（@app 装饰器减 exception_handler）；PG chunk **2068** / Milvus dm_chunks **2078**（storage.milvus_client() 带库名）；staging 12（历史正常单 + 用户自测导入 1）；deal 表无测试商单残留（DC-IMP = 0）
+
+**测试素材**：`data/raw/import_test/`（谈判复盘 md / 微信截图 / 8 行台账 csv 含 1 行脏数据 / 测试剧本 README），csv 用 UTF-8-BOM 重生（Excel 乱码根因）
+
 ## R10 · 结案沉淀闭环 P1-P4 全量实现 ✅（commit `f6a4e4b`）
 
 **动机**：盘点发现「数据飞轮」停在话术——party_traits=0、ingest_staging=2、语料回流是一次性脚本，业务使用对语料的增量为 0。用户拍板四通道全做。

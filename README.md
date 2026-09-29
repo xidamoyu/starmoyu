@@ -18,7 +18,7 @@
 | 向量库 | **Milvus 3.0**（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | ✅ 2076 条向量 |
 | 关系库 | **PostgreSQL 18.6** | 本地 Windows | ✅ 14 张表 |
 | 对象存储 | **MinIO**（S3 兼容） | 本地 WSL Docker | ✅ 原件 + 预签名直链 |
-| 后端 | **FastAPI**（JWT + SSE 流式） | 本地 :8000 | ✅ 29 端点 |
+| 后端 | **FastAPI**（JWT + SSE 流式） | 本地 :8000 | ✅ 35 端点 |
 | 前端 | **Vue3 + Vite + TS + Element Plus + Pinia** | 本地 :5173 | ✅ 7 页面 |
 
 ---
@@ -31,7 +31,7 @@
 └───────────────────────┬────────────────────────────┘
                         │ REST + SSE
 ┌───────────────────────▼────────────────────────────┐
-│              FastAPI 后端 :8000（29 端点）            │
+│              FastAPI 后端 :8000（35 端点）            │
 ├────────────────────────────────────────────────────┤
 │ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
 │   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
@@ -59,6 +59,10 @@
 
 **全生命周期（M5+M6，7）**：`save_deal_result`/`get_deal_result`（结案复盘）/ `save_brief`（Brief 接单）/ `get_today_briefing`（主动简报）/ `get_brand_traits`/`save_brand_traits`（品牌特质）/ `get_pending_traits`（待确认队列）
 
+**图片识图沉淀流（用户拖/贴聊天截图 → 经验入库，全链路实测）**：用户在对话输入框拖入或粘贴聊天记录截图（预览条确认，气泡内渲染，原图存 MinIO `chat-attachments/` 留档）→ 后端调 **qwen-vl-plus**（DashScope 视觉通道；ARK 主模型 deepseek-v4-flash 为纯文本模型，`image_url` 被静默丢弃，识图必须走 qwen-vl）**完整转写图中对话** → 转写文本拼进 Agent 输入 → Agent 按沉淀协议从转写内容抽取合作特质（付款要求/排期习惯/内容尺度/沟通偏好，附原文引用）→ 出确认卡 → 用户回复「确认」入库（`save_interaction`，可溯源达人编号）。识图失败时如实告知并请用户文字补充，不编造图片内容。
+
+**导入三通道 + Agent/管理员双审（管理后台「导入管理」）**：①**达人库** csv 直导（admin 专属，ON CONFLICT 幂等）；②**商单台账** csv → 逐行入暂存区（`ingest_staging`，不直接写 deal 表）；③**非结构化文档** md/txt/csv → 整篇入暂存区。暂存记录由 **Agent 预审**（LLM 质检：字段缺失/异常值/敏感信息，结论 pass/warn/reject + 问题清单存库）→ 管理员在暂存区看结论徽标逐条**确认或驳回**：确认商单可先在 JSON 编辑框修正字段再入库；Agent 判 reject 的记录强制入库需过二次确认弹窗；非结构化文档确认后自动切块向量化、**即时可检索**。E2E 实测：正常单 pass、预算 -20000 脏数据被抓 reject、导入文档检索命中。
+
 **审批流闭环（M7b）**：对话内 Agent **无权限直改**商单主字段（预算/负责人/阶段等），调 `request_deal_change` 建申请（`deal_change_requests`，自动捕获旧值）→ 审批中心「商单变更」标签页显示 → 批准后**自动写回 deal + 跟进流水留痕**，驳回则不动 deal。**一商单可挂多个审批，互不影响。**
 
 ---
@@ -74,7 +78,7 @@
 | 广告主 `brand` | **100 家**（30 品类） | note 列生成内容全删 |
 | 跟进流水 `deal_followup` | **1611 条** | 含真实进度反馈；跟进工具有富化引导（拒绝原因/返点/档期） |
 | 变更审批 `deal_change_requests` | 按业务产生 | 一商单多审批 |
-| RAG 语料 chunk | **2064 子块 / 2076 Milvus 向量** | 结案案例 552 + 在途单 + 刊例 27 表 + 规则；结案沉淀自动 +6 块/单 |
+| RAG 语料 chunk | **2068 子块 / 2078 Milvus 向量**（2026-09-29 实测） | 结案案例 552 + 在途单 + 刊例 27 表 + 规则 + 导入文档；结案沉淀自动 +6 块/单，导入文档确认后即时入库 |
 | 变更审批实例 `deal_change_requests` | **25 条** | M7b 审批流真实产生 |
 
 > 脱敏红线：Excel 原始数据绝不存原文、绝不提交 git。
@@ -87,7 +91,7 @@
 cd starmoyu
 export LANGGRAPH_CHECKPOINT_SQLITE="C:/.../starmoyu/data/checkpoints.db"
 
-# 后端（29 端点）
+# 后端（35 端点）
 .venv/Scripts/python.exe -m uvicorn server.api:app --port 8000 --app-dir src
 
 # 前端（Vue3）
@@ -126,7 +130,7 @@ cd frontend && npm run dev    # http://localhost:5173
 | 检索 | 8 组消融完整链路 | **Hit@1 0.694 / Hit@5 0.908 / MRR 0.788**（基线 0.551/0.662，增益 +0.143/+0.126） |
 | 生成 | RAGAS 四指标（20 条抽样） | **faithfulness 0.959 / answer_relevancy 0.794 / context_precision 0.705 / context_recall 0.559** |
 
-口径：语料 2064 块真实业务数据渲染（消融实测于 2063 块口径）、评测集 98 条与语料同源反查生成。完整实验数据见
+口径：语料现 **2068 块**（2026-09-29 实测，含导入文档）；消融/RAGAS 实测于 2063 块口径，语料增量后指标待下次消融刷新；评测集 98 条与语料同源反查生成。完整实验数据见
 `reports/检索评测报告.md` 与 `reports/生成质量评估报告.md`；Rerank 选型（本地 CPU 1126ms → GPU 失败 → 云端 35ms/条 32×）见检索评测报告。
 
 

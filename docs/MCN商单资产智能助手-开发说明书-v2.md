@@ -60,7 +60,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 └───────────────────────┬────────────────────────────┘
                         │ REST + SSE
 ┌───────────────────────▼────────────────────────────┐
-│              FastAPI 后端 :8000（29 端点）            │
+│              FastAPI 后端 :8000（35 端点）            │
 ├────────────────────────────────────────────────────┤
 │ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
 │   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
@@ -83,7 +83,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 | 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2063 条向量 |
 | 关系库 | PostgreSQL 18.6 | 本地 Windows | 14 张表 |
 | 对象存储 | MinIO（S3 兼容） | 本地 WSL Docker | 原件 + 预签名直链 |
-| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 29 端点 |
+| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 35 端点 |
 | 前端 | Vue3 + Vite + TS + Element Plus + Pinia | 本地 :5173 | 6 业务页面 |
 
 ### 2.3 核心设计：Service 层是唯一写库者
@@ -147,7 +147,43 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 | 全周期 | `get_brand_traits` / `save_brand_traits` | 品牌特质查询 / 沉淀 | 读 / ✅ |
 | 全周期 | `get_pending_traits` | 待确认特质队列 | 只读 |
 
-> **勘误（R10 后更新）**：工具总数 **19**（基座 10 + 沉淀 2 + 全周期 7，源码三列表逐项计数）。`sediment_case`/`save_trait`（R10 新增）入 `AGENT_TOOLS`（8→10）；FastAPI 端点 **29**（沉淀 preview/confirm/stats 3 个）。README/RESUME 已同步。
+> **勘误（R10 后更新）**：工具总数 **19**（基座 10 + 沉淀 2 + 全周期 7，源码三列表逐项计数）。`sediment_case`/`save_trait`（R10 新增）入 `AGENT_TOOLS`（8→10）；FastAPI 端点 **35**（R10 沉淀 3 个 + R11 导入三通道/暂存区双审 6 个、识图附件流等）。README/RESUME 已同步。
+
+### 3.6 图片识图沉淀流（R11，截图 → 经验入库全链路）
+
+**问题**：商务谈判多发生在微信里，经验锁在聊天截图里打不了字也进不了库。v2 早期方案是「诚实降级」（图片只留档、请用户文字补充），R11 升级为**真识图**。
+
+**链路（每步实测）**：
+
+```
+用户拖图/粘贴 → ChatView FileReader 转 base64 → 预览条确认
+  → POST /api/chat/{conv} attachments[{name, data_base64}]   # 注意 snake_case
+  → MinIO 留档 chat-attachments/{conv}/{时间戳}_{i}.png       # 原图可回溯
+  → llm.chat_vision(qwen-vl-plus) 完整转写图中对话            # DashScope compatible-mode
+  → 转写文本 + 用户文字 拼成 user_text → LangGraph Agent
+  → Agent 从转写抽合作特质（付款/排期/内容尺度/沟通偏好，附原文引用）
+  → 确认卡 → 用户「确认」→ save_interaction 原子入库
+```
+
+**关键选型依据（实测踩坑）**：ARK plan 通道的 `deepseek-v4-flash` 是**纯文本模型**——带 `image_url` 的请求被**静默降级**（不报错，图片被丢弃，prompt_tokens 仅 +104），模型回答「无法识别」。视觉能力必须走 **qwen-vl-plus（DashScope）**：实测 760×1400 截图准确读出「成交 8万8 / 预付 50% / 10月22日20点」。前端字段名也踩过坑：前端内部 camelCase `dataBase64`，Pydantic 契约是 snake_case `data_base64`，不转换必然 422。
+
+**诚实边界**：识图失败（网络/格式）时如实告知用户并请文字补充，**不编造图片内容**；转写与用户口述冲突时（如截图人名 vs 用户给的达人编号）Agent 主动标注不一致等用户裁决。
+
+### 3.7 导入三通道 + Agent/管理员双审（R11）
+
+**问题**：原导入页只有达人库 csv 直导；业务笔记/SOP 等非结构化知识、新商单台账都进不来，且无质检关口。
+
+**三通道**：
+
+| 通道 | 输入 | 暂存 | 确认后落库 |
+|---|---|---|---|
+| 达人库 | csv（admin 专属） | 不暂存 | `kol_profile`（ON CONFLICT 幂等） |
+| 商单台账 | csv 逐行 | `ingest_staging`(kind=import_deal) | `deal`（可先 JSON 编辑框修字段） |
+| 非结构化文档 | md/txt/csv 整篇 | `ingest_staging`(kind=import_doc) | `ingest_document_incremental` 切块向量化 |
+
+**双审流程**：上传 → 暂存区（**不落正式表**）→ **Agent 预审**（`m4_service.stage()` 内 LLM 质检：字段缺失/异常值/敏感信息未脱敏/类目合理性 → verdict pass/warn/reject + issues 存 `extracted`）→ 管理员看结论徽标与问题清单逐条**确认/驳回**（reject 强制入库需二次确认弹窗）→ 落库。非结构化文档确认后即时可检索（实测导入「商务谈判 SOP」后检索命中第 2 位）。
+
+**E2E 实测**：正常商单 pass；预算 -20000 脏数据被 Agent 抓出 reject；8 行 csv 全走暂存不直写 deal 表；`ingest_staging.suggested_kind` CHECK 约束同步扩枚举。
 
 ### 3.3 三条「确认卡」流（核心差异化）
 

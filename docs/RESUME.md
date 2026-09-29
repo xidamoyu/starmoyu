@@ -12,12 +12,14 @@
 
 **Starmoyu · MCN 商单资产智能助手**（个人项目）｜ LangGraph Agent · RAG · Milvus · PostgreSQL · FastAPI · Vue3 · DeepSeek
 
-- 构建**对话式 MCN 商单业务助手**：LangGraph `bind_tools` + ToolNode 真 Agent 循环（LLM 自主选工具、结果回喂、多轮迭代），**19 个工具**覆盖「达人筛选 → 方案生成 → 审批流转 → 跟进记录 → 结案复盘 → 经验沉淀 → 变更审批」商单全生命周期；FastAPI(JWT/SSE) + Vue3 前端，**29 个 API 端点、14 张 PG 表**
+- 构建**对话式 MCN 商单业务助手**：LangGraph `bind_tools` + ToolNode 真 Agent 循环（LLM 自主选工具、结果回喂、多轮迭代），**19 个工具**覆盖「达人筛选 → 方案生成 → 审批流转 → 跟进记录 → 结案复盘 → 经验沉淀 → 变更审批」商单全生命周期；FastAPI(JWT/SSE) + Vue3 前端，**35 个 API 端点、14 张 PG 表**
 - 设计**混合检索链路**（Milvus 向量 ∥ BM25 → RRF 融合 → 类型先验/配额 → 文档去重 → Rerank 精排），语料 **2063 块**（真实数据渲染 4.7× 于初版）、评测集 **98 条**全链路消融 8 组：完整链路 **Hit@1 0.694 / MRR 0.788**，相对纯向量基线 **Hit@1 +0.143 / MRR +0.126**，Rerank 单组件贡献 **MRR +0.044** 为最大增益
 - **RAGAS 四指标评测**（检索层+生成层）：抽样 20 条真实查询走完整 RAG 链路，**faithfulness（忠实度）0.959（近零幻觉）**、answer_relevancy 0.794、context_precision 0.705、context_recall 0.559；低分项逐条归因（列表型回答 Embedding 相似度天然偏低/聚合型问题对齐损耗），非幻觉问题
 - **结构化/非结构化双路检索设计**：14289 达人 + 400 商单走 **SQL 精查**（类目/量级/粉丝/报价/排他期过滤，`search_kols` 毫秒级），非结构化语料（案例/刊例/方法论/跟踪单 2063 块）走向量检索——由 LLM 在对话中自主决定查哪一路
 - **数据飞轮闭环（双向）**：①读侧——组合建议带 `hist_deals`/`avg_roi` 历史 ROI；②写侧——**结案沉淀闭环**：结案→主动提醒→案例预览（自动提炼跟进流水复盘经验）→两次确认→单文档增量嵌入回流 RAG（按 source_file 幂等，6 块秒级）——**沉淀越多，推荐越准，语料随业务运转自动增厚**
 - **商单字段变更审批流**：对话内 Agent 无权限直改主字段 → `request_deal_change` 工具建申请（自动捕获旧值）→ 审批中心批准/驳回 → 批准自动写回 + 跟进流水留痕；一商单可挂多审批
+- **图片识图沉淀闭环**：微信谈判截图拖入对话 → qwen-vl 完整转写（实测主模型 deepseek-v4-flash 对 `image_url` 静默丢弃，视觉必须独立通道）→ Agent 从转写抽合作特质（附原文引用）→ 确认卡入库、原图 MinIO 留档可回溯——经验从「截图里的死数据」变成「可检索的知识库资产」
+- **导入三通道 + Agent/管理员双审**：达人库/商单台账/非结构化文档统一入暂存区，Agent LLM 质检（异常值/缺字段/脱敏检查，实测抓出预算 -20000 脏数据判 reject）→ 管理员确认/驳回后才落正式表；非结构化文档确认后秒级向量化、即时可检索——所有外部数据入口都有 AI 预审 + 人工把关双重防线
 
 ### 写法 B（问题解决能力优先，适合需要讲故事的面试）
 
@@ -146,7 +148,7 @@ v2 语料上该问题更严重（1134 块在途单），去重组件保留，但
 | RAGAS answer_relevancy | 0.794（低分样本为列表型回答，非幻觉） | 同上 |
 | RAGAS context_precision / recall | 0.705 / 0.559（recall 仅统计有 ground_truth 的 14 条） | 同上 |
 | Rerank 延迟 | 35 ms/条（DashScope gte-rerank-v2，32× vs 本地 CPU 1126ms） | `reports/bench_rerank.log` |
-| API / 表 | FastAPI 29 端点 / PG 14 表 / Agent 19 工具 | 代码实测 |
+| API / 表 | FastAPI 35 端点 / PG 14 表 / Agent 19 工具 | 代码实测 |
 | M1-M7b 验收 | verify_m1 8/8 · m2 11/11 · m4 7/7×3 · m5 15/15×3 · pytest 22+4 | `reports/verify_*.log` |
 
 ---
