@@ -448,9 +448,9 @@ def list_deals(sub: str = Depends(_jwt_sub), status: str = "", limit: int = 50):
 
 def _parse_rows(b: bytes, filename: str) -> list[dict]:
     """xlsx 用 openpyxl，csv 直接解。返回 dict 行。"""
+    import io
     if filename.lower().endswith((".xlsx", ".xls")):
         from openpyxl import load_workbook
-        import io
         wb = load_workbook(io.BytesIO(b), read_only=True, data_only=True)
         ws = wb.active
         rows = list(ws.iter_rows(values_only=True))
@@ -466,13 +466,50 @@ def _parse_rows(b: bytes, filename: str) -> list[dict]:
 @app.post("/api/admin/import")
 async def admin_import(file: UploadFile, kind: str = "kols",
                        sub: str = Depends(_jwt_sub)):
+    """批量导入。kols 直导（低风险，ON CONFLICT 兜底）；deals/docs 先入暂存区
+    （Agent 预审 + 管理员确认双关后才落正式表/向量库）。"""
     if sub not in ("admin", "u-admin"):
         raise HTTPException(403, "仅管理员可导入")
     data = await file.read()
+    fname = file.filename or ""
+    if kind == "docs":
+        # 非结构化文档：txt/md/csv 原文整篇入暂存，等双审后向量化入库
+        from server.m4_service import IngestService
+        raw = data.decode("utf-8-sig", errors="replace")
+        if not raw.strip():
+            raise HTTPException(422, "文件内容为空")
+        svc = IngestService()
+        sid = svc.stage("import_doc", "admin_import", raw,
+                        extracted={"title": fname, "size": len(raw)},
+                        created_by=sub)
+        return {"ok": True, "staged": 1, "staging_ids": [sid],
+                "hint": "已入暂存区，先 Agent 预审再管理员确认后才会进知识库"}
     try:
-        rows = _parse_rows(data, file.filename or "")
+        rows = _parse_rows(data, fname)
     except Exception as e:
         raise HTTPException(422, f"解析失败: {e}")
+    if not rows:
+        raise HTTPException(422, "未解析到任何数据行")
+
+    if kind == "deals":
+        # 商单批量导入：逐行入暂存（不直接写 deal 表），Agent 预审 + 管理员确认
+        from server.m4_service import IngestService
+        svc = IngestService()
+        ids: list[str] = []
+        for r in rows:
+            if not (r.get("brand_name") or r.get("品牌")):
+                continue
+            ex = {k: (v if v not in ("", None) else None)
+                  for k, v in r.items() if k in (
+                      "deal_id", "brand_name", "category", "sub_category", "goal",
+                      "budget", "stage", "demand_desc", "start_date", "end_date",
+                      "owner", "note")}
+            ids.append(svc.stage("import_deal", "admin_import",
+                                 json.dumps(r, ensure_ascii=False, default=str),
+                                 extracted=ex, created_by=sub))
+        return {"ok": True, "rows_parsed": len(rows), "staged": len(ids),
+                "staging_ids": ids[:50],
+                "hint": f"{len(ids)} 行已入暂存区，请在下方暂存区完成 Agent 预审 + 确认"}
 
     inserted = 0
     if kind == "kols":
@@ -504,6 +541,67 @@ async def admin_import(file: UploadFile, kind: str = "kols",
     else:
         raise HTTPException(422, f"暂不支持 kind={kind}")
     return {"ok": True, "rows_parsed": len(rows), "inserted": inserted}
+
+
+@app.get("/api/admin/staging")
+def list_staging(status: str = "pending", sub: str = Depends(_jwt_sub)):
+    """暂存导入队列（管理员）。"""
+    from server.m4_service import IngestService
+    limit = 100
+    items = IngestService().pending(limit=limit)
+    if status != "pending":
+        # 非 pending 状态直接查表
+        with storage.pg_connect() as conn:
+            cur = conn.cursor()
+            cur.execute("""SELECT staging_id, suggested_kind, source_type,
+                                  LEFT(raw_content, 80) AS raw_preview, status,
+                                  reviewed_by, created_at
+                           FROM ingest_staging WHERE status=%s
+                           ORDER BY created_at DESC LIMIT %s""", (status, limit))
+            names = [d[0] for d in cur.description]
+            items = [dict(zip(names, r)) for r in cur.fetchall()]
+    return {"items": items}
+
+
+class ReviewBody(BaseModel):
+    staging_id: str
+
+
+@app.post("/api/admin/staging/agent-review")
+def agent_review_staging(body: ReviewBody, sub: str = Depends(_jwt_sub)):
+    """Agent 预审一条暂存导入（LLM 质检），结果写回 extracted.agent_review。"""
+    from server.m4_service import IngestService
+    try:
+        return IngestService().agent_review(body.staging_id, reviewer=sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+class ConfirmBody(BaseModel):
+    staging_id: str
+    final_fields: dict = {}
+
+
+@app.post("/api/admin/staging/confirm")
+def confirm_staging(body: ConfirmBody, sub: str = Depends(_jwt_sub)):
+    """管理员确认暂存导入 → 落正式表/向量库（Agent 预审意见仅供参照）。"""
+    from server.m4_service import IngestService
+    try:
+        r = IngestService().confirm(body.staging_id, body.final_fields, reviewer=sub)
+        # import_doc 确认后向量入库
+        if r.get("kind") == "import_doc" and r.get("vectorize_text"):
+            pass  # confirm 内部(import_doc 分支)已完成向量入库
+        return r
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@app.post("/api/admin/staging/reject")
+def reject_staging(body: ReviewBody, sub: str = Depends(_jwt_sub)):
+    from server.m4_service import IngestService
+    if IngestService().reject(body.staging_id, reviewer=sub):
+        return {"ok": True}
+    raise HTTPException(422, "驳回失败（可能已处理）")
 
 
 # ============================================================ M6: 商单钉住/路线图/结案表单

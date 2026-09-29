@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import sys
+import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -121,7 +122,8 @@ class IngestService:
         with storage.pg_connect() as conn:
             cur = conn.cursor()
             cur.execute("""SELECT staging_id, suggested_kind, source_type,
-                                  LEFT(raw_content, 80) AS raw_preview, status, created_at
+                                  LEFT(raw_content, 80) AS raw_preview, status,
+                                  extracted, created_at
                            FROM ingest_staging WHERE status='pending'
                            ORDER BY created_at DESC LIMIT %s""", (limit,))
             names = [d[0] for d in cur.description]
@@ -169,6 +171,31 @@ class IngestService:
                     (fid, final_fields.get("deal_id"), final_fields.get("note", ""),
                      reviewer or "admin"))
                 written_id = str(fid)
+            elif kind == "import_deal":
+                # 批量导入的商单行（管理员在导入页逐行确认后落 deal 表）
+                rid = final_fields.get("deal_id") or f"DC-IMP-{uuid.uuid4().hex[:8].upper()}"
+                cur.execute(
+                    """INSERT INTO deal
+                       (deal_id, brand_name, category, sub_category, goal, budget,
+                        stage, demand_desc, start_date, end_date, owner, note)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                       ON CONFLICT (deal_id) DO NOTHING""",
+                    (rid, final_fields.get("brand_name"), final_fields.get("category"),
+                     final_fields.get("sub_category"), final_fields.get("goal"),
+                     final_fields.get("budget"), final_fields.get("stage") or "需求沟通",
+                     final_fields.get("demand_desc"), final_fields.get("start_date"),
+                     final_fields.get("end_date"), final_fields.get("owner"),
+                     final_fields.get("note")))
+                written_id = rid
+            elif kind == "import_doc":
+                # 非结构化文档 → RAG 语料（复用沉淀流的增量入库，先删后插幂等）
+                from server.sediment_service import ingest_document_incremental
+                rel = final_fields.get("rel_path") or f"imports/{uuid.uuid4().hex[:10]}.md"
+                title = final_fields.get("title") or rel.rsplit("/", 1)[-1]
+                r2 = ingest_document_incremental(rel, title, st["raw_content"])
+                if not r2.get("ok"):
+                    raise ValueError(f"向量入库失败: {r2.get('error')}")
+                written_id = r2["doc_id"]
             else:  # deal 等其他 kind 先到暂存确认，正式写库随 M5 扩展
                 raise ValueError(f"kind={kind} 的正式落库尚未开放，请先在暂存区确认字段")
             cur.execute("""UPDATE ingest_staging
@@ -177,6 +204,42 @@ class IngestService:
             conn.commit()
         return {"kind": kind, "written_id": written_id,
                 "vectorize_text": st["raw_content"]}  # 上层拿去走向量入库
+
+    def agent_review(self, staging_id: str, reviewer: str = "agent") -> dict:
+        """Agent 预审：LLM 检查一条暂存导入（数据质量/敏感信息/明显错误），
+        结论写入 extracted.agent_review，供管理员确认时参考。不改 status。"""
+        st = self.get(staging_id)
+        if not st:
+            raise ValueError(f"暂存记录不存在: {staging_id}")
+        if st["status"] != "pending":
+            raise ValueError(f"该记录已处理: {st['status']}")
+        from starmoyu import llm
+        prompt = (
+            "你是 MCN 商单系统的数据质检助手。审查以下待导入数据，输出 JSON：\n"
+            '{"verdict": "pass" | "warn" | "reject",\n'
+            ' "issues": ["问题1", "问题2"],\n'
+            ' "notes": "一句话综合评价"}\n'
+            "检查点：字段缺失/明显异常值（如预算为负、粉丝数超 10 亿）/手机号等敏感信息未脱敏/"
+            "类目是否属于常见 MCN 类目/文本是否含不当内容。只输出 JSON。\n\n"
+            f"类型: {st['suggested_kind']}\n"
+            f"提取字段: {st['extracted']}\n"
+            f"原文（截断 1500 字）: {st['raw_content'][:1500]}")
+        try:
+            review = llm.chat_json([{"role": "user", "content": prompt}], max_tokens=8000)
+            if not isinstance(review, dict) or "verdict" not in review:
+                review = {"verdict": "warn", "issues": ["Agent 预审输出结构异常"],
+                          "notes": str(review)[:200]}
+        except Exception as e:
+            review = {"verdict": "warn", "issues": [f"Agent 预审异常: {type(e).__name__}"],
+                      "notes": "预审失败不阻塞，请管理员人工重点核对"}
+        with storage.pg_connect() as conn:
+            conn.cursor().execute(
+                """UPDATE ingest_staging
+                   SET extracted = extracted || %s::jsonb
+                   WHERE staging_id=%s""",
+                (__import__("json").dumps({"agent_review": review}, ensure_ascii=False),
+                 staging_id))
+        return {"staging_id": staging_id, "review": review}
 
     def reject(self, staging_id: str, reviewer: str | None = None) -> bool:
         with storage.pg_connect() as conn:
