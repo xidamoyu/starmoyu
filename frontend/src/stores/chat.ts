@@ -9,11 +9,13 @@ export interface ToolStep {
   detail: string
 }
 
+export interface MsgAttachment { name: string; dataUrl: string }
 export interface ChatMsg {
   role: 'user' | 'assistant'
   text: string
   steps?: ToolStep[]   // assistant 消息附带的工具调用过程
   error?: boolean
+  attachments?: MsgAttachment[]  // 用户消息附带的图片
 }
 
 export const useChatStore = defineStore('chat', {
@@ -65,10 +67,11 @@ export const useChatStore = defineStore('chat', {
     dismissDetected(dealId: string) {
       this.detectedDealIds = this.detectedDealIds.filter((d) => d !== dealId)
     },
-    async send(text: string) {
-      if (!text.trim() || this.streaming) return
+    async send(text: string, attachments?: { name: string; dataUrl: string; dataBase64: string }[]) {
+      if ((!text.trim() && !attachments?.length) || this.streaming) return
       if (!this.convId) await this.startNew()   // 仅在真正发消息时才惰性建新会话
-      this.messages.push({ role: 'user', text })
+      this.messages.push({ role: 'user', text,
+        attachments: attachments?.map((a) => ({ name: a.name, dataUrl: a.dataUrl })) })
       this.streaming = true
 
       const assistantMsg: ChatMsg = { role: 'assistant', text: '', steps: [] }
@@ -96,7 +99,7 @@ export const useChatStore = defineStore('chat', {
       }
 
       try {
-        const res = await streamChat(this.convId, text, onEvent, this.pinnedDealId)
+        const res = await streamChat(this.convId, text, onEvent, this.pinnedDealId, attachments)
         // M6: 同步钉住状态与检测到的商单
         if (res.pinnedDealId) this.pinnedDealId = res.pinnedDealId
         for (const d of res.detected) {

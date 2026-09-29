@@ -22,11 +22,17 @@ export interface StreamResult {
   detected: string[]
 }
 
+export interface ChatAttachment {
+  name: string
+  dataBase64: string
+}
+
 export async function streamChat(
   convId: string,
   text: string,
   onEvent: (ev: ChatEvent) => void,
   dealId: string | null = null,
+  attachments?: ChatAttachment[],
 ): Promise<StreamResult> {
   const result: StreamResult = { pinnedDealId: null, detected: [] }
   const resp = await fetch(`/api/chat/${convId}`, {
@@ -35,7 +41,7 @@ export async function streamChat(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
     },
-    body: JSON.stringify({ text, deal_id: dealId }),
+    body: JSON.stringify({ text, deal_id: dealId, attachments: attachments ?? [] }),
   })
   if (!resp.ok || !resp.body) {
     let detail = `HTTP ${resp.status}`

@@ -112,12 +112,12 @@ async function saveClose() {
     try {
       await ElMessageBox.confirm('本单已结案。建议沉淀成案例文档进知识库（会自动提炼跟进流水里的复盘经验），先出预览吗？',
         '沉淀提醒', { confirmButtonText: '出预览', cancelButtonText: '暂不', type: 'info' })
-      const pv = await sedimentPreview(props.dealId)
+      const pv = await sedimentPreview(props.dealId ?? '')
       await ElMessageBox.alert(
         `<pre style="white-space:pre-wrap;max-height:50vh;overflow:auto;font-size:12px">${pv.preview.replace(/</g,'&lt;')}</pre>`,
         pv.title, { dangerouslyUseHTMLString: true, confirmButtonText: '确认入库',
                     distinguishCancelAndClose: true, cancelButtonText: '补充说明后入库' })
-        .then(() => sedimentConfirm(props.dealId))
+        .then(() => sedimentConfirm(props.dealId ?? ''))
         .then(r => ElMessage.success(`已入库：${r.sediment.chunks} 块（替换旧 ${r.sediment.replaced_old}），知识库即时可检索`))
         .catch(a => { if (a === 'cancel') ElMessage.info('可在对话里让助手补充经验要点后沉淀'); })
     } catch { /* 用户选暂不 */ }

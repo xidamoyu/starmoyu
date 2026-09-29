@@ -11,6 +11,11 @@ const store = useChatStore()
 const input = ref('')
 const bodyRef = ref<HTMLElement | null>(null)
 const drawerDealId = ref<string | null>(null)
+// 图片附件（拖拽/粘贴）
+interface Att { name: string; dataUrl: string; dataBase64: string }
+const attachments = ref<Att[]>([])
+const dragging = ref(false)
+// 失焦保留：textarea 内容绑在组件 state（input ref）上，切窗口/切焦点不丢
 
 const TOOL_LABELS: Record<string, string> = {
   search_knowledge: '📚 检索知识库',
@@ -40,11 +45,41 @@ async function scrollBottom() {
 
 async function send() {
   const t = input.value.trim()
-  if (!t) return
+  if (!t && !attachments.value.length) return
   input.value = ''
-  await store.send(t)
+  const atts = attachments.value
+  attachments.value = []
+  await store.send(t, atts.length ? atts : undefined)
   await scrollBottom()
 }
+
+/** 输入框随内容行数自动增高（1~8 行） */
+function autoGrow(e: Event) {
+  const el = e.target as HTMLTextAreaElement
+  el.style.height = 'auto'
+  el.style.height = Math.min(el.scrollHeight, 8 * 24 + 20) + 'px'
+}
+
+function addFiles(files: FileList | File[]) {
+  for (const f of Array.from(files)) {
+    if (!f.type.startsWith('image/')) continue
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = String(reader.result)
+      attachments.value.push({ name: f.name, dataUrl,
+        dataBase64: dataUrl.slice(dataUrl.indexOf(',') + 1) })
+    }
+    reader.readAsDataURL(f)
+  }
+}
+function onDrop(e: DragEvent) {
+  dragging.value = false
+  if (e.dataTransfer?.files.length) addFiles(e.dataTransfer.files)
+}
+function onPaste(e: ClipboardEvent) {
+  if (e.clipboardData?.files.length) { addFiles(e.clipboardData.files); e.preventDefault() }
+}
+function removeAtt(i: number) { attachments.value.splice(i, 1) }
 
 async function loadHistory(convId: string) {
   store.select(convId)
@@ -136,7 +171,12 @@ onMounted(async () => {
 
         <template v-for="(m, i) in store.messages" :key="i">
           <div v-if="m.role === 'user'" class="row user">
-            <div class="bubble user-bubble">{{ m.text }}</div>
+            <div class="bubble user-bubble">
+              <div v-if="m.attachments?.length" class="msg-atts">
+                <img v-for="(a, j) in m.attachments" :key="j" :src="a.dataUrl" class="msg-att" :alt="a.name" />
+              </div>
+              <div v-if="m.text">{{ m.text }}</div>
+            </div>
           </div>
           <div v-else class="row assistant">
             <div v-if="m.steps?.length" class="steps">
@@ -158,17 +198,30 @@ onMounted(async () => {
         </template>
       </div>
 
-      <!-- 输入区 -->
-      <div class="chat-footer">
+      <!-- 输入区（拖拽图片到此发送） -->
+      <div class="chat-footer"
+           @dragover.prevent="dragging = true"
+           @dragleave.prevent="dragging = false"
+           @drop.prevent="onDrop">
+        <!-- 附件预览条 -->
+        <div v-if="attachments.length" class="att-row">
+          <div v-for="(a, i) in attachments" :key="i" class="att-chip">
+            <img :src="a.dataUrl" class="att-thumb" :alt="a.name" />
+            <span class="att-name">{{ a.name }}</span>
+            <button class="att-x" @click="removeAtt(i)">✕</button>
+          </div>
+        </div>
+        <div v-if="dragging" class="drop-hint">松开以添加图片（聊天记录截图会随消息留档）</div>
         <div class="input-row">
           <textarea v-model="input" class="input" rows="1"
-            placeholder="例如：找几个美妆腰部达人，预算 15 万 / DC20250026 现在什么情况 / 帮我记录一条跟进…"
-            @keydown.enter.exact.prevent="send" />
-          <button class="send-btn" :disabled="store.streaming" @click="send">
+            placeholder="例如：找几个美妆腰部达人，预算 15 万 / DC20250026 现在什么情况 / 帮我记录一条跟进…（可拖入聊天记录截图）"
+            @keydown.enter.exact.prevent="send"
+            @input="autoGrow" @paste="onPaste" />
+          <button class="send-btn" :disabled="store.streaming || (!input.trim() && !attachments.length)" @click="send">
             <el-icon><Promotion /></el-icon> 发送
           </button>
         </div>
-        <div class="foot-hint">可查报价规则 · 搜达人 · 查商单 · 记跟进 · 出方案 · 沉淀经验</div>
+        <div class="foot-hint">可查报价规则 · 搜达人 · 查商单 · 记跟进 · 出方案 · 沉淀经验（截图可拖入）</div>
       </div>
     </div>
 
@@ -235,6 +288,8 @@ onMounted(async () => {
 
 .bubble { max-width: 76%; padding: 10px 14px; border-radius: var(--r-md); line-height: 1.55; font-size: 14px; }
 .user-bubble { background: var(--brand); color: #fff; border-bottom-right-radius: 3px; white-space: pre-wrap; }
+.msg-atts { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.msg-att { max-width: 180px; max-height: 140px; border-radius: 6px; border: 2px solid rgba(255,255,255,.4); cursor: zoom-in; }
 
 .assistant-content { background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--r-md); border-bottom-left-radius: 3px; padding: 12px 16px;
@@ -252,11 +307,24 @@ onMounted(async () => {
 .step.tool_result .step-label { color: var(--ok); font-weight: 600; }
 .step-detail { color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; }
 
-.chat-footer { border-top: 1px solid var(--line); background: var(--surface); padding: 12px 16px 8px; }
+.chat-footer { border-top: 1px solid var(--line); background: var(--surface); padding: 12px 16px 8px; position: relative; }
+.chat-footer.drag-over { outline: 2px dashed var(--brand); outline-offset: -4px; }
+.drop-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--brand-soft) 85%, transparent); color: var(--brand-strong);
+  font-size: 13px; font-weight: 600; z-index: 2; pointer-events: none; border-radius: 4px; }
+.att-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.att-chip { display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+.att-thumb { width: 34px; height: 34px; object-fit: cover; border-radius: 4px; }
+.att-name { font-size: 12px; color: var(--ink-2); max-width: 140px; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.att-x { border: none; background: transparent; color: var(--ink-3); cursor: pointer; font-size: 12px; padding: 2px; }
+.att-x:hover { color: var(--danger); }
 .input-row { display: flex; gap: 10px; align-items: flex-end; }
 .input { flex: 1; resize: none; font: inherit; font-size: 14px; line-height: 1.5;
   padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-md);
-  background: var(--paper); color: var(--ink); }
+  background: var(--paper); color: var(--ink); min-height: 44px; max-height: 212px;
+  overflow-y: auto; field-sizing: content; }
 .input:focus { outline: none; border-color: var(--brand); background: var(--surface); }
 .send-btn { display: flex; align-items: center; gap: 6px; padding: 9px; border: none;
   border-radius: var(--r-sm); background: var(--brand); color: #fff; font: inherit;

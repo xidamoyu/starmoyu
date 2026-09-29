@@ -95,10 +95,16 @@ def me(sub: str = Depends(_jwt_sub)):
 
 # ============================================================ 对话
 
+class ChatAttachment(BaseModel):
+    name: str = "image.png"
+    data_base64: str  # 纯 base64（不含 data: 前缀）
+
+
 class ChatBody(BaseModel):
     text: str = ""
     title: str | None = None
     deal_id: str | None = None  # 会话钉住的商单（前端「关联」chip 传）
+    attachments: list[ChatAttachment] = []  # 沉淀流图片输入（存 MinIO 留档）
 
 
 @app.post("/api/conversations")
@@ -129,7 +135,38 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
     """发送消息，SSE 流式返回 Agent 执行过程。"""
     agent = get_agent()
     cs.ensure_conversation(conv_id, sub, body.title)
-    cs.add_message(conv_id, "user", body.text)
+
+    # 图片附件 → MinIO 留档（沉淀流图片输入路径；当前模型无可靠视觉能力，
+    # 不假装抽取——附件只留档并在对话里可见，视觉模型接入后可回溯抽取）
+    attachment_notes: list[str] = []
+    attachment_meta: list[dict] = []
+    if body.attachments:
+        import base64 as _b64
+        import datetime as _dt
+        for i, att in enumerate(body.attachments):
+            try:
+                raw = _b64.b64decode(att.data_base64)
+                ext = ".png" if att.name.lower().endswith(".png") else (
+                    ".jpg" if att.name.lower().endswith((".jpg", ".jpeg")) else ".bin")
+                key = f"chat-attachments/{conv_id}/{_dt.datetime.now():%Y%m%d_%H%M%S}_{i}{ext}"
+                import tempfile
+                with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tf:
+                    tf.write(raw)
+                    tmp = tf.name
+                storage.upload_object(tmp, key)
+                os.unlink(tmp)
+                attachment_meta.append({"name": att.name, "object_key": key, "size": len(raw)})
+                attachment_notes.append(f"[图片附件 {i + 1}: {att.name}，已留档 {key}]")
+            except Exception:
+                attachment_notes.append(f"[图片附件 {i + 1}: {att.name}，上传失败]")
+
+    user_text = body.text or ""
+    if attachment_notes:
+        suffix = ("\n（用户附了聊天记录/凭证截图。当前无法识别图片内容，请如实说明，"
+                  "并请用户把关键信息用文字补充——不要编造图片里的内容。）")
+        user_text = (user_text + "\n" if user_text else "") + \
+            "\n".join(attachment_notes) + suffix
+    cs.add_message(conv_id, "user", user_text)
 
     # 会话钉住的商单（用户点「关联」时前端会持续传 deal_id；取库中现值兜底）
     from server import m6_service as m6
@@ -146,6 +183,15 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
         try:
             # 开场先推钉住状态（前端渲染关联 chip / 提示条）
             yield f"event: deal_context\ndata: {json.dumps({'pinned_deal_id': pinned}, ensure_ascii=False)}\n\n"
+            if attachment_meta:
+                yield (f"event: attachments\ndata: "
+                       f"{json.dumps({'attachments': attachment_meta}, ensure_ascii=False)}\n\n")
+            # 用户输入里直接提到的商单号也弹关联提示（此前只扫工具结果，
+            # 首轮确认卡/结案粘贴不调工具 → 商单号检测不到）
+            for did in m6.extract_deal_ids(body.text or ""):
+                if did != pinned:
+                    seen_deal_ids.add(did)
+                    yield f"event: deal_context\ndata: {json.dumps({'pinned_deal_id': pinned, 'detected_deal_id': did}, ensure_ascii=False)}\n\n"
             for ev in agent.chat_stream(conv_id, body.text, pinned_deal_id=pinned):
                 if ev["type"] == "token":
                     final_text_parts.append(ev.get("text") or "")
@@ -300,28 +346,54 @@ KOL_COLS = ("kol_id", "kol_name", "platform", "category", "sub_category",
 
 @app.get("/api/kols")
 def list_kols(sub: str = Depends(_jwt_sub), q: str = "", category: str = "",
-              tier: str = "", limit: int = 50):
-    sql = """SELECT kol_id, kol_name, platform, category, sub_category, tier,
-                    fans_count, interact_rate, price_21_60s, avg_views,
-                    exclusive_until, available_from, blacklist
-             FROM kol_profile WHERE 1=1"""
-    args: list = []
+              tier: str = "", page: int = 1, page_size: int = 20,
+              sort: str = "fans"):
+    """达人库分页列表（企业表格口径：总数/分页/统计条/类目 facets）。"""
+    where, args = ["1=1"], []
     if q:
-        sql += " AND kol_name ILIKE %s"
+        where.append("kol_name ILIKE %s")
         args.append(f"%{q}%")
     if category:
-        sql += " AND category=%s"
+        where.append("category=%s")
         args.append(category)
     if tier:
-        sql += " AND tier=%s"
+        where.append("tier=%s")
         args.append(tier)
-    sql += " ORDER BY fans_count DESC LIMIT %s"
-    args.append(min(limit, 200))
+    w = " AND ".join(where)
+    order = {"fans": "fans_count DESC", "price": "price_21_60s DESC",
+             "interact": "interact_rate DESC NULLS LAST"}.get(sort, "fans_count DESC")
     with storage.pg_connect() as conn:
         cur = conn.cursor()
-        cur.execute(sql, args)
+        cur.execute(f"SELECT count(*) FROM kol_profile WHERE {w}", args)
+        total = cur.fetchone()[0]
+        # 统计条（按当前筛选口径）：总粉丝/均价/排期冲突数/黑名单数
+        cur.execute(f"""SELECT coalesce(sum(fans_count),0),
+                               coalesce(avg(price_21_60s),0),
+                               count(*) FILTER (WHERE exclusive_until IS NOT NULL),
+                               count(*) FILTER (WHERE blacklist IS NOT NULL)
+                        FROM kol_profile WHERE {w}""", args)
+        sum_fans, avg_price, n_excl, n_black = cur.fetchone()
+        # 类目 facets（不筛类目时返回，供下拉）
+        facets: list[dict] = []
+        if not category:
+            cur.execute("""SELECT category, count(*) FROM kol_profile
+                           WHERE {w} GROUP BY category ORDER BY count(*) DESC""".format(w=w),
+                        args)
+            facets = [{"category": r[0], "count": r[1]} for r in cur.fetchall()]
+        page = max(page, 1)
+        page_size = min(max(page_size, 10), 100)
+        cur.execute(f"""SELECT kol_id, kol_name, platform, category, sub_category, tier,
+                               fans_count, interact_rate, price_21_60s, avg_views,
+                               exclusive_until, available_from, blacklist
+                        FROM kol_profile WHERE {w}
+                        ORDER BY {order} LIMIT %s OFFSET %s""",
+                    args + [page_size, (page - 1) * page_size])
         names = [d[0] for d in cur.description]
-        return {"items": [dict(zip(names, r)) for r in cur.fetchall()]}
+        return {"items": [dict(zip(names, r)) for r in cur.fetchall()],
+                "total": total, "page": page, "page_size": page_size,
+                "stats": {"sum_fans": int(sum_fans), "avg_price": round(float(avg_price)),
+                          "exclusive_count": n_excl, "blacklist_count": n_black},
+                "facets": facets}
 
 
 class KolPatch(BaseModel):
