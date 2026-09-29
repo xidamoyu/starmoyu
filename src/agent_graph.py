@@ -30,7 +30,7 @@ from m4_tools import M4_TOOLS  # noqa: E402
 from m5_tools import M5_TOOLS  # noqa: E402
 from starmoyu import llm  # noqa: E402
 
-MAX_STEPS = 12
+MAX_STEPS = 25  # 12 会在复杂多轮连环调用时 GraphRecursionError（verify_all F2b 实测）
 
 SYSTEM_PROMPT = """你是「星图商单助手」，服务 MCN 机构的商单运营与商务同事。
 
@@ -125,7 +125,10 @@ def _make_checkpointer():
 
 class MCAgent:
     def __init__(self):
-        self.model = _make_model().bind_tools(AGENT_TOOLS)
+        # bind 全部工具（基座+沉淀+全周期）：只 bind 基座会让模型对 M4/M5 工具
+        # 「盲调」（签名不在 schema 里，服从性时灵时不灵——verify_all 实测复现）
+        self.model = _make_model().bind_tools(
+            list(AGENT_TOOLS) + list(M4_TOOLS) + list(M5_TOOLS))
         self.cp, self.cp_kind = _make_checkpointer()
         self.graph = self._build()
 
