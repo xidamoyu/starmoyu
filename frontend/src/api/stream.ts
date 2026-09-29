@@ -47,7 +47,8 @@ export async function streamChat(
     let detail = `HTTP ${resp.status}`
     try {
       const j = await resp.json()
-      detail = j.detail ?? detail
+      const raw = j.detail ?? detail
+      detail = typeof raw === 'string' ? raw : JSON.stringify(raw)
     } catch { /* ignore */ }
     onEvent({ type: 'error', error: detail })
     return result

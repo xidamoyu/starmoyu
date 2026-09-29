@@ -17,6 +17,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -35,6 +36,17 @@ SECRET = os.environ.get("JWT_SECRET", "dev-secret-change-me")
 JWT_EXP_H = 24
 
 app = FastAPI(title="MCN 商单助手 API", version="0.1.0")
+
+
+# 422 校验错误的 detail 是 [{loc, msg, type}...] 数组，前端 ElMessage 直接渲染会显示
+# [object Object]（用户截图踩过）。统一转成可读字符串，前端任何端点都不再拿到对象/数组。
+@app.exception_handler(RequestValidationError)
+async def _validation_handler(request: Request, exc: RequestValidationError):
+    parts = []
+    for e in exc.errors():
+        loc = ".".join(str(x) for x in e.get("loc", []) if x != "body")
+        parts.append(f"{loc}: {e.get('msg', '校验失败')}")
+    raise HTTPException(status_code=422, detail="；".join(parts) or "请求参数校验失败")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # Vue dev server

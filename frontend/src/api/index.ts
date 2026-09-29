@@ -4,6 +4,23 @@ import { ElMessage } from 'element-plus'
 
 export const api = axios.create({ baseURL: '/api', timeout: 60_000 })
 
+/** 后端错误 detail 兜底格式化：数组（旧 422）/对象 → 可读字符串，避免弹 [object Object] */
+export function _fmt_detail(d: unknown): string | null {
+  if (d == null) return null
+  if (typeof d === 'string') return d
+  if (Array.isArray(d)) {
+    return d.map((e) =>
+      typeof e === 'string' ? e
+        : [e.loc?.filter((x: unknown) => x !== 'body').join('.'), e.msg].filter(Boolean).join(': ')
+    ).join('；') || null
+  }
+  if (typeof d === 'object') {
+    const o = d as Record<string, unknown>
+    return String(o.msg ?? o.detail ?? JSON.stringify(o))
+  }
+  return String(d)
+}
+
 api.interceptors.request.use((cfg) => {
   const t = localStorage.getItem('token')
   if (t) cfg.headers.Authorization = `Bearer ${t}`
@@ -17,7 +34,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       location.hash = '#/login'
     }
-    ElMessage.error(err.response?.data?.detail ?? err.message ?? '请求失败')
+    ElMessage.error(_fmt_detail(err.response?.data?.detail) ?? err.message ?? '请求失败')
     return Promise.reject(err)
   },
 )
