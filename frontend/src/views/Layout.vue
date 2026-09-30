@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ChatDotRound, Notebook, User, DocumentChecked, Upload, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
+import { ChatDotRound, Collection, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { logout, api } from '../api'
 import { useChatStore } from '../stores/chat'
 
@@ -19,10 +19,8 @@ onMounted(async () => {
   } catch { /* 401 已由拦截器处理 */ }
   store.refreshConversations().catch(() => {})
 })
-const isAdmin = computed(() => role.value === 'admin')
 const roleLabel = computed(() => ({ admin: '管理员', operator: '运营', viewer: '只读' })[role.value] ?? role.value)
 
-// 「对话」分组 = 会话列表（点击切换会话并跳到对话页）
 const conversations = computed(() => store.convList ?? [])
 async function pickConv(id: string) {
   store.select(id)
@@ -33,12 +31,24 @@ function newChat() {
   router.push('/')
 }
 
+const libItems = [
+  { path: '/kols', label: '达人库' },
+  { path: '/deals', label: '商单台账' },
+  { path: '/proposals', label: '审批中心' },
+]
+const settingItems = computed(() => {
+  const items = [{ path: '/import', label: '导入管理' }]
+  if (role.value === 'admin') items.push({ path: '/users', label: '用户管理' })
+  return items
+})
+function go(path: string) {
+  router.push(path)
+}
 const activePath = computed(() => route.path)
 </script>
 
 <template>
   <div class="layout">
-    <!-- 顶栏 -->
     <header class="topbar">
       <div class="brand"><span class="logo">★</span><span>星图商单助手</span></div>
       <div class="top-right">
@@ -61,45 +71,46 @@ const activePath = computed(() => route.path)
     </header>
 
     <div class="body">
-      <!-- 侧边栏：分组折叠 -->
       <aside class="nav">
         <div class="group">
           <div class="group-title">对话</div>
           <button class="nav-item new-chat" @click="newChat">
             <el-icon><ChatDotRound /></el-icon><span>新对话</span>
           </button>
-          <button v-for="c in conversations.slice(0, 8)" :key="c.conv_id"
+          <button v-for="c in conversations.slice(0, 10)" :key="c.conv_id"
                   class="nav-item conv" :class="{ active: route.path === '/' && store.convId === c.conv_id }"
                   :title="c.title" @click="pickConv(c.conv_id)">
             <span class="dot"></span><span class="conv-title">{{ c.title }}</span>
           </button>
         </div>
 
-        <div class="group">
-          <div class="group-title">资料库</div>
-          <router-link to="/kols" class="nav-item" :class="{ active: activePath === '/kols' }">
-            <el-icon><User /></el-icon><span>达人库</span>
-          </router-link>
-          <router-link to="/deals" class="nav-item" :class="{ active: activePath === '/deals' }">
-            <el-icon><Notebook /></el-icon><span>商单台账</span>
-          </router-link>
-          <router-link to="/proposals" class="nav-item" :class="{ active: activePath === '/proposals' }">
-            <el-icon><DocumentChecked /></el-icon><span>审批中心</span>
-          </router-link>
-        </div>
+        <div class="spacer"></div>
 
-        <div class="group">
-          <div class="group-title">设置</div>
-          <router-link to="/import" class="nav-item" :class="{ active: activePath === '/import' }">
-            <el-icon><Upload /></el-icon><span>导入管理</span>
-          </router-link>
-          <router-link v-if="isAdmin" to="/users" class="nav-item" :class="{ active: activePath === '/users' }">
-            <el-icon><Setting /></el-icon><span>用户管理</span>
-          </router-link>
-        </div>
+        <el-popover placement="top-start" trigger="hover" :width="150" popper-class="nav-pop">
+          <template #reference>
+            <button class="nav-item entry" :class="{ active: ['/kols','/deals','/proposals'].includes(activePath) }">
+              <el-icon><Collection /></el-icon><span>资料库</span>
+            </button>
+          </template>
+          <div class="pop-menu">
+            <button v-for="it in libItems" :key="it.path" class="pop-item"
+                    :class="{ active: activePath === it.path }" @click="go(it.path)">{{ it.label }}</button>
+          </div>
+        </el-popover>
+
+        <el-popover placement="top-start" trigger="hover" :width="150" popper-class="nav-pop">
+          <template #reference>
+            <button class="nav-item entry" :class="{ active: ['/import','/users'].includes(activePath) }">
+              <el-icon><Setting /></el-icon><span>设置</span>
+            </button>
+          </template>
+          <div class="pop-menu">
+            <button v-for="it in settingItems" :key="it.path" class="pop-item"
+                    :class="{ active: activePath === it.path }" @click="go(it.path)">{{ it.label }}</button>
+          </div>
+        </el-popover>
       </aside>
 
-      <!-- 主区域 -->
       <main class="main">
         <router-view />
       </main>
@@ -110,7 +121,6 @@ const activePath = computed(() => route.path)
 <style scoped>
 .layout { display: flex; flex-direction: column; height: 100vh; }
 
-/* 顶栏 */
 .topbar {
   height: 54px; flex: none; display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--line);
@@ -131,10 +141,9 @@ const activePath = computed(() => route.path)
 
 .body { display: flex; flex: 1; min-height: 0; }
 
-/* 侧边栏：浅灰底 + 分组 */
 .nav {
-  width: 216px; flex: none; background: var(--surface-2, #f5f5f5); border-right: 1px solid var(--line);
-  overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 14px;
+  width: 232px; flex: none; background: var(--surface-2, #f5f5f5); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 2px; overflow-y: auto; padding: 12px 10px;
 }
 .group { display: flex; flex-direction: column; gap: 2px; }
 .group-title { font-size: 11.5px; color: var(--ink-3, #909399); padding: 0 10px 4px; letter-spacing: 1px; }
@@ -150,15 +159,21 @@ const activePath = computed(() => route.path)
 .conv .dot { width: 6px; height: 6px; border-radius: 50%; background: #c0c4cc; flex: none; }
 .conv.active .dot { background: #fff; }
 .conv-title { overflow: hidden; text-overflow: ellipsis; }
+.spacer { flex: 1; }
+.entry { font-weight: 500; border: 1px solid rgba(0, 123, 255, .35); background: rgba(0, 123, 255, .05); }
+.entry.active { background: #007bff; color: #fff; border-color: #007bff; }
 
-/* 主区域 */
 .main { flex: 1; min-width: 0; overflow-y: auto; background: var(--paper); }
+</style>
 
-/* 窄屏：侧边栏折叠为图标 rail */
-@media (max-width: 768px) {
-  .nav { width: 52px; padding: 12px 6px; }
-  .nav-item { justify-content: center; padding: 10px 0; gap: 0; }
-  .nav-item span, .group-title, .conv .dot { display: none; }
-  .role-tag { display: none; }
+<style>
+.nav-pop { padding: 6px !important; }
+.nav-pop .pop-menu { display: flex; flex-direction: column; gap: 2px; }
+.nav-pop .pop-item {
+  display: block; width: 100%; text-align: left; padding: 8px 12px; border: none;
+  background: none; border-radius: 5px; cursor: pointer; font: inherit; font-size: 13.5px;
+  color: #303133;
 }
+.nav-pop .pop-item:hover { background: rgba(0, 123, 255, .08); color: #007bff; }
+.nav-pop .pop-item.active { background: #007bff; color: #fff; }
 </style>
