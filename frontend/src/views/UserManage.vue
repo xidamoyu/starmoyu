@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { api } from '../api'
 
@@ -15,6 +15,10 @@ const rows = ref<UserRow[]>([])
 const loading = ref(false)
 const me = ref<{ user_id: string; role: string } | null>(null)
 
+// 搜索/筛选
+const keyword = ref('')
+const roleFilter = ref('')
+
 const showCreate = ref(false)
 const form = ref({ username: '', password: '', display_name: '', role: 'viewer' })
 
@@ -22,13 +26,27 @@ const showEdit = ref(false)
 const editing = ref<UserRow | null>(null)
 const editForm = ref({ display_name: '', role: 'viewer', password: '' })
 
+const ROLE_LABEL: Record<string, string> = { admin: '管理员', operator: '运营', viewer: '只读' }
+
+const filtered = computed(() =>
+  rows.value.filter((u) => {
+    if (roleFilter.value && u.role !== roleFilter.value) return false
+    const kw = keyword.value.trim().toLowerCase()
+    if (!kw) return true
+    return u.username.toLowerCase().includes(kw) || u.display_name.toLowerCase().includes(kw)
+  }),
+)
+
+// 统计卡片
+const statAdmins = computed(() => rows.value.filter((u) => u.role === 'admin').length)
+const statOperators = computed(() => rows.value.filter((u) => u.role === 'operator').length)
+const statViewers = computed(() => rows.value.filter((u) => u.role === 'viewer').length)
+
 async function load() {
   loading.value = true
   try {
-    const meR = await api.get('/me')
-    me.value = meR.data
-    const r = await api.get('/admin/users')
-    rows.value = r.data.items
+    me.value = (await api.get('/me')).data
+    rows.value = (await api.get('/admin/users')).data.items
   } finally {
     loading.value = false
   }
@@ -42,7 +60,7 @@ async function create() {
   await api.post('/admin/users', form.value)
   ElMessage.success(`已创建 ${form.value.username}`)
   showCreate.value = false
-  form.value = { username: '', password: '', display_name: '', role: 'user' }
+  form.value = { username: '', password: '', display_name: '', role: 'viewer' }
   await load()
 }
 
@@ -76,40 +94,74 @@ onMounted(load)
 
 <template>
   <div class="page">
-    <div class="head">
-      <h2>用户管理</h2>
-      <el-button type="primary" @click="showCreate = true">新建用户</el-button>
+    <!-- 统计卡片 -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-title">用户总数</div>
+        <div class="stat-num green">{{ rows.length }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">管理员</div>
+        <div class="stat-num blue">{{ statAdmins }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">运营</div>
+        <div class="stat-num orange">{{ statOperators }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">只读</div>
+        <div class="stat-num gray">{{ statViewers }}</div>
+      </div>
     </div>
 
-    <el-table :data="rows" v-loading="loading" stripe>
-      <el-table-column prop="username" label="用户名" min-width="120" />
-      <el-table-column prop="display_name" label="显示名" min-width="120" />
-      <el-table-column label="角色" width="100">
-        <template #default="{ row }">
-          <el-tag :type="row.role === 'admin' ? 'danger' : row.role === 'operator' ? 'warning' : 'info'" size="small">
-            {{ {admin: '管理员', operator: '运营', viewer: '只读'}[row.role] ?? row.role }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="created_at" label="创建时间" min-width="160">
-        <template #default="{ row }">{{ new Date(row.created_at).toLocaleString() }}</template>
-      </el-table-column>
-      <el-table-column label="操作" width="150" fixed="right">
-        <template #default="{ row }">
-          <el-button size="small" @click="openEdit(row)">编辑</el-button>
-          <el-button size="small" type="danger" :disabled="row.user_id === me?.user_id"
-                     @click="remove(row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <!-- 表格卡片 -->
+    <div class="table-card">
+      <div class="toolbar">
+        <h2>用户管理</h2>
+        <div class="filters">
+          <el-input v-model="keyword" placeholder="搜索用户名 / 显示名" clearable class="kw" />
+          <el-select v-model="roleFilter" placeholder="全部角色" clearable class="role-sel">
+            <el-option label="管理员" value="admin" />
+            <el-option label="运营" value="operator" />
+            <el-option label="只读" value="viewer" />
+          </el-select>
+          <el-button type="primary" @click="showCreate = true">＋ 新建用户</el-button>
+        </div>
+      </div>
 
-    <el-dialog v-model="showCreate" title="新建用户" width="420">
-      <el-form label-width="80">
+      <el-table :data="filtered" v-loading="loading" stripe border>
+        <el-table-column prop="username" label="用户名" min-width="140" />
+        <el-table-column prop="display_name" label="显示名" min-width="140" />
+        <el-table-column label="角色" width="110" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.role === 'admin' ? 'danger' : row.role === 'operator' ? 'warning' : 'info'" size="small">
+              {{ ROLE_LABEL[row.role] ?? row.role }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" min-width="180">
+          <template #default="{ row }">{{ new Date(row.created_at).toLocaleString() }}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="160" align="center" fixed="right">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" plain @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" type="danger" plain :disabled="row.user_id === me?.user_id"
+                       @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty description="没有匹配的用户" />
+        </template>
+      </el-table>
+    </div>
+
+    <el-dialog v-model="showCreate" title="新建用户" width="440">
+      <el-form label-width="90">
         <el-form-item label="用户名"><el-input v-model="form.username" /></el-form-item>
         <el-form-item label="密码"><el-input v-model="form.password" type="password" show-password /></el-form-item>
         <el-form-item label="显示名"><el-input v-model="form.display_name" placeholder="默认同用户名" /></el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="form.role">
+          <el-select v-model="form.role" class="role-sel">
             <el-option label="只读（viewer）" value="viewer" />
             <el-option label="运营（operator）" value="operator" />
             <el-option label="管理员（admin）" value="admin" />
@@ -122,11 +174,11 @@ onMounted(load)
       </template>
     </el-dialog>
 
-    <el-dialog v-model="showEdit" :title="`编辑 ${editing?.username}`" width="420">
-      <el-form label-width="80">
+    <el-dialog v-model="showEdit" :title="`编辑 ${editing?.username}`" width="440">
+      <el-form label-width="90">
         <el-form-item label="显示名"><el-input v-model="editForm.display_name" /></el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="editForm.role" :disabled="editing?.user_id === me?.user_id">
+          <el-select v-model="editForm.role" :disabled="editing?.user_id === me?.user_id" class="role-sel">
             <el-option label="只读（viewer）" value="viewer" />
             <el-option label="运营（operator）" value="operator" />
             <el-option label="管理员（admin）" value="admin" />
@@ -144,8 +196,28 @@ onMounted(load)
 </template>
 
 <style scoped>
-.page { padding: 20px 24px; }
-.head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.head h2 { margin: 0; font-size: 18px; }
-.hint { font-size: 12px; color: var(--el-text-color-secondary); margin-top: 4px; }
+.page { padding: 18px 22px; }
+
+.stat-row { display: flex; gap: 16px; margin-bottom: 16px; }
+.stat-card {
+  flex: 1; background: #fff; border: 1px solid #ebeef5; border-radius: 8px;
+  padding: 14px 18px; box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+}
+.stat-title { font-size: 13px; color: #909399; margin-bottom: 6px; }
+.stat-num { font-size: 26px; font-weight: 700; line-height: 1; }
+.green { color: #28a745; }
+.blue { color: #007bff; }
+.orange { color: #ff9800; }
+.gray { color: #606266; }
+
+.table-card {
+  background: #fff; border: 1px solid #ebeef5; border-radius: 8px;
+  padding: 16px 18px; box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+}
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.toolbar h2 { margin: 0; font-size: 17px; }
+.filters { display: flex; gap: 10px; align-items: center; }
+.kw { width: 220px; }
+.role-sel { width: 170px; }
+.hint { font-size: 12px; color: #909399; margin-top: 4px; }
 </style>
