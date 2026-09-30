@@ -1,7 +1,7 @@
-"""LLM 接入层：DeepSeek(火山方舟 ARK) + 本地 Ollama Embedding + 阿里云 DashScope Rerank。
+"""LLM 接入层：Qwen3.8(阿里云百炼 token-plan) + 本地 Ollama Embedding + DashScope Rerank/Vision。
 
 三个通道各自独立、可配置：
-  - Chat     : DeepSeek via 火山方舟 ARK（OpenAI 兼容）
+  - Chat     : Qwen3.8 via 阿里云百炼 token-plan（OpenAI 兼容）
   - Embedding: 本地 Ollama bge-m3（1024 维）
   - Rerank   : 阿里云 DashScope gte-rerank-v2（云端 API）
 
@@ -42,10 +42,13 @@ _load_env()
 
 # ---------------------------------------------------------------- 配置
 
-ARK_BASE_URL = os.environ.get("ARK_BASE_URL", "https://ark.cn-beijing.volces.com/api/plan/v3")
-ARK_API_KEY = os.environ.get("ARK_API_KEY", "")
-CHAT_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash-ga-260731")
-CHAT_MODEL_PRO = os.environ.get("DEEPSEEK_MODEL_PRO", "deepseek-v4-pro-ga-260813")
+# Chat 通道：阿里云百炼 token-plan（OpenAI 兼容模式，与 Hermes 会话同源模型）
+# 旧 ARK/deepseek 变量名仍作回退兼容
+CHAT_BASE_URL = os.environ.get("CHAT_BASE_URL") or os.environ.get(
+    "ARK_BASE_URL", "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1")
+CHAT_API_KEY = os.environ.get("CHAT_API_KEY") or os.environ.get("ARK_API_KEY", "")
+CHAT_MODEL = os.environ.get("CHAT_MODEL") or os.environ.get("DEEPSEEK_MODEL", "qwen3.8-flash")
+CHAT_MODEL_PRO = os.environ.get("CHAT_MODEL_PRO") or os.environ.get("DEEPSEEK_MODEL_PRO", "qwen3.8-max")
 
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 # 注：默认值必须用 127.0.0.1 而非 localhost——Windows 下 localhost 可能解析为
@@ -99,7 +102,7 @@ def chat_vision(prompt: str, images_b64: list[str], max_tokens: int = 1500) -> s
         raise LLMError(f"vision 响应结构异常: {json.dumps(data, ensure_ascii=False)[:300]}") from e
 
 
-# ---------------------------------------------------------------- Chat（DeepSeek / ARK）
+# ---------------------------------------------------------------- Chat（Qwen3.8 / token-plan）
 
 def _post(url: str, payload: dict, headers: dict, timeout: float = 120.0, retries: int = 4) -> dict:
     last: Exception | None = None
@@ -122,9 +125,9 @@ def _post(url: str, payload: dict, headers: dict, timeout: float = 120.0, retrie
 
 def chat(messages: list[dict], temperature: float = 0.3, max_tokens: int = 2048,
          json_mode: bool = False, model: str | None = None) -> str:
-    """调用 DeepSeek（火山方舟 ARK）Chat 接口。"""
-    if not ARK_API_KEY:
-        raise LLMError("ARK_API_KEY 未设置（DeepSeek 通道）")
+    """调用 Qwen3.8（token-plan）Chat 接口（OpenAI 兼容协议）。"""
+    if not CHAT_API_KEY:
+        raise LLMError("CHAT_API_KEY 未设置（token-plan 通道）")
     payload: dict[str, Any] = {
         "model": model or CHAT_MODEL,
         "messages": messages,
@@ -133,8 +136,8 @@ def chat(messages: list[dict], temperature: float = 0.3, max_tokens: int = 2048,
     }
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
-    data = _post(f"{ARK_BASE_URL}/chat/completions", payload,
-                 {"Content-Type": "application/json", "Authorization": f"Bearer {ARK_API_KEY}"})
+    data = _post(f"{CHAT_BASE_URL}/chat/completions", payload,
+                 {"Content-Type": "application/json", "Authorization": f"Bearer {CHAT_API_KEY}"})
     try:
         return data["choices"][0]["message"]["content"]
     except (KeyError, IndexError) as e:

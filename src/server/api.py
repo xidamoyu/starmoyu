@@ -250,7 +250,7 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
     cs.ensure_conversation(conv_id, sub, body.title)
 
     # 图片附件 → MinIO 留档 + qwen-vl 识图抽取文字（沉淀流图片输入路径）。
-    # 注意 ARK 主模型 deepseek-v4-flash 是纯文本模型，识图必须走 llm.chat_vision（qwen-vl）。
+    # 注意 chat 主模型走纯文本通道，识图必须走 llm.chat_vision（qwen-vl）。
     attachment_notes: list[str] = []
     attachment_meta: list[dict] = []
     if body.attachments:
@@ -791,7 +791,7 @@ def deal_timeline(deal_id: str, sub: str = Depends(_jwt_sub)):
 def vision_enabled():
     """视觉（截图→特质）抽取能力是否可用。
 
-    探测结论：当前 chat 模型 deepseek-v4-flash 对真实截图内容识别不可靠（自报无法加载图片），
+    探测结论：chat 主模型（纯文本通道）对真实截图内容识别不可靠（自报无法加载图片），
     故置灰。前端据此隐藏抽取 UI、仅把截图作附件留档。接入可靠视觉模型后置 True 即启用。
     """
     return {"enabled": False,

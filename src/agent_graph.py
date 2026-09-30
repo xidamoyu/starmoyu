@@ -99,14 +99,15 @@ class AgentState(TypedDict):
 
 
 def _make_model():
-    """用现有 llm.py 的 ARK 通道构造支持 tool-calling 的模型。"""
+    """用现有 llm.py 的 token-plan 通道构造支持 tool-calling 的模型。"""
     import httpx
     from langchain_openai import ChatOpenAI
 
     return ChatOpenAI(
-        model=os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash-ga-260731"),
-        api_key=os.environ.get("ARK_API_KEY", ""),
-        base_url=os.environ.get("ARK_BASE_URL", ""),
+        model=os.environ.get("CHAT_MODEL", "qwen3.8-flash"),
+        api_key=os.environ.get('CHAT_API_KEY', '') or os.environ.get('ARK_API_KEY', ''),
+        base_url=os.environ.get("CHAT_BASE_URL",
+                                "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"),
         temperature=0.3,
         max_tokens=8000,
         timeout=90,
