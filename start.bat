@@ -16,6 +16,10 @@ if errorlevel 1 (
     echo     容器已就绪（Milvus 启动约需 20-40 秒）
 )
 
+rem WSL2 闲置约15秒会自休眠导致 Milvus/MinIO 端口失联——开一个常驻保活窗口
+echo     WSL 保活窗口已开（关闭它会中断向量库连接）
+start "starmoyu-wsl-keepalive" /min cmd /k "wsl -d Ubuntu -e bash -c ""while true; do sleep 60; done"""
+
 echo [2/3] 启动后端 FastAPI :8000 ...
 start "starmoyu-backend" cmd /k "cd /d %ROOT% && set LANGGRAPH_CHECKPOINT_SQLITE=%ROOT%data\checkpoints.db && set PYTHONUNBUFFERED=1 && set PYTHONIOENCODING=utf-8 && .venv\Scripts\python.exe -m uvicorn src.server.api:app --host 0.0.0.0 --port 8000"
 
