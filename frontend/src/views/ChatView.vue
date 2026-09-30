@@ -199,7 +199,8 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.chat-page { display: flex; height: 100vh; }
+/* 顶栏已占 54px：这里必须 100%（撑满 main），100vh 会把整页撑出滚动、与侧栏底边错位 */
+.chat-page { display: flex; height: 100%; min-height: 0; }
 
 
 .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
