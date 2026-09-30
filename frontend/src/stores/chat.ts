@@ -1,6 +1,6 @@
 /** 对话状态管理。 */
 import { defineStore } from 'pinia'
-import { listConversations, newConversation, pinDeal } from '../api'
+import { getMessages, getPinned, listConversations, newConversation, pinDeal } from '../api'
 import { streamChat, type ChatEvent } from '../api/stream'
 
 export interface ToolStep {
@@ -21,7 +21,7 @@ export interface ChatMsg {
 export const useChatStore = defineStore('chat', {
   state: () => ({
     convId: '' as string,
-    convList: [] as Array<{ conv_id: string; title: string; last_active_at: string }>,
+    convList: [] as Array<{ conv_id: string; title: string; last_active_at: string; pinned_deal_id?: string | null }>,
     messages: [] as ChatMsg[],
     streaming: false,
     /** M6: 本会话钉住的商单（对话内沉淀自动溯源） */
@@ -35,6 +35,7 @@ export const useChatStore = defineStore('chat', {
       this.convList = (r ?? []).map((x: { row: Record<string, string> }) => ({
         conv_id: x.row.conv_id, title: x.row.title ?? '新对话',
         last_active_at: x.row.last_active_at ?? '',
+        pinned_deal_id: x.row.pinned_deal_id ?? null,
       }))
     },
     async startNew() {
@@ -48,6 +49,19 @@ export const useChatStore = defineStore('chat', {
       this.convId = convId
       this.messages = []
       this.detectedDealIds = []
+    },
+    /** 切换会话并还原消息与钉住商单（M6；侧栏统一入口用） */
+    async selectAsync(convId: string) {
+      this.select(convId)
+      this.pinnedDealId = null   // 先清，避免闪现上一个会话的钉住
+      try {
+        const p = await getPinned(convId)
+        this.pinnedDealId = p.pinned_deal_id
+      } catch { this.pinnedDealId = null }
+      const msgs = await getMessages(convId)
+      this.messages = msgs
+        .filter((m) => m.role === 'user' || m.role === 'assistant')
+        .map((m) => ({ role: m.role as 'user' | 'assistant', text: m.content ?? '' }))
     },
     /** 清空当前选中（点「对话助手」导航时）：回到空态，不自动建新 */
     clearSelection() {

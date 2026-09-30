@@ -150,6 +150,47 @@ class ChatService:
             conn.commit()
         return mid
 
+    def rename(self, conv_id: str, title: str) -> bool:
+        with storage.pg_connect() as conn:
+            cur = conn.cursor()
+            cur.execute("UPDATE conversations SET title=%s WHERE conv_id=%s", (title, conv_id))
+            conn.commit()
+            return cur.rowcount > 0
+
+    def delete(self, conv_id: str) -> bool:
+        """删会话；messages 无级联约束则显式删。"""
+        with storage.pg_connect() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT 1 FROM conversations WHERE conv_id=%s", (conv_id,))
+            if not cur.fetchone():
+                return False
+            cur.execute("DELETE FROM messages WHERE conv_id=%s", (conv_id,))
+            cur.execute("DELETE FROM conversations WHERE conv_id=%s", (conv_id,))
+            conn.commit()
+            return True
+
+    def maybe_autotitle(self, conv_id: str) -> None:
+        """会话仍是默认标题时，用第一条用户消息提炼标题（截断即可，无需 LLM 成本）。"""
+        with storage.pg_connect() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT title FROM conversations WHERE conv_id=%s", (conv_id,))
+            r = cur.fetchone()
+            if not r or r[0] not in ("新对话", None, ""):
+                return
+            cur.execute("""SELECT content FROM messages WHERE conv_id=%s AND role='user'
+                           ORDER BY created_at LIMIT 1""", (conv_id,))
+            m = cur.fetchone()
+            if not m:
+                return
+            first = (m[0] or "").strip().split("\n")[0]
+            # 附件转写前缀等系统注入文本不作为标题
+            if first.startswith("[图片附件") or not first:
+                return
+            title = first[:20] + ("…" if len(first) > 20 else "")
+            cur.execute("UPDATE conversations SET title=%s WHERE conv_id=%s AND title IN ('新对话','')",
+                        (title, conv_id))
+            conn.commit()
+
     def history(self, conv_id: str, limit: int = 200) -> list[dict]:
         with storage.pg_connect() as conn:
             cur = conn.cursor()

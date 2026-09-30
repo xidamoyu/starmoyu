@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Promotion, Plus, ChatDotRound, Link } from '@element-plus/icons-vue'
+import { Promotion, Plus, Link } from '@element-plus/icons-vue'
 import { useChatStore } from '../stores/chat'
-import { getMessages, getPinned } from '../api'
 import Md from '../components/Md.vue'
 import DealDrawer from '../components/DealDrawer.vue'
 
@@ -50,6 +49,7 @@ async function send() {
   const atts = attachments.value
   attachments.value = []
   await store.send(t, atts.length ? atts : undefined)
+  await store.refreshConversations()   // 首问后标题可能被后端提炼,拉回新名
   await scrollBottom()
 }
 
@@ -81,25 +81,6 @@ function onPaste(e: ClipboardEvent) {
 }
 function removeAtt(i: number) { attachments.value.splice(i, 1) }
 
-async function loadHistory(convId: string) {
-  store.select(convId)
-  store.pinnedDealId = null   // 切会话先清，避免闪现上一个会话的钉住
-  // 还原本会话钉住的商单（M6）
-  try {
-    const p = await getPinned(convId)
-    store.pinnedDealId = p.pinned_deal_id
-  } catch { store.pinnedDealId = null }
-  const msgs = await getMessages(convId)
-  store.messages = msgs
-    .filter((m) => m.role === 'user' || m.role === 'assistant')
-    .map((m) => ({ role: m.role as 'user' | 'assistant', text: m.content ?? '' }))
-  await scrollBottom()
-}
-
-async function newConv() {
-  await store.startNew()
-}
-
 /** M6: 关联检测到的商单 */
 async function linkDetected(dealId: string) {
   await store.setPinned(dealId)
@@ -125,19 +106,6 @@ onMounted(async () => {
 
 <template>
   <div class="chat-page">
-    <!-- 会话侧栏 -->
-    <aside class="sidebar">
-      <button class="new-btn" @click="newConv"><el-icon><Plus /></el-icon> 新对话</button>
-      <div class="conv-list">
-        <div v-for="c in store.convList" :key="c.conv_id" class="conv-item"
-             :class="{ active: c.conv_id === store.convId }"
-             @click="loadHistory(c.conv_id)">
-          <el-icon><ChatDotRound /></el-icon>
-          <span class="conv-title">{{ c.title }}</span>
-        </div>
-      </div>
-    </aside>
-
     <!-- 对话主区 -->
     <div class="main-col">
       <!-- M6 商单关联提示条 -->
@@ -165,8 +133,8 @@ onMounted(async () => {
             <span class="cap">📌 商单号关联溯源（M6）</span>
             <span class="cap">🗂️ 沉淀达人经验复用</span>
           </div>
-          <button class="empty-new" @click="newConv"><el-icon><Plus /></el-icon> 开启新对话</button>
-          <div class="empty-hint">左侧选历史会话继续 · 台账/达人/审批在导航栏</div>
+          <button class="empty-new" @click="store.startNew()"><el-icon><Plus /></el-icon> 开启新对话</button>
+          <div class="empty-hint">左侧选历史会话继续 · 台账/达人/审批在顶部「资料库」</div>
         </div>
 
         <template v-for="(m, i) in store.messages" :key="i">
@@ -233,20 +201,6 @@ onMounted(async () => {
 <style scoped>
 .chat-page { display: flex; height: 100vh; }
 
-.sidebar { width: 230px; flex: none; display: flex; flex-direction: column;
-  border-right: 1px solid var(--line); background: var(--surface); padding: 12px; }
-.new-btn { display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 9px; border: none; border-radius: var(--r-sm); background: var(--brand);
-  color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 12px;
-  transition: background 120ms ease-out; }
-.new-btn:hover { background: var(--brand-strong); }
-.new-btn:active { transform: translateY(1px); }
-.conv-list { flex: 1; overflow-y: auto; }
-.conv-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px;
-  border-radius: var(--r-sm); cursor: pointer; color: var(--ink-2); font-size: 13px; }
-.conv-item:hover { background: var(--surface-2); }
-.conv-item.active { background: var(--brand-soft); color: var(--brand-strong); font-weight: 600; }
-.conv-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 

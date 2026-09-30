@@ -231,11 +231,32 @@ def new_conversation(body: ChatBody, sub: str = Depends(_jwt_sub)):
 def list_conversations(sub: str = Depends(_jwt_sub)):
     with storage.pg_connect() as conn:
         cur = conn.cursor()
-        cur.execute("""SELECT conv_id, title, created_at, last_active_at
+        cur.execute("""SELECT conv_id, title, created_at, last_active_at, pinned_deal_id
                        FROM conversations WHERE user_id=%s
                        ORDER BY last_active_at DESC LIMIT 50""", (sub,))
         names = [d[0] for d in cur.description]
         return [{"row": dict(zip(names, r))} for r in cur.fetchall()]
+
+
+class TitleBody(BaseModel):
+    title: str
+
+
+@app.patch("/api/conversations/{conv_id}/title")
+def rename_conversation(conv_id: str, body: TitleBody, sub: str = Depends(_jwt_sub)):
+    title = body.title.strip()
+    if not title or len(title) > 60:
+        raise HTTPException(422, "标题需为 1-60 字")
+    if not cs.rename(conv_id, title):
+        raise HTTPException(404, "会话不存在")
+    return {"ok": True}
+
+
+@app.delete("/api/conversations/{conv_id}")
+def delete_conversation(conv_id: str, sub: str = Depends(_jwt_sub)):
+    if not cs.delete(conv_id):
+        raise HTTPException(404, "会话不存在")
+    return {"ok": True}
 
 
 @app.get("/api/conversations/{conv_id}/messages")
@@ -293,6 +314,7 @@ def chat(conv_id: str, body: ChatBody, sub: str = Depends(_jwt_sub)):
         user_text = (user_text + "\n" if user_text else "") + \
             "\n".join(attachment_notes)
     cs.add_message(conv_id, "user", user_text)
+    cs.maybe_autotitle(conv_id)   # 默认标题时以首问提炼会话名
 
     # 会话钉住的商单（用户点「关联」时前端会持续传 deal_id；取库中现值兜底）
     from server import m6_service as m6
