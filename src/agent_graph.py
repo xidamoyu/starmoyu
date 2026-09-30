@@ -14,8 +14,9 @@ import sys
 from pathlib import Path
 from typing import Annotated, Literal
 
-from langchain_core.messages import (AIMessage, AnyMessage, SystemMessage,
-                                     ToolMessage)
+from langchain_core.messages import (AIMessage, AIMessageChunk, AnyMessage, HumanMessage,
+                                     SystemMessage, ToolMessage)
+from langchain_core.runnables import ensure_config
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
@@ -98,11 +99,13 @@ class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], lambda a, b: (a or []) + (b or [])]
 
 
-def _make_model():
-    """用现有 llm.py 的 token-plan 通道构造支持 tool-calling 的模型。"""
-    import httpx
+def _make_model(thinking: bool = True):
+    """用现有 llm.py 的 token-plan 通道构造支持 tool-calling 的模型。
+
+    thinking=False 走关闭思考链的快通道（闲聊/寒暄类首响提速，牺牲复杂推理）。"""
     from langchain_openai import ChatOpenAI
 
+    kwargs = {} if thinking else {"extra_body": {"enable_thinking": False}}
     return ChatOpenAI(
         model=os.environ.get("CHAT_MODEL", "qwen3.8-flash"),
         api_key=os.environ.get('CHAT_API_KEY', '') or os.environ.get('ARK_API_KEY', ''),
@@ -112,7 +115,28 @@ def _make_model():
         max_tokens=8000,
         timeout=90,
         max_retries=2,
+        **kwargs,
     )
+
+
+# 只有「明显寒暄/自述」才走轻通道（宁可多挂工具，不可漏挂）：
+# 短、且完全不含业务信号词
+_CHITCHAT_RE = None
+_BIZ_WORDS = ("商单", "达人", "刊例", "结案", "沉淀", "方案", "审批", "预算", "ROI", "roi",
+              "DC20", "GMV", "品牌", "笔记", "跟进", "报价", "导入", "台账", "案例", "复盘",
+              "查", "找", "推荐", "匹配", "记录", "归档", "回流")
+
+
+def _is_chitchat(text: str) -> bool:
+    t = (text or "").strip()
+    if len(t) > 14:
+        return False
+    if any(w in t for w in _BIZ_WORDS):
+        return False
+    return t in ("你好", "您好", "hi", "Hi", "hello", "Hello", "嗨", "哈喽", "在吗", "在？",
+                 "谢谢", "感谢", "辛苦了", "再见", "早上好", "下午好", "晚上好",
+                 "你是谁", "你能干什么", "你能做什么", "能干什么", "能做什么", "帮助",
+                 "怎么用", "介绍一下你", "自我介绍")
 
 
 def _make_checkpointer():
@@ -130,6 +154,8 @@ class MCAgent:
         # 「盲调」（签名不在 schema 里，服从性时灵时不灵——verify_all 实测复现）
         self.model = _make_model().bind_tools(
             list(AGENT_TOOLS) + list(M4_TOOLS) + list(M5_TOOLS))
+        # 寒暄/能力自述专用轻通道：不挂 24KB 工具 schema、关思考链，首响最快
+        self.model_light = _make_model(thinking=False)
         self.cp, self.cp_kind = _make_checkpointer()
         self.graph = self._build()
 
@@ -138,7 +164,16 @@ class MCAgent:
         msgs = state["messages"]
         if not any(isinstance(m, SystemMessage) for m in msgs):
             msgs = [SystemMessage(content=SYSTEM_PROMPT)] + list(msgs)
-        resp = self.model.invoke(msgs)
+        # 选路：首轮寒暄且无钉单/无历史工具调用 → 轻快通道
+        last_human = next((m for m in reversed(msgs)
+                           if isinstance(m, HumanMessage)), None)
+        has_tool_history = any(isinstance(m, ToolMessage) for m in msgs)
+        pinned = (ensure_config().get("configurable", {}) or {}).get("pinned_deal_id")
+        if (last_human is not None and not has_tool_history and not pinned
+                and _is_chitchat(str(last_human.content))):
+            resp = self.model_light.invoke(msgs)
+        else:
+            resp = self.model.invoke(msgs)
         return {"messages": [resp]}
 
     @staticmethod
@@ -172,25 +207,37 @@ class MCAgent:
     def chat(self, conv_id: str, user_text: str, pinned_deal_id: str | None = None):
         """同步单轮：返回最终 state（含全部消息）。"""
         cfg = self._cfg(conv_id, pinned_deal_id)
-        return self.graph.invoke({"messages": [("user", user_text)]}, cfg)
+        return self.graph.invoke({"messages": [HumanMessage(content=user_text)]}, cfg)
 
     def chat_stream(self, conv_id: str, user_text: str,
                     pinned_deal_id: str | None = None):
-        """流式：yield 事件字典，供 SSE 转发。"""
+        """流式：yield 事件字典，供 SSE 转发。
+
+        双模式：messages 模式把 LLM 增量 token 实时推前端（真流式，首字可见
+        从整段生成完的 ~14s 降到 ~5s）；updates 模式负责工具事件。
+        updates 里的完整 AIMessage 不再重复推（增量已推过）。"""
         cfg = self._cfg(conv_id, pinned_deal_id)
-        for ev in self.graph.stream({"messages": [("user", user_text)]}, cfg,
-                                    stream_mode="updates"):
-            for node, update in ev.items():
-                for msg in update.get("messages", []):
-                    if isinstance(msg, AIMessage) and msg.tool_calls:
-                        for tc in msg.tool_calls:
-                            yield {"type": "tool_call", "name": tc["name"],
-                                   "args": tc["args"], "node": node}
-                    elif isinstance(msg, ToolMessage):
-                        yield {"type": "tool_result", "name": getattr(msg, "name", "?"),
-                               "preview": (msg.content or "")[:200], "node": node}
-                    elif isinstance(msg, AIMessage):
-                        yield {"type": "token", "text": msg.content, "node": node}
+        streamed_any = False   # messages 模式是否推过增量(决定全文兜底)
+        for mode, ev in self.graph.stream({"messages": [HumanMessage(content=user_text)]}, cfg,
+                                          stream_mode=["messages", "updates"]):
+            if mode == "messages":
+                chunk, meta = ev
+                if isinstance(chunk, AIMessageChunk) and chunk.content:
+                    streamed_any = True
+                    yield {"type": "token", "text": chunk.content, "node": "agent"}
+            else:
+                for node, update in ev.items():
+                    for msg in update.get("messages", []):
+                        if isinstance(msg, AIMessage) and msg.tool_calls:
+                            for tc in msg.tool_calls:
+                                yield {"type": "tool_call", "name": tc["name"],
+                                       "args": tc["args"], "node": node}
+                        elif isinstance(msg, ToolMessage):
+                            yield {"type": "tool_result", "name": getattr(msg, "name", "?"),
+                                   "preview": (msg.content or "")[:200], "node": node}
+                        elif isinstance(msg, AIMessage) and msg.content and not streamed_any:
+                            # 模型不支持增量时的兜底：补发全文
+                            yield {"type": "token", "text": msg.content, "node": node}
         yield {"type": "done"}
 
 
