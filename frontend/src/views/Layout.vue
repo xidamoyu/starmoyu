@@ -1,16 +1,27 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { ChatDotRound, Notebook, User, DocumentChecked, Upload, SwitchButton } from '@element-plus/icons-vue'
-import { logout } from '../api'
+import { ChatDotRound, Notebook, User, DocumentChecked, Upload, Setting, SwitchButton } from '@element-plus/icons-vue'
+import { logout, api } from '../api'
 
 const route = useRoute()
-const navs = [
-  { path: '/', label: '对话助手', icon: ChatDotRound },
-  { path: '/deals', label: '商单台账', icon: Notebook },
-  { path: '/kols', label: '达人库', icon: User },
-  { path: '/proposals', label: '审批中心', icon: DocumentChecked },
-  { path: '/import', label: '导入管理', icon: Upload },
-]
+const role = ref<string>('')
+onMounted(async () => {
+  try { role.value = (await api.get('/me')).data.role } catch { /* 401 已由拦截器处理 */ }
+})
+const isAdmin = computed(() => role.value === 'admin')
+
+const navs = computed(() => {
+  const base = [
+    { path: '/', label: '对话助手', icon: ChatDotRound },
+    { path: '/deals', label: '商单台账', icon: Notebook },
+    { path: '/kols', label: '达人库', icon: User },
+    { path: '/proposals', label: '审批中心', icon: DocumentChecked },
+    { path: '/import', label: '导入管理', icon: Upload },
+  ]
+  if (isAdmin.value) base.push({ path: '/users', label: '用户管理', icon: Setting })
+  return base
+})
 </script>
 
 <template>

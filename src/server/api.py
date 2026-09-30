@@ -78,6 +78,22 @@ def _jwt_sub(cred: HTTPAuthorizationCredentials = Depends(security)) -> str:
         raise HTTPException(401, "凭证无效或已过期")
 
 
+def _jwt_payload(cred: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    if cred is None:
+        raise HTTPException(401, "未登录")
+    try:
+        return jwt.decode(cred.credentials, SECRET, algorithms=["HS256"])
+    except JWTError:
+        raise HTTPException(401, "凭证无效或已过期")
+
+
+def _require_admin(payload: dict = Depends(_jwt_payload)) -> dict:
+    """管理员专属操作守卫。"""
+    if payload.get("role") != "admin":
+        raise HTTPException(403, "需要管理员权限")
+    return payload
+
+
 # ============================================================ 认证
 
 class LoginBody(BaseModel):
@@ -101,8 +117,93 @@ def login(body: LoginBody):
 
 
 @app.get("/api/me")
-def me(sub: str = Depends(_jwt_sub)):
-    return {"user_id": sub}
+def me(payload: dict = Depends(_jwt_payload)):
+    return {"user_id": payload["sub"], "role": payload.get("role", "user")}
+
+
+# ============================================================ 用户管理（admin 专属）
+
+class UserCreateBody(BaseModel):
+    username: str
+    password: str
+    display_name: str = ""
+    role: str = "viewer"  # admin | operator | viewer（对应 users_role_check 约束）
+
+
+class UserUpdateBody(BaseModel):
+    display_name: str | None = None
+    role: str | None = None
+    password: str | None = None
+
+
+@app.get("/api/admin/users")
+def list_users(_admin: dict = Depends(_require_admin)):
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute("""SELECT user_id, username, display_name, role, created_at
+                       FROM users ORDER BY created_at""")
+        names = [d[0] for d in cur.description]
+        return {"items": [dict(zip(names, r)) for r in cur.fetchall()]}
+
+
+@app.post("/api/admin/users")
+def create_user(body: UserCreateBody, admin: dict = Depends(_require_admin)):
+    if body.role not in ("admin", "operator", "viewer"):
+        raise HTTPException(422, "role 只能是 admin / operator / viewer")
+    if len(body.password) < 6:
+        raise HTTPException(422, "密码至少 6 位")
+    user_id = f"u_{uuid.uuid4().hex[:12]}"
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM users WHERE username=%s", (body.username,))
+        if cur.fetchone():
+            raise HTTPException(409, f"用户名 {body.username} 已存在")
+        cur.execute(
+            "INSERT INTO users (user_id, username, password_hash, display_name, role) "
+            "VALUES (%s, %s, %s, %s, %s)",
+            (user_id, body.username, bcrypt.hash(body.password),
+             body.display_name or body.username, body.role))
+    return {"ok": True, "user_id": user_id}
+
+
+@app.patch("/api/admin/users/{user_id}")
+def update_user(user_id: str, body: UserUpdateBody, admin: dict = Depends(_require_admin)):
+    sets, args = [], []
+    if body.display_name is not None:
+        sets.append("display_name=%s"); args.append(body.display_name)
+    if body.role is not None:
+        if body.role not in ("admin", "operator", "viewer"):
+            raise HTTPException(422, "role 只能是 admin / operator / viewer")
+        if user_id == admin["sub"] and body.role != "admin":
+            raise HTTPException(422, "不能降级自己的管理员角色")
+        sets.append("role=%s"); args.append(body.role)
+    if body.password is not None:
+        if len(body.password) < 6:
+            raise HTTPException(422, "密码至少 6 位")
+        sets.append("password_hash=%s"); args.append(bcrypt.hash(body.password))
+    if not sets:
+        raise HTTPException(422, "没有要修改的字段")
+    args.append(user_id)
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute(f"UPDATE users SET {', '.join(sets)} WHERE user_id=%s", args)
+        if cur.rowcount == 0:
+            raise HTTPException(404, "用户不存在")
+    return {"ok": True}
+
+
+@app.delete("/api/admin/users/{user_id}")
+def delete_user(user_id: str, admin: dict = Depends(_require_admin)):
+    if user_id == admin["sub"]:
+        raise HTTPException(422, "不能删除自己")
+    with storage.pg_connect() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT role FROM users WHERE user_id=%s", (user_id,))
+        r = cur.fetchone()
+        if not r:
+            raise HTTPException(404, "用户不存在")
+        cur.execute("DELETE FROM users WHERE user_id=%s", (user_id,))
+    return {"ok": True}
 
 
 # ============================================================ 对话
