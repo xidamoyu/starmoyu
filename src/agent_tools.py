@@ -79,20 +79,24 @@ def search_knowledge(query: str, doc_type: str = "", category: str = "") -> str:
 @tool
 def search_kols(category: str = "", tier: str = "", fans_min: int = 0,
                 fans_max: int = 0, price_max: int = 0, target_date: str = "",
-                limit: int = 8) -> str:
-    """搜索达人库，可按类目/量级/粉丝区间/报价上限筛选，并自动排除档期冲突。
+                name: str = "", limit: int = 8) -> str:
+    """搜索达人库，可按名字/类目/量级/粉丝区间/报价上限筛选，并自动排除档期冲突。
 
-    何时使用：用户问「有哪些达人」「找个美妆腰部达人」「谁在 XX 价格内」。
+    何时使用：用户问「有哪些达人」「找个美妆腰部达人」「谁在 XX 价格内」，
+    以及「找XX这个达人的档期/报价/粉丝」（用 name 参数，不要换类目反复试）。
     Args:
         category: 类目，如 美妆/3C数码/食品饮料/母婴/服饰/家居/汽车/游戏
         tier: 量级：头部/腰部/尾部，留空为不限
         fans_min/fans_max: 粉丝数区间（整数）
         price_max: 21-60s 刊例报价上限（元）
         target_date: 目标投放日期 YYYY-MM-DD；提供时会排除排他期内/档期未到的达人
+        name: 达人名字（模糊匹配，用户点名找某人时用它）
         limit: 返回条数上限，默认 8
     """
     try:
         conds, args = ["1=1"], []
+        if name:
+            conds.append("kol_name LIKE %s"); args.append(f"%{name}%")
         if category:
             conds.append("category = %s"); args.append(category)
         if tier:
