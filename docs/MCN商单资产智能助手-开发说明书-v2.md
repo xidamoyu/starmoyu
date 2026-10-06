@@ -60,7 +60,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 └───────────────────────┬────────────────────────────┘
                         │ REST + SSE
 ┌───────────────────────▼────────────────────────────┐
-│              FastAPI 后端 :8000（35 端点）            │
+│              FastAPI 后端 :8000（41 端点）            │
 ├────────────────────────────────────────────────────┤
 │ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
 │   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
@@ -80,10 +80,10 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 | LLM | Qwen3.8（阿里云百炼 token-plan，`qwen3.8-flash`/`qwen3.8-max`） | 云端 API | tool-calling/json_mode 实测兼容；`max_tokens=8000` |
 | Embedding | bge-m3（1024 维） | 本地 Ollama | dim=1024，零 API 成本 |
 | Rerank | gte-rerank-v2（阿里云 DashScope） | 云端 API | 35 ms/条（32.1×） |
-| 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2078 条向量（2026-09-29 实测） |
+| 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2084 条向量（2026-10-06 实测） |
 | 关系库 | PostgreSQL 18.6 | 本地 Windows | 14 张表 |
 | 对象存储 | MinIO（S3 兼容） | 本地 WSL Docker | 原件 + 预签名直链 |
-| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 35 端点 |
+| 后端 | FastAPI（JWT + SSE 流式） | 本地 :8000 | 41 端点 |
 | 前端 | Vue3 + Vite + TS + Element Plus + Pinia | 本地 :5173 | 6 业务页面 |
 
 ### 2.3 核心设计：Service 层是唯一写库者
@@ -93,7 +93,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 ### 2.4 结构化 / 非结构化双路检索
 
 - **结构化精查**（`search_kols` / `get_deal_status` 等）：14289 达人、400 商单走 **SQL**——类目/量级/粉丝区间/报价上限/排他期过滤是精确过滤问题，向量检索既慢又不准。
-- **非结构化召回**（`search_knowledge`）：案例/刊例/方法论/跟踪单 **2068 块**（2026-09-29 实测；消融实验于 2063 块口径）走 **向量 + BM25 混合检索**。
+- **非结构化召回**（`search_knowledge`）：案例/刊例/方法论/跟踪单 **2086 块**（2026-10-06 实测；消融实验于 2063 块口径）走 **向量 + BM25 混合检索**。
 - **路由交给 LLM**：工具 docstring 写清「何时该调我」，模型按用户问题自主决定查哪一路——路由本身是涌现的，不靠穷举分支。
 
 ### 2.5 Rerank 选型决策（用数据否掉「看似更专业」的方案）
@@ -183,7 +183,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 - **主动简报**（`get_today_briefing`）：开场打招呼必调，汇报四类**事实**（只报查证过的数据，不预测）：① 档期临期 ② 待审批方案 ③ 3 天未跟进 ④ 黑名单撞单。
 - **数据飞轮**（读侧）：`match_kols_for_requirement` 组合建议带 `hist_deals`（历史结案单数）+ `avg_roi`（平均 ROI，取 `deal.result_metrics` 原值，**非生成**）。实测：美妆 10 万预算 → 小美妆记 2 单 avg ROI 1.59 / 是美妆日常 2 单 0.98 / 老美妆说 0 单 null（如实返回空，不编数）。
 - **结案沉淀闭环（R10）**：结案 → Agent 主动提醒 → 案例预览（`extract_lessons` 从跟进流水提炼拒绝原因/返点/档期/改稿经验，DC20250005 渲染 1080 字含 4 条经验）→ 两次确认 → `ingest_document_incremental` 增量入库（PG 按 `source_file` 先删后插幂等 + Milvus upsert，6 块秒级，**不动存量语料**）→ 知识库即时可检索。前端 DealDrawer 结案表单同步接线（结案成功 → ElMessageBox 提醒 → 预览 → 确认入库）。
-- **幂等性实测**：同一案例二次入库总块数稳定（2064→2064），重复结案/误触确认不会污染语料。
+- **幂等性实测**：同一案例二次入库总块数稳定（R7 时点 2064→2064；R12 回归 2092→2092 后清理还原 2086），重复结案/误触确认不会污染语料。
 
 ### 3.6 图片识图沉淀流（R11，截图 → 经验入库全链路）
 
@@ -266,7 +266,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 
 | 存储 | 承载内容 | 实测规模 |
 |---|---|---|
-| Milvus `dm_chunks` | 子块向量 + 元数据（混合检索 + 过滤） | **2078** 条向量（含 8 孤儿，检索按 doc_id 过滤不碍事） |
+| Milvus `dm_chunks` | 子块向量 + 元数据（混合检索 + 过滤） | **2084** 条向量（检索按 doc_id 过滤） |
 | PostgreSQL | 台账 + 会话/消息 + 父子块 + 特质/审批 | 14 张表 |
 | MinIO `starmoyu-raw` | 文档原件（预签名直链供「查看原文」） | — |
 
@@ -278,12 +278,12 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 | `deal` | **400** | budget=达人单价上限（对齐 demand_desc）；结案带 ROI/GMV/实际CPM |
 | `brand` | **100**（30 品类） | note 生成内容全删 |
 | `deal_followup` | **1613** | 含真实进度反馈（测试运行后实测） |
-| `chunk_meta` | **2068 子块** | RAG 语料（结案案例 424（70 单）+ 在途跟踪单 1261 + 刊例 360 + policies/playbook 18 + 导入文档 5 + 27 刊例表 + 规则/方法论 + 导入文档） |
+| `chunk_meta` | **2086 子块** | RAG 语料（结案案例 572（112 单）+ 在途跟踪单 1131（365 单）+ 刊例 360 + 平台规则 11 + 方法论 7 + 导入文档 5） |
 | `parent_chunk` | **1724 父块** | 生成粒度上下文 |
 | `deal_change_requests` | 按业务产生 | 一商单多审批 |
 | 其余 | `users` / `conversations` / `messages` / `proposals` / `proposal_versions` / `party_traits` / `ingest_staging` | v2 新增会话/方案/特质体系 |
 
-> **勘误**：`README.md §4` 表格仍写「RAG 语料 chunk 457 子块 / 427 父块」——这是 v1 旧值；R9 语料重做后实时 `count(*)` 为 **2063 子块 / 1724 父块**（R9 时点）；2026-09-29 实测已增至 **2068 子块**（含 R10 沉淀与 R11 导入文档回流）。
+> **勘误**：`README.md §4` 表格仍写「RAG 语料 chunk 457 子块 / 427 父块」——这是 v1 旧值；R9 语料重做后实时 `count(*)` 为 **2063 子块 / 1724 父块**（R9 时点）；2026-10-06 实测已增至 **2086 子块**（含 R10/R12 回归沉淀与 R11 导入文档回流）。
 
 ### 4.3 14 张表清单（`information_schema` 实查）
 

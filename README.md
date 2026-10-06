@@ -16,10 +16,10 @@
 | 首响优化 | 真流式（token 逐帧 SSE）+ 寒暄轻通道 | — | ✅ 寒暄首字 14.5s → 热态 1.3-2.2s |
 | Embedding | **bge-m3**（1024 维） | 本地 Ollama | ✅ dim=1024，零 API 成本 |
 | Rerank | **gte-rerank-v2**（阿里云 DashScope） | 云端 API | ✅ 35 ms/条（30 条候选 1051ms） |
-| 向量库 | **Milvus 3.0**（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | ✅ 2076 条向量 |
+| 向量库 | **Milvus 3.0**（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | ✅ 2084 条向量（2026-10-06 实测） |
 | 关系库 | **PostgreSQL 18.6** | 本地 Windows | ✅ 14 张表 |
 | 对象存储 | **MinIO**（S3 兼容） | 本地 WSL Docker | ✅ 原件 + 预签名直链 |
-| 后端 | **FastAPI**（JWT + SSE 流式） | 本地 :8000 | ✅ 35 端点 |
+| 后端 | **FastAPI**（JWT + SSE 流式） | 本地 :8000 | ✅ 41 端点 |
 | 前端 | **Vue3 + Vite + TS + Element Plus + Pinia** | 本地 :5173 | ✅ 7 页面 |
 
 ---
@@ -32,7 +32,7 @@
 └───────────────────────┬────────────────────────────┘
                         │ REST + SSE
 ┌───────────────────────▼────────────────────────────┐
-│              FastAPI 后端 :8000（35 端点）            │
+│              FastAPI 后端 :8000（41 端点）            │
 ├────────────────────────────────────────────────────┤
 │ Agent 层（agent_graph.py）：agent_node ⇄ ToolNode    │
 │   LLM bind_tools 自主选工具 · 循环至无 tool_calls     │
@@ -79,7 +79,7 @@
 | 广告主 `brand` | **100 家**（30 品类） | note 列生成内容全删 |
 | 跟进流水 `deal_followup` | **1611 条** | 含真实进度反馈；跟进工具有富化引导（拒绝原因/返点/档期） |
 | 变更审批 `deal_change_requests` | 按业务产生 | 一商单多审批 |
-| RAG 语料 chunk | **2068 子块 / 2078 Milvus 向量**（2026-09-29 实测） | 结案案例 424（70 单）+ 在途跟踪单 1261 + 刊例 360 + 规则/方法论 18 + 导入文档 5；结案沉淀自动 +6 块/单，导入文档确认后即时入库 |
+| RAG 语料 chunk | **2086 子块 / 2084 Milvus 向量**（2026-10-06 实测） | 结案案例 572（112 单）+ 在途跟踪单 1131（365 单）+ 刊例 360 + 平台规则 11 + 方法论 7 + 导入文档 5；结案沉淀自动入库、导入文档确认后即时入库 |
 | 变更审批实例 `deal_change_requests` | **25 条** | M7b 审批流真实产生 |
 
 > 脱敏红线：Excel 原始数据绝不存原文、绝不提交 git。
@@ -92,7 +92,7 @@
 cd starmoyu
 export LANGGRAPH_CHECKPOINT_SQLITE="C:/.../starmoyu/data/checkpoints.db"
 
-# 后端（35 端点）
+# 后端（41 端点）
 .venv/Scripts/python.exe -m uvicorn server.api:app --port 8000 --app-dir src
 
 # 前端（Vue3）
@@ -131,7 +131,7 @@ cd frontend && npm run dev    # http://localhost:5173
 | 检索 | 8 组消融完整链路 | **Hit@1 0.694 / Hit@5 0.908 / MRR 0.788**（基线 0.551/0.662，增益 +0.143/+0.126） |
 | 生成 | RAGAS 四指标（20 条抽样） | **faithfulness 0.959 / answer_relevancy 0.794 / context_precision 0.705 / context_recall 0.559** |
 
-口径：语料现 **2068 块**（2026-09-29 实测，含导入文档）；消融/RAGAS 实测于 2063 块口径，语料增量后指标待下次消融刷新；评测集 98 条与语料同源反查生成。完整实验数据见
+口径：语料现 **2086 块**（2026-10-06 实测，含回归沉淀增量）；消融/RAGAS 实测于 2063 块口径，语料增量后指标待下次消融刷新；评测集 98 条与语料同源反查生成。完整实验数据见
 `reports/检索评测报告.md` 与 `reports/生成质量评估报告.md`；Rerank 选型（本地 CPU 1126ms → GPU 失败 → 云端 35ms/条 32×）见检索评测报告。
 
 

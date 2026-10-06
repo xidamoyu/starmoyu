@@ -313,7 +313,7 @@ RAGAS：0.4.x 与 langchain-community 0.4 不兼容（缺 ChatVertexAI），锁 
 
 **错误可见性**（用户截图 `[object Object]`）：422 detail 数组转可读字符串（后端全局 exception_handler + 前端 `_fmt_detail` 双保险）；附件字段 camelCase→snake_case（前端 `dataBase64` vs Pydantic `data_base64` 必 422）
 
-**数字实测（2026-09-29）**：FastAPI 端点 **35**（@app 装饰器减 exception_handler）；PG chunk **2068** / Milvus dm_chunks **2078**（storage.milvus_client() 带库名）；staging 12（历史正常单 + 用户自测导入 1）；deal 表无测试商单残留（DC-IMP = 0）
+**数字实测（2026-09-29 R11 时点）**：FastAPI 端点 35；PG chunk 2068 / Milvus 2078。**最新（2026-10-06 R12 后实测）**：端点 **41**（+用户管理 CRUD 5 + 会话改名/删除 2 -1 合并口径）；PG chunk **2086** / Milvus **2084**（含回归沉淀 2092 后清理还原 -6）
 
 **测试素材**：`data/raw/import_test/`（谈判复盘 md / 微信截图 / 8 行台账 csv 含 1 行脏数据 / 测试剧本 README），csv 用 UTF-8-BOM 重生（Excel 乱码根因）
 

@@ -12,7 +12,7 @@
 
 **Starmoyu · MCN 商单资产智能助手**（个人项目）｜ LangGraph Agent · RAG · Milvus · PostgreSQL · FastAPI · Vue3 · DeepSeek
 
-- 构建**对话式 MCN 商单业务助手**：LangGraph `bind_tools` + ToolNode 真 Agent 循环（LLM 自主选工具、结果回喂、多轮迭代），**19 个工具**覆盖「达人筛选 → 方案生成 → 审批流转 → 跟进记录 → 结案复盘 → 经验沉淀 → 变更审批」商单全生命周期；FastAPI(JWT/SSE) + Vue3 前端，**35 个 API 端点、14 张 PG 表**
+- 构建**对话式 MCN 商单业务助手**：LangGraph `bind_tools` + ToolNode 真 Agent 循环（LLM 自主选工具、结果回喂、多轮迭代），**19 个工具**覆盖「达人筛选 → 方案生成 → 审批流转 → 跟进记录 → 结案复盘 → 经验沉淀 → 变更审批」商单全生命周期；FastAPI(JWT/SSE) + Vue3 前端，**41 个 API 端点、14 张 PG 表**
 - 设计**混合检索链路**（Milvus 向量 ∥ BM25 → RRF 融合 → 类型先验/配额 → 文档去重 → Rerank 精排），语料 **2063 块**（真实数据渲染 4.7× 于初版）、评测集 **98 条**全链路消融 8 组：完整链路 **Hit@1 0.694 / MRR 0.788**，相对纯向量基线 **Hit@1 +0.143 / MRR +0.126**，Rerank 单组件贡献 **MRR +0.044** 为最大增益
 - **RAGAS 四指标评测**（检索层+生成层）：抽样 20 条真实查询走完整 RAG 链路，**faithfulness（忠实度）0.959（近零幻觉）**、answer_relevancy 0.794、context_precision 0.705、context_recall 0.559；低分项逐条归因（列表型回答 Embedding 相似度天然偏低/聚合型问题对齐损耗），非幻觉问题
 - **结构化/非结构化双路检索设计**：14289 达人 + 400 商单走 **SQL 精查**（类目/量级/粉丝/报价/排他期过滤，`search_kols` 毫秒级），非结构化语料（案例/刊例/方法论/跟踪单 2063 块）走向量检索——由 LLM 在对话中自主决定查哪一路
@@ -149,7 +149,7 @@ v2 语料上该问题更严重（1134 块在途单），去重组件保留，但
 | RAGAS answer_relevancy | 0.794（低分样本为列表型回答，非幻觉） | 同上 |
 | RAGAS context_precision / recall | 0.705 / 0.559（recall 仅统计有 ground_truth 的 14 条） | 同上 |
 | Rerank 延迟 | 35 ms/条（DashScope gte-rerank-v2，32× vs 本地 CPU 1126ms） | `reports/bench_rerank.log` |
-| API / 表 | FastAPI 35 端点 / PG 14 表 / Agent 19 工具 | 代码实测 |
+| API / 表 | FastAPI 41 端点 / PG 14 表 / Agent 19 工具 | 代码实测 |
 | M1-M7b 验收 | verify_m1 8/8 · m2 11/11 · m4 7/7×3 · m5 15/15×3 · pytest 22+4 | `reports/verify_*.log` |
 
 ---
