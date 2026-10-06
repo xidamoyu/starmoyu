@@ -45,6 +45,7 @@
 | R9 RAG 语料重做 | ✅ | 真实数据渲染 70案例+27刊例+330在途 → 2063 块重入向量库（类目归一化 68→30） | `reports/reindex_rag.log` 结构表未动 |
 | R10 结案沉淀闭环 | ✅ | P1-P4：结案→主动提醒→预览→两次确认→单文档增量回流（幂等）→即时可检索 | `test_sediment_service.py` 3/3 + DC20250005 全链路 |
 | R11 识图+导入双审 | ✅ | qwen-vl 截图转写→特质确认卡入库；导入三通道→Agent 预审→管理员确认/驳回 | 识图 E2E（4 特质抽取）+ 脏数据 reject 实测 |
+| R12 首响性能优化 | ✅ | 真流式（messages 增量 token 逐帧 SSE）+ 寒暄轻通道（关思考链/不挂工具 schema）+ search_kols name 参数 + WSL 保活；寒暄首字 14.5s→热态 1.3-2.2s（SSE 计时实测落盘 reports/latency_report_*.md）；verify_all 36/36 全绿（RUN 1790763642） | latency 报告 + 36 断言回归 |
 
 ### 旧版（v1 已退役，历史记录）
 

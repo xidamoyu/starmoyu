@@ -77,7 +77,7 @@ v1 是「固定流水线 RAG demo」（Streamlit 三 tab + 10 节点 router，�
 | 层 | 选型 | 运行位置 | 关键实测 |
 |---|---|---|---|
 | Agent 编排 | LangGraph（StateGraph + `bind_tools` + ToolNode + Checkpointer） | 本地 | 真 Agent 循环，LLM 自主调工具 |
-| LLM | DeepSeek（火山方舟 ARK，`deepseek-v4-flash-ga-260731`） | 云端 API | HTTP 200；`max_tokens=8000` 防 reasoning 吃光 |
+| LLM | Qwen3.8（阿里云百炼 token-plan，`qwen3.8-flash`/`qwen3.8-max`） | 云端 API | tool-calling/json_mode 实测兼容；`max_tokens=8000` |
 | Embedding | bge-m3（1024 维） | 本地 Ollama | dim=1024，零 API 成本 |
 | Rerank | gte-rerank-v2（阿里云 DashScope） | 云端 API | 35 ms/条（32.1×） |
 | 向量库 | Milvus 3.0（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | 2078 条向量（2026-09-29 实测） |
@@ -201,7 +201,7 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
   → 确认卡 → 用户「确认」→ save_interaction 原子入库
 ```
 
-**关键选型依据（实测踩坑）**：ARK plan 通道的 `deepseek-v4-flash` 是**纯文本模型**——带 `image_url` 的请求被**静默降级**（不报错，图片被丢弃，prompt_tokens 仅 +104），模型回答「无法识别」。视觉能力必须走 **qwen-vl-plus（DashScope）**：实测 760×1400 截图准确读出「成交 8万8 / 预付 50% / 10月22日20点」。前端字段名也踩过坑：前端内部 camelCase `dataBase64`，Pydantic 契约是 snake_case `data_base64`，不转换必然 422。
+**关键选型依据（实测踩坑）**：主对话通道（qwen-tokenplan `qwen3.8-flash`）为**纯文本模型**——带 `image_url` 的请求被**静默降级**（不报错，图片被丢弃），模型回答「无法识别」。视觉能力必须走 **qwen-vl-plus（DashScope）**：实测 760×1400 截图准确读出「成交 8万8 / 预付 50% / 10月22日20点」。切换通道前实测三项兼容性：tool-calling（bind_tools 后真实返回 tool_calls）、json_mode、小 max_tokens 不被思考链吃光。前端字段名也踩过坑：前端内部 camelCase `dataBase64`，Pydantic 契约是 snake_case `data_base64`，不转换必然 422。
 
 **诚实边界**：识图失败（网络/格式）时如实告知用户并请文字补充，**不编造图片内容**；转写与用户口述冲突时（如截图人名 vs 用户给的达人编号）Agent 主动标注不一致等用户裁决。
 
@@ -232,6 +232,33 @@ graph = StateGraph(AgentState) ... .compile(checkpointer=SqliteSaver)
 **测试素材**：`data/raw/import_test/`（谈判复盘 md / 微信截图 / 8 行台账 csv 含 1 行预算 -20000 脏数据 / 测试剧本）；csv 用 **UTF-8 with BOM**（Windows Excel 按 GBK 解无 BOM 的 UTF-8 会乱码——实测踩坑后重生）。
 
 ---
+
+
+### 3.8 首响性能优化（真流式 + 双通道选路，实测数据落盘 reports/latency_report_*.md）
+
+**改造前痛点**：`chat_stream` 用 `stream_mode="updates"`——LangGraph 在 agent 节点跑完 `model.invoke()`（思考链+全文生成完）才吐出整条 AIMessage，SSE 转发虽叫流式，用户实际等 14.5s 才一次性看到全文，期间零反馈。
+
+**改造 1：真流式（agent_graph.chat_stream）**
+- `stream_mode=["messages","updates"]` 双模式：messages 模式把 LLM 的 `AIMessageChunk` 增量 token 实时 yield 给 SSE；updates 模式只负责 tool_call / tool_result 事件。
+- updates 里的完整 AIMessage 不再重复推 token；模型不支持增量时兜底补发全文。
+- 前端 `stores/chat.ts` 本来就是 `text += ev.text` 累加，天然兼容，零前端改动。
+
+**改造 2：寒暄轻通道（_make_model(thinking=False) + _is_chitchat 选路）**
+- 白名单命中（你好/你是谁/谢谢等，≤14 字且无业务信号词）且无钉单、无工具历史 → 走「`enable_thinking: false` + 不挂 24KB 工具 schema」的轻模型实例。
+- 判定保守：带任何业务词一律走全工具通道，宁可慢不可漏调工具。
+- 实测同消息：思考开 3.6s vs 关 1.2s；裸调「你好」首 chunk 0.6s。
+
+**改造 3（配套修复）**：chat/chat_stream 入口把 `("user", text)` 元组统一转为 `HumanMessage`——此前 state 里是裸 tuple，选路判定取不到 content 恒走全工具通道。
+
+**实测对比（SSE 事件流计时，首字=首个 token 事件）**：
+| 场景 | 旧（updates 整段） | 新（真流式+选路） |
+|---|---|---|
+| 寒暄「你好」 | 首字 14.5s | 热态首字 1.3-2.2s（冷启动首轮 8.6s） |
+| 自述「你能干什么」 | ≈14s | 首字 1.2s |
+| 点名查达人（2 工具） | ≈20s+ | 首字 9.3s / 总 20.3s |
+| 商单状态（3 工具链） | ≈30s+ | 首字/总随工具链长度，工具事件 4.5s 即到 |
+
+**坑：WSL2 闲置自休眠**——无常驻进程时 WSL VM 约 15s 闲置即 shutdown，Milvus(19530)/MinIO(9000) 端口随之失联，表现为「检索失败→模型反复重试→GraphRecursionError」。根治：start.bat 增设 starmoyu-wsl-keepalive 最小化常驻窗口（while sleep 60）。
 
 ## 四、数据结构
 
@@ -405,7 +432,7 @@ cd frontend && npm run dev     # http://localhost:5173
 |---|---|---|
 | 刊例表向量召回第 1、RRF 后掉到第 15 | 45 份同构跟踪单数量梯度堆 RRF 分 | 融合后按 `doc_id` 去重 |
 | 刊例表整块被元数据过滤误杀 | 一块多行达人只解析首个粉丝数 | `extract_all_fans` 块内任一命中即保留 |
-| ARK reasoning 吃光 max_tokens（finish_reason=length、content 空、工具不调） | 思考链耗尽配额 | max_tokens 2500 → **8000**（所有走 ARK 的脚本一律 ≥8000） |
+| reasoning 吃光 max_tokens（finish_reason=length、content 空、工具不调） | 思考链耗尽配额 | max_tokens 2500 → **8000**（所有走 LLM 的脚本一律 ≥8000） |
 | 「LLM 服从性波动」真根因 | 同上（配额耗尽，非模型不服从） | 同上 |
 | Ollama 连接永久悬起 | Windows `localhost` 解析为 `::1`，Ollama 只监听 IPv4 | 所有服务地址硬编码 `127.0.0.1` |
 | 达人召回失败（真实 bug） | Agent 跳过 `list_kol_traits` 直接搜知识库（数据在 PG 不在向量库） | 提示词强制化 + 昵称歧义澄清 |

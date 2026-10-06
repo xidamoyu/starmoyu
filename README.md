@@ -12,7 +12,8 @@
 | 层次 | 选型 | 运行位置 | 验证状态 |
 |---|---|---|---|
 | Agent 编排 | **LangGraph**（StateGraph + `bind_tools` + ToolNode + Checkpointer） | 本地 | ✅ 真 Agent 循环，LLM 自主调工具 |
-| LLM | **DeepSeek**（火山方舟 ARK，`deepseek-v4-flash`） | 云端 API | ✅ HTTP 200（max_tokens ≥8000 防 reasoning 吃光） |
+| LLM | **Qwen3.8**（阿里云百炼 token-plan，`qwen3.8-flash` / `qwen3.8-max`） | 云端 API | ✅ tool-calling / json_mode 实测兼容（max_tokens ≥8000） |
+| 首响优化 | 真流式（token 逐帧 SSE）+ 寒暄轻通道 | — | ✅ 寒暄首字 14.5s → 热态 1.3-2.2s |
 | Embedding | **bge-m3**（1024 维） | 本地 Ollama | ✅ dim=1024，零 API 成本 |
 | Rerank | **gte-rerank-v2**（阿里云 DashScope） | 云端 API | ✅ 35 ms/条（30 条候选 1051ms） |
 | 向量库 | **Milvus 3.0**（HNSW + COSINE + 倒排索引） | 本地 WSL Docker | ✅ 2076 条向量 |
@@ -59,7 +60,7 @@
 
 **全生命周期（M5+M6，7）**：`save_deal_result`/`get_deal_result`（结案复盘）/ `save_brief`（Brief 接单）/ `get_today_briefing`（主动简报）/ `get_brand_traits`/`save_brand_traits`（品牌特质）/ `get_pending_traits`（待确认队列）
 
-**图片识图沉淀流（用户拖/贴聊天截图 → 经验入库，全链路实测）**：用户在对话输入框拖入或粘贴聊天记录截图（预览条确认，气泡内渲染，原图存 MinIO `chat-attachments/` 留档）→ 后端调 **qwen-vl-plus**（DashScope 视觉通道；ARK 主模型 deepseek-v4-flash 为纯文本模型，`image_url` 被静默丢弃，识图必须走 qwen-vl）**完整转写图中对话** → 转写文本拼进 Agent 输入 → Agent 按沉淀协议从转写内容抽取合作特质（付款要求/排期习惯/内容尺度/沟通偏好，附原文引用）→ 出确认卡 → 用户回复「确认」入库（`save_interaction`，可溯源达人编号）。识图失败时如实告知并请用户文字补充，不编造图片内容。
+**图片识图沉淀流（用户拖/贴聊天截图 → 经验入库，全链路实测）**：用户在对话输入框拖入或粘贴聊天记录截图（预览条确认，气泡内渲染，原图存 MinIO `chat-attachments/` 留档）→ 后端调 **qwen-vl-plus**（DashScope 视觉通道；主对话模型为纯文本模型，`image_url` 会被静默丢弃，识图必须走 qwen-vl）**完整转写图中对话** → 转写文本拼进 Agent 输入 → Agent 按沉淀协议从转写内容抽取合作特质（付款要求/排期习惯/内容尺度/沟通偏好，附原文引用）→ 出确认卡 → 用户回复「确认」入库（`save_interaction`，可溯源达人编号）。识图失败时如实告知并请用户文字补充，不编造图片内容。
 
 **导入三通道 + Agent/管理员双审（管理后台「导入管理」）**：①**达人库** csv 直导（admin 专属，ON CONFLICT 幂等）；②**商单台账** csv → 逐行入暂存区（`ingest_staging`，不直接写 deal 表）；③**非结构化文档** md/txt/csv → 整篇入暂存区。暂存记录由 **Agent 预审**（LLM 质检：字段缺失/异常值/敏感信息，结论 pass/warn/reject + 问题清单存库）→ 管理员在暂存区看结论徽标逐条**确认或驳回**：确认商单可先在 JSON 编辑框修正字段再入库；Agent 判 reject 的记录强制入库需过二次确认弹窗；非结构化文档确认后自动切块向量化、**即时可检索**。E2E 实测：正常单 pass、预算 -20000 脏数据被抓 reject、导入文档检索命中。
 
