@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 # ---------------------------------------------------------------- 配置读取
@@ -111,17 +112,23 @@ def pg_ensure_database() -> str:
         return PG_DB
 
 
-def minio_client(retries: int = 4, delay: float = 1.5):
-    """MinIO 客户端。WSL2 端口转发存在秒级抖动（SYN 能通但请求被拒），
-    这里对连接失败做短间隔重试，单次抖动不致把健康检查/附件操作打死。"""
+def minio_client(retries: int = 3, delay: float = 1.0, connect_timeout: float = 4.0):
+    """MinIO 客户端。
+
+    WSL2 端口转发偶发秒级抖动、MinIO 容器偶发无响应，这里：
+    1. 给底层 urllib3 池设置短连接/读超时，避免单请求挂死调用线程；
+    2. 对连接失败做短间隔重试，穿透瞬时抖动。
+    """
     from minio import Minio
+    from urllib3 import PoolManager
     import time as _time
     last_exc: Exception | None = None
     for attempt in range(retries):
         try:
+            http = PoolManager(timeout=connect_timeout, retries=1)
             cli = Minio(MINIO_ENDPOINT, access_key=MINIO_ACCESS_KEY,
-                        secret_key=MINIO_SECRET_KEY, secure=False)
-            cli.bucket_exists(MINIO_BUCKET)  # 探活：真正触发连接
+                        secret_key=MINIO_SECRET_KEY, secure=False,
+                        http_client=http)
             return cli
         except Exception as e:
             last_exc = e
@@ -161,13 +168,17 @@ def health() -> dict:
         out["postgres"] = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}"}
 
     try:
-        b = minio_ensure_bucket()
-        cli = minio_client()
-        objs = [o.object_name for o in cli.list_objects(b, recursive=True)]
-        out["minio"] = {"ok": True, "endpoint": MINIO_ENDPOINT, "bucket": b,
-                        "objects": len(objs)}
+        def _minio_check() -> dict:
+            b = minio_ensure_bucket()
+            cli = minio_client()
+            objs = [o.object_name for o in cli.list_objects(b, recursive=True)]
+            return {"ok": True, "endpoint": MINIO_ENDPOINT, "bucket": b,
+                    "objects": len(objs)}
+        with ThreadPoolExecutor(max_workers=1) as _pool:
+            out["minio"] = _pool.submit(_minio_check).result(timeout=12)
     except Exception as e:
-        out["minio"] = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}"}
+        out["minio"] = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}",
+                        "hint": "MinIO 无响应（容器可能僵死，docker restart starmoyu-minio）"}
 
     return out
 
