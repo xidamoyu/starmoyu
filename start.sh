@@ -6,6 +6,12 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 LOGDIR="$ROOT/reports"
 mkdir -p "$LOGDIR"
 
+echo "[0/3] 清理残留的 8000 端口进程（上次可能留下僵死后端）..."
+for PID in $(netstat -ano | grep ":8000" | grep LISTENING | awk '{print $NF}' | sort -u); do
+  echo "    结束残留进程 $PID"
+  taskkill //F //PID "$PID" >/dev/null 2>&1 || true
+done
+
 echo "[1/3] 拉起 WSL 容器（etcd / Milvus / MinIO）..."
 wsl -d Ubuntu -e bash -c "docker start smartrecruit-etcd smartrecruit-milvus starmoyu-minio" 2>/dev/null \
   && echo "    容器已就绪（Milvus 启动约需 20-40 秒）" \
