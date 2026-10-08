@@ -111,10 +111,23 @@ def pg_ensure_database() -> str:
         return PG_DB
 
 
-def minio_client():
+def minio_client(retries: int = 4, delay: float = 1.5):
+    """MinIO 客户端。WSL2 端口转发存在秒级抖动（SYN 能通但请求被拒），
+    这里对连接失败做短间隔重试，单次抖动不致把健康检查/附件操作打死。"""
     from minio import Minio
-    return Minio(MINIO_ENDPOINT, access_key=MINIO_ACCESS_KEY,
-                 secret_key=MINIO_SECRET_KEY, secure=False)
+    import time as _time
+    last_exc: Exception | None = None
+    for attempt in range(retries):
+        try:
+            cli = Minio(MINIO_ENDPOINT, access_key=MINIO_ACCESS_KEY,
+                        secret_key=MINIO_SECRET_KEY, secure=False)
+            cli.bucket_exists(MINIO_BUCKET)  # 探活：真正触发连接
+            return cli
+        except Exception as e:
+            last_exc = e
+            if attempt < retries - 1:
+                _time.sleep(delay)
+    raise last_exc  # type: ignore[misc]
 
 
 def minio_ensure_bucket() -> str:
