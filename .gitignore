@@ -11,3 +11,6 @@ frontend/tsc.log
 frontend/vite-dev.log
 *.xlsx
 data/raw/imports/
+
+# 会话工作日志(不进仓库)
+.workbuddy/
