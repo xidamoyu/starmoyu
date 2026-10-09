@@ -9,13 +9,14 @@ set +e  # 逐项清理,单项失败不中断
 echo "[1/3] 停止后端 FastAPI :8000 ..."
 for PID in $(netstat -ano | grep ":8000" | grep LISTENING | awk '{print $NF}' | sort -u); do
   echo "    结束进程 $PID"
-  taskkill /F /PID "$PID" >/dev/null 2>&1
+  # /T 连子进程树一起杀(uvicorn 可能有 worker 子进程);错误输出可见,不再吞掉
+  taskkill /F /T /PID "$PID" || echo "    警告: $PID 结束失败(可能权限不足,试试管理员运行)"
 done
 
 echo "[2/3] 停止前端 Vite :5173 ..."
 for PID in $(netstat -ano | grep ":5173" | grep LISTENING | awk '{print $NF}' | sort -u); do
   echo "    结束进程 $PID"
-  taskkill /F /PID "$PID" >/dev/null 2>&1
+  taskkill /F /T /PID "$PID" || echo "    警告: $PID 结束失败"
 done
 # Vite 的 esbuild.exe 子进程有时不随端口释放,兜底清一次
 taskkill /F /IM esbuild.exe >/dev/null 2>&1
