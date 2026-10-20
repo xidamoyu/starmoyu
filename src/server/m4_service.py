@@ -190,8 +190,17 @@ class IngestService:
             elif kind == "import_doc":
                 # 非结构化文档 → RAG 语料（复用沉淀流的增量入库，先删后插幂等）
                 from server.sediment_service import ingest_document_incremental
-                rel = final_fields.get("rel_path") or f"imports/{uuid.uuid4().hex[:10]}.md"
-                title = final_fields.get("title") or rel.rsplit("/", 1)[-1]
+                ex = st.get("extracted") or {}
+                if isinstance(ex, str):
+                    try:
+                        ex = json.loads(ex)
+                    except Exception:
+                        ex = {}
+                if isinstance(ex, list):   # 历史记录为 [{field,value,confidence}] 形态
+                    ex = {x.get("field"): x.get("value") for x in ex if isinstance(x, dict)}
+                rel = (final_fields.get("rel_path") or ex.get("rel_path")
+                       or f"imports/{uuid.uuid4().hex[:10]}.md")
+                title = final_fields.get("title") or ex.get("title") or rel.rsplit("/", 1)[-1]
                 r2 = ingest_document_incremental(rel, title, st["raw_content"])
                 if not r2.get("ok"):
                     raise ValueError(f"向量入库失败: {r2.get('error')}")

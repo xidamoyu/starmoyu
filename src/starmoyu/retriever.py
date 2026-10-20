@@ -146,7 +146,9 @@ class Retriever:
         out = []
         for h in hits[0]:
             cid = h.get("id") or (h.get("entity") or {}).get("chunk_id")
-            if cid:
+            # 只保留 PG 里真实存在的块：Milvus 若残留孤儿向量（增量入库中断、
+            # 或重建与关系表不同步），下游取元数据会 KeyError 直接 500。
+            if cid and cid in self.by_id:
                 out.append((cid, float(h.get("distance", 0.0))))
         return out
 

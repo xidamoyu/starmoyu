@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -157,11 +158,12 @@ def render_case_md(deal_id: str, extra_lessons: list[str] | None = None) -> tupl
         for t in d["traits"]:
             L.append(f"- @{t['party_id']}【{t['trait_category']}】{t['trait_content']}")
 
-    # 跟进大事记（有则附）
+    # 跟进大事记（有则附）——编号随「合作画像」是否出现动态顺延，避免跳号
     key_fs = [f for f in d["followups"]
               if (f.get("note") or "") and not (f.get("note") or "").startswith("{")]
     if key_fs:
-        L += ["", "## 六、跟进大事记", ""]
+        seq = "六" if d["traits"] else "五"
+        L += ["", f"## {seq}、跟进大事记", ""]
         for f in key_fs[-12:]:
             L.append(f"- {f['created_at'][:16]} [{f['action_type']}] {f['note']}（{f['operator']}）")
 
@@ -171,10 +173,27 @@ def render_case_md(deal_id: str, extra_lessons: list[str] | None = None) -> tupl
 
 # ============================================================ 增量入库
 
-def ingest_document_incremental(rel_path: str, title: str, content: str) -> dict:
-    """单文档增量入库：切块 → embed → PG chunk 表 + Milvus（不动已有数据）。
+def rel_path_for_filename(fname: str) -> str:
+    """导入文件名 → 稳定的语料相对路径。
 
-    幂等：同 source_file 重复入库先删旧块（更新场景）。
+    同一文件名重传必须落到同一 rel_path，否则幂等失效、旧块不会被清掉。
+    因此这里按文件名归一（不用随机串），并把分隔符与空白压平避免 doc_id 冲突：
+    `a/b.md` 与 `a__b.md` 归一后分别为 `a_b.md`、`a_b.md`——故连字符也一并收敛。
+    """
+    base = (fname or "untitled").replace("\\", "/").rsplit("/", 1)[-1]
+    stem = re.sub(r"\.(md|txt|csv)$", "", base, flags=re.I)
+    stem = re.sub(r"[^\w\u4e00-\u9fa5\-]+", "_", stem)   # 保留中英文数字下划线连字符
+    stem = re.sub(r"_+", "_", stem).strip("_") or "untitled"
+    stem = stem[:80]                                      # 防超长文件名撑爆路径与 doc_id
+    return f"imports/{stem}.md"
+
+
+def ingest_document_incremental(rel_path: str, title: str, content: str) -> dict:
+    """单文档增量入库：切块 → embed → PG chunk 表 + Milvus（不动其它文档）。
+
+    幂等：同 rel_path 重复入库时先删旧块再插新块，旧内容不会残留。
+    删除顺序刻意做成「先删向量、后删关系表」：向量删除失败会在 PG 提交前抛出，
+    此时 PG 仍是旧状态，不会产生「PG 有块、Milvus 无向量」的半截数据。
     """
     RAW = ROOT / "data" / "raw"
     p = RAW / rel_path
@@ -205,15 +224,26 @@ def ingest_document_incremental(rel_path: str, title: str, content: str) -> dict
     if not chunks:
         return {"ok": False, "error": "切块结果为空"}
 
-    # 1) PG：先删同 source_file 旧块（幂等），再插新块
+    # 1) 先查旧块 ID（PG 与 Milvus 共用同一批 chunk_id）
     with storage.pg_connect() as con:
         with con.cursor() as cur:
             cur.execute("SELECT chunk_id FROM chunk_meta WHERE source_file=%s", (rel_path,))
             old_ids = [r[0] for r in cur.fetchall()]
+
+    # 2) 先删旧向量：失败即在 PG 落库前抛出，不留「有块无向量」的半截数据
+    client = storage.milvus_client()
+    if old_ids:
+        client.delete(storage.COLLECTION, ids=old_ids)
+        client.flush(storage.COLLECTION)
+
+    # 3) 再改关系表（同一事务：删旧块 → 删旧父块 → 插新父块 → 插新块）
+    with storage.pg_connect() as con:
+        with con.cursor() as cur:
             if old_ids:
                 ph = ",".join(["%s"] * len(old_ids))
                 cur.execute(f"DELETE FROM chunk_meta WHERE chunk_id IN ({ph})", tuple(old_ids))  # noqa: S608
-                cur.execute("DELETE FROM parent_chunk WHERE doc_id=%s", (doc_id,))
+            # 父块按 doc_id 删：覆盖「同文档重渲染后父块数量变化」的情况
+            cur.execute("DELETE FROM parent_chunk WHERE doc_id=%s", (doc_id,))
             cur.executemany(
                 "INSERT INTO parent_chunk VALUES (%s,%s,%s,%s,%s)",
                 [(x["parent_id"], x["doc_id"], x["doc_title"], x["section"], x["content"])
@@ -226,16 +256,24 @@ def ingest_document_incremental(rel_path: str, title: str, content: str) -> dict
                  for c in chunks])
         con.commit()
 
-    # 2) Milvus：删旧向量（按 chunk_id 主键）再插入
-    client = storage.milvus_client()
-    if old_ids:
-        client.delete(storage.COLLECTION, ids=old_ids)
+    # 4) 插新向量
     vecs = llm.embed([c["content"] for c in chunks])
     rows = []
     for c, v in zip(chunks, vecs):
         r = dict(c); r["embedding"] = v; rows.append(r)
     client.insert(storage.COLLECTION, rows)
     client.flush(storage.COLLECTION)
+
+    # 5) 幂等自检：库里该文档的块必须与本次新块完全一致
+    with storage.pg_connect() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT chunk_id FROM chunk_meta WHERE source_file=%s", (rel_path,))
+            now_ids = {r[0] for r in cur.fetchall()}
+    expect_ids = {c["chunk_id"] for c in chunks}
+    if now_ids != expect_ids:
+        raise RuntimeError(
+            f"幂等自检失败 {rel_path}: 期望 {len(expect_ids)} 块，实际 {len(now_ids)} 块，"
+            f"残留 {len(now_ids - expect_ids)} 块")
 
     return {"ok": True, "doc_id": doc_id, "chunks": len(chunks), "parents": len(parents),
             "replaced_old": len(old_ids), "file": str(p)}

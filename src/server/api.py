@@ -627,8 +627,12 @@ async def admin_import(file: UploadFile, kind: str = "kols",
         if not raw.strip():
             raise HTTPException(422, "文件内容为空")
         svc = IngestService()
+        # 相对路径按文件名归一（不用随机串）：同名文件重传 = 更新同一篇语料，
+        # 增量入库会先删旧块再插新块；否则每次上传都会在知识库里堆出一篇重复文档。
+        from server.sediment_service import rel_path_for_filename
         sid = svc.stage("import_doc", "admin_import", raw,
-                        extracted={"title": fname, "size": len(raw)},
+                        extracted={"title": fname, "size": len(raw),
+                                   "rel_path": rel_path_for_filename(fname)},
                         created_by=sub)
         return {"ok": True, "staged": 1, "staging_ids": [sid],
                 "hint": "已入暂存区，先 Agent 预审再管理员确认后才会进知识库"}
