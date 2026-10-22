@@ -16,7 +16,7 @@
   F13 待确认队列      get_pending_traits
   F14 知识检索召回     沉淀后案例可被 search_knowledge 召回
 
-运行：.venv/Scripts/python.exe scripts/verify_all.py
+运行：.venv/Scripts/python.exe scripts/verify_all.py （需后端 :8000 已启动）
    （真实 LLM 循环，约 3-6 分钟；结束自动还原全部测试数据）
 """
 from __future__ import annotations

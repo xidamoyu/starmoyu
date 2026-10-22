@@ -373,6 +373,29 @@ def deal_followups(deal_id: str, sub: str = Depends(_jwt_sub)):
         return {"n": cur.rowcount, "items": [dict(zip(names, r)) for r in cur.fetchall()]}
 
 
+class FollowupBody(BaseModel):
+    note: str
+    action_type: str = "手动记录"
+
+
+@app.post("/api/deals/{deal_id}/followups")
+def create_deal_followup(deal_id: str, body: FollowupBody, sub: str = Depends(_jwt_sub)):
+    """UI 直调：在商单抽屉里手写一条跟进备注（确定性路径，不经 LLM）。
+
+    与 Agent 的 create_followup 工具写同一张表，区别只在入口：
+    工具走对话确认，本端点走表单提交。action_type 默认「手动记录」，
+    与 Agent 写入的动作类型区分开，便于台账按来源筛选。
+    """
+    if not body.note.strip():
+        raise HTTPException(422, "跟进内容不能为空")
+    from server.service import FollowupService
+    try:
+        fid = FollowupService().create(deal_id, body.note.strip(), body.action_type, sub)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    return {"ok": True, "followup_id": fid, "deal_id": deal_id}
+
+
 @app.get("/api/proposals")
 def list_proposals(sub: str = Depends(_jwt_sub)):
     with storage.pg_connect() as conn:
@@ -896,12 +919,18 @@ def pending_traits(sub: str = Depends(_jwt_sub)):
 
 @app.get("/api/sediment/stats")
 def sediment_stats(sub: str = Depends(_jwt_sub)):
-    """沉淀流看板：各通道的累积量（体现 RAG 随业务运转生长）。"""
+    """沉淀流看板：各通道的累积量（体现 RAG 随业务运转生长）。
+
+    chunks_by_type 覆盖全部 6 种 doc_type（此前只统计 deal_case，看板缺 1/3 语料）。
+    """
     from server.sediment_service import _q
-    n_deal_case = _q("SELECT count(*) AS n FROM chunk_meta WHERE doc_type='deal_case'")[0]["n"]
+    rows = _q("SELECT doc_type, count(*) AS n FROM chunk_meta GROUP BY 1 ORDER BY 2 DESC")
+    by_type = {r["doc_type"]: r["n"] for r in rows}
     n_closed = _q("SELECT count(*) AS n FROM deal WHERE stage='结案'")[0]["n"]
     n_traits = _q("SELECT count(*) AS n FROM party_traits WHERE verified=TRUE")[0]["n"]
     n_followup = _q("SELECT count(*) AS n FROM deal_followup")[0]["n"]
-    return {"chunks_by_type": {"deal_case": n_deal_case},
+    n_staging = _q("SELECT count(*) AS n FROM ingest_staging")[0]["n"]
+    return {"chunks_by_type": by_type,
+            "chunks_total": sum(by_type.values()),
             "deals_closed": n_closed, "traits_verified": n_traits,
-            "followups": n_followup}
+            "followups": n_followup, "staging_records": n_staging}
