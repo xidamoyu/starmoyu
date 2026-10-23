@@ -1,0 +1,23 @@
+{
+ "run_date": "2026-10-23 18:51:59",
+ "milvus_row_count_with_tombstones": 1848,
+ "milvus_actual_ids": 1842,
+ "pg_chunk_meta": 1842,
+ "documents": 440,
+ "by_doc_type": {
+  "methodology": 28,
+  "other": 5,
+  "inflight_deal": 975,
+  "rate_card": 360,
+  "deal_case": 451,
+  "platform_policy": 23
+ },
+ "tombstones": 6,
+ "only_in_milvus": [],
+ "only_in_pg": [],
+ "consistent": true,
+ "note": "row_count 含未 compact 的墓碑记录，一致性判据是 ID 集合而非 row_count",
+ "script_sha": "5d1d59c0eacb",
+ "script_name": "check_corpus_consistency.py",
+ "script_label": "corpus-consistency"
+}
