@@ -31,12 +31,31 @@ OUT = ROOT / "reports" / "ingest_narrative_docs.json"
 
 # 本轮新增的叙述性语料（散文体复盘/实录，非条目式清单）
 NEW_DOCS = [
+    # 第一批：6 篇 33 块
     "playbook/类目复盘-美妆.md",
     "playbook/议价过程实录与判断依据.md",
     "playbook/类目复盘-母婴与3C.md",
     "playbook/达人评估的经验判断.md",
     "policies/商单事故复盘汇编.md",
     "policies/客户沟通与需求澄清实录.md",
+    # 第二批：17 篇 150 块
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/平台生态差异与跨平台投放.md",
+    "playbook/脚本创作与审核实操.md",
+    "playbook/数据指标定义与常见误读.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/报价体系与成本结构.md",
+    "playbook/排期管理与延期处理.md",
+    "playbook/结案复盘与资产沉淀.md",
+    "policies/达人合作风险与合同要点.md",
+    "policies/项目立项与资源分配.md",
+    "playbook/内容形态选择与创意方法.md",
+    "policies/客户类型差异与应对.md",
+    "playbook/直播投放与坑位管理.md",
+    "playbook/大促节点投放节奏.md",
+    "policies/新人培养与执行标准.md",
+    "playbook/类目复盘-食品与家居.md",
+    "playbook/类目复盘-服饰游戏与汽车.md",
 ]
 
 

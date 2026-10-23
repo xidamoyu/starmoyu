@@ -1,9 +1,9 @@
 {
- "run_date": "2026-10-23 18:49:42",
- "docs": 6,
- "docs_ok": 6,
- "new_chunks": 33,
- "total_seconds": 61.7,
+ "run_date": "2026-10-23 19:35:15",
+ "docs": 23,
+ "docs_ok": 23,
+ "new_chunks": 165,
+ "total_seconds": 308.6,
  "note": "叙述性语料增量入库，散文体复盘与实录，非条目式清单",
  "rows": [
   {
@@ -15,7 +15,7 @@
    "chunks": 5,
    "parents": 5,
    "error": null,
-   "seconds": 12.3
+   "seconds": 14.1
   },
   {
    "source_file": "playbook/议价过程实录与判断依据.md",
@@ -26,7 +26,7 @@
    "chunks": 5,
    "parents": 5,
    "error": null,
-   "seconds": 6.5
+   "seconds": 21.8
   },
   {
    "source_file": "playbook/类目复盘-母婴与3C.md",
@@ -37,7 +37,7 @@
    "chunks": 5,
    "parents": 5,
    "error": null,
-   "seconds": 10.6
+   "seconds": 21.6
   },
   {
    "source_file": "playbook/达人评估的经验判断.md",
@@ -48,7 +48,7 @@
    "chunks": 6,
    "parents": 6,
    "error": null,
-   "seconds": 10.8
+   "seconds": 21.6
   },
   {
    "source_file": "policies/商单事故复盘汇编.md",
@@ -59,7 +59,7 @@
    "chunks": 6,
    "parents": 6,
    "error": null,
-   "seconds": 10.9
+   "seconds": 22.5
   },
   {
    "source_file": "policies/客户沟通与需求澄清实录.md",
@@ -70,7 +70,194 @@
    "chunks": 6,
    "parents": 6,
    "error": null,
+   "seconds": 22.1
+  },
+  {
+   "source_file": "playbook/投放目标与达人结构匹配.md",
+   "title": "投放目标与达人结构的匹配逻辑",
+   "sections": 7,
+   "chars": 1644,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/平台生态差异与跨平台投放.md",
+   "title": "平台生态差异与跨平台投放",
+   "sections": 7,
+   "chars": 1716,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.9
+  },
+  {
+   "source_file": "playbook/脚本创作与审核实操.md",
+   "title": "脚本创作与审核实操",
+   "sections": 7,
+   "chars": 1689,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/数据指标定义与常见误读.md",
+   "title": "数据指标的定义与常见误读",
+   "sections": 7,
+   "chars": 1660,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/达人库维护与标签体系.md",
+   "title": "达人库维护与标签体系",
+   "sections": 7,
+   "chars": 1451,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.7
+  },
+  {
+   "source_file": "playbook/报价体系与成本结构.md",
+   "title": "报价体系与成本结构",
+   "sections": 9,
+   "chars": 1985,
+   "ok": true,
+   "chunks": 9,
+   "parents": 9,
+   "error": null,
+   "seconds": 11.7
+  },
+  {
+   "source_file": "playbook/排期管理与延期处理.md",
+   "title": "排期管理与延期处理",
+   "sections": 8,
+   "chars": 1783,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 11.2
+  },
+  {
+   "source_file": "playbook/结案复盘与资产沉淀.md",
+   "title": "结案复盘与资产沉淀",
+   "sections": 8,
+   "chars": 1603,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "policies/达人合作风险与合同要点.md",
+   "title": "达人合作的风险识别与合同要点",
+   "sections": 9,
+   "chars": 1615,
+   "ok": true,
+   "chunks": 9,
+   "parents": 9,
+   "error": null,
+   "seconds": 11.0
+  },
+  {
+   "source_file": "policies/项目立项与资源分配.md",
+   "title": "项目立项与资源分配",
+   "sections": 8,
+   "chars": 1429,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/内容形态选择与创意方法.md",
+   "title": "内容形态选择与创意方法",
+   "sections": 8,
+   "chars": 1504,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 11.1
+  },
+  {
+   "source_file": "policies/客户类型差异与应对.md",
+   "title": "客户类型差异与应对方式",
+   "sections": 8,
+   "chars": 1473,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
    "seconds": 10.6
+  },
+  {
+   "source_file": "playbook/直播投放与坑位管理.md",
+   "title": "直播间投放与坑位管理",
+   "sections": 8,
+   "chars": 1580,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/大促节点投放节奏.md",
+   "title": "大促节点的投放节奏",
+   "sections": 8,
+   "chars": 1372,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.6
+  },
+  {
+   "source_file": "policies/新人培养与执行标准.md",
+   "title": "新人培养与执行标准",
+   "sections": 8,
+   "chars": 1417,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.5
+  },
+  {
+   "source_file": "playbook/类目复盘-食品与家居.md",
+   "title": "食品饮料与家居类目实操",
+   "sections": 7,
+   "chars": 1372,
+   "ok": true,
+   "chunks": 7,
+   "parents": 7,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "playbook/类目复盘-服饰游戏与汽车.md",
+   "title": "服饰、游戏与汽车类目实操",
+   "sections": 8,
+   "chars": 1383,
+   "ok": true,
+   "chunks": 8,
+   "parents": 8,
+   "error": null,
+   "seconds": 10.8
   }
  ]
 }
