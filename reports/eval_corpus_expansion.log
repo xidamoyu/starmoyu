@@ -1,0 +1,13 @@
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\ADMINI~1\AppData\Local\Temp\jieba.cache
+Loading model cost 0.996 seconds.
+Prefix dict has been built successfully.
+语料 1974 块｜题目 250 道｜cand_k=30 top_k=10
+  P0_现行生产_等权RRF_含先验配额              Hit@1=0.6160 Hit@5=0.8120 MRR=0.7001 NDCG@10=0.7225 失败=0 825s
+  P1_加权RRF_含先验配额                   Hit@1=0.6400 Hit@5=0.8560 MRR=0.7345 NDCG@10=0.7686 失败=0 158s
+  P2_加权RRF_无先验_含配额                 Hit@1=0.6440 Hit@5=0.8360 MRR=0.7270 NDCG@10=0.7573 失败=0 155s
+  P3_加权RRF_含先验_无配额                 Hit@1=0.6520 Hit@5=0.8560 MRR=0.7400 NDCG@10=0.7741 失败=0 146s
+  P4_加权RRF_无先验_无配额_对齐F1            Hit@1=0.6440 Hit@5=0.8400 MRR=0.7271 NDCG@10=0.7573 失败=0 149s
+已落盘 eval_corpus_expansion.json（脚本 sha 5b07522ed3a2）
+
+总耗时 1433s

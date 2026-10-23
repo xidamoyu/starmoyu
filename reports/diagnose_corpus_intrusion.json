@@ -1,0 +1,645 @@
+{
+ "run_date": "2026-10-23 20:15:16",
+ "dropped": 26,
+ "gained": 10,
+ "net": -16,
+ "dropped_with_truth_in_top10": 15,
+ "dropped_with_new_doc_in_top10": 21,
+ "avg_new_doc_slots": 3.27,
+ "by_layer": {
+  "L1": {
+   "n": 6,
+   "intrude": 4,
+   "truth_in10": 2
+  },
+  "L2": {
+   "n": 15,
+   "intrude": 15,
+   "truth_in10": 8
+  },
+  "L3": {
+   "n": 5,
+   "intrude": 2,
+   "truth_in10": 5
+  }
+ },
+ "rows": [
+  {
+   "id": "L1-014",
+   "layer": "L1",
+   "query": "预算分配里达人费用、内容制作、机动的占比各是多少？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "policies/项目立项与资源分配.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/报价体系与成本结构.md",
+    "playbook/投放目标与达人结构匹配.md",
+    "policies/达人合作风险与合同要点.md"
+   ],
+   "top10": [
+    "policies/项目立项与资源分配.md",
+    "policies/商单立项与执行SOP.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/报价体系与成本结构.md",
+    "playbook/投放目标与达人结构匹配.md",
+    "policies/抖音星图下单与结算规则.md",
+    "deal_cases/DC20250240_案例.md",
+    "policies/达人合作风险与合同要点.md"
+   ]
+  },
+  {
+   "id": "L1-043",
+   "layer": "L1",
+   "query": "我是富贵 的平均播放能跑到什么水平？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "playbook/达人评估的经验判断.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/大促节点投放节奏.md",
+    "playbook/达人库维护与标签体系.md"
+   ],
+   "top10": [
+    "playbook/达人评估的经验判断.md",
+    "rate_cards/影视娱乐类目达人刊例表.md",
+    "playbook/数据指标定义与常见误读.md",
+    "rate_cards/剧情搞笑类目达人刊例表.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/大促节点投放节奏.md",
+    "playbook/达人库维护与标签体系.md"
+   ]
+  },
+  {
+   "id": "L1-052",
+   "layer": "L1",
+   "query": "哈里路亚 的互动率表现怎么样？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 0,
+   "intruders": [],
+   "top10": [
+    "deal_cases/DC20250189_案例.md",
+    "deal_cases/DC20250099_案例.md",
+    "deal_cases/DC20250251_案例.md",
+    "deal_cases/DC20250245_案例.md",
+    "deal_cases/DC20250297_案例.md",
+    "deal_cases/DC20250079_案例.md",
+    "deal_cases/DC20250344_案例.md",
+    "deal_cases/DC20250307_案例.md",
+    "deal_cases/DC20250141_案例.md",
+    "deal_cases/DC20250300_案例.md"
+   ]
+  },
+  {
+   "id": "L1-055",
+   "layer": "L1",
+   "query": "肖小小🌻 的 21-60 秒刊例价是报多少？",
+   "truth_rank": 8,
+   "n_labels": 1,
+   "new_doc_in_top10": 0,
+   "intruders": [],
+   "top10": [
+    "rate_cards/音乐类目达人刊例表.md",
+    "rate_cards/随拍类目达人刊例表.md",
+    "rate_cards/美妆类目达人刊例表.md",
+    "rate_cards/颜值达人类目达人刊例表.md",
+    "rate_cards/舞蹈类目达人刊例表.md",
+    "rate_cards/母婴亲子类目达人刊例表.md",
+    "rate_cards/二次元类目达人刊例表.md",
+    "rate_cards/三农类目达人刊例表.md",
+    "rate_cards/游戏类目达人刊例表.md"
+   ]
+  },
+  {
+   "id": "L1-057",
+   "layer": "L1",
+   "query": "杨铁环🎣 的平均播放能跑到什么水平？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 4,
+   "intruders": [
+    "playbook/达人评估的经验判断.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/达人库维护与标签体系.md"
+   ],
+   "top10": [
+    "rate_cards/影视娱乐类目达人刊例表.md",
+    "rate_cards/剧情搞笑类目达人刊例表.md",
+    "playbook/达人评估的经验判断.md",
+    "deal_cases/inflight/DC20250080_跟踪单.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/达人库维护与标签体系.md"
+   ]
+  },
+  {
+   "id": "L1-064",
+   "layer": "L1",
+   "query": "阿鸡 的平均播放能跑到什么水平？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "playbook/达人评估的经验判断.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/大促节点投放节奏.md",
+    "playbook/达人库维护与标签体系.md"
+   ],
+   "top10": [
+    "rate_cards/剧情搞笑类目达人刊例表.md",
+    "playbook/达人评估的经验判断.md",
+    "playbook/数据指标定义与常见误读.md",
+    "rate_cards/萌宠类目达人刊例表.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/大促节点投放节奏.md",
+    "playbook/达人库维护与标签体系.md"
+   ]
+  },
+  {
+   "id": "L2-008",
+   "layer": "L2",
+   "query": "怎么判断达人数据有没有注水？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 7,
+   "intruders": [
+    "playbook/达人评估的经验判断.md",
+    "playbook/结案复盘与资产沉淀.md",
+    "policies/达人合作风险与合同要点.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/商单事故复盘汇编.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/投放目标与达人结构匹配.md"
+   ],
+   "top10": [
+    "playbook/达人评估的经验判断.md",
+    "playbook/结案复盘与资产沉淀.md",
+    "policies/达人合作风险与合同要点.md",
+    "playbook/数据指标定义与常见误读.md",
+    "policies/商单事故复盘汇编.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/投放目标与达人结构匹配.md"
+   ]
+  },
+  {
+   "id": "L2-011",
+   "layer": "L2",
+   "query": "美妆内容里能不能直接说美白祛斑？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "policies/达人合作风险与合同要点.md",
+    "playbook/类目复盘-美妆.md",
+    "playbook/脚本创作与审核实操.md",
+    "playbook/类目复盘-母婴与3C.md",
+    "policies/客户类型差异与应对.md"
+   ],
+   "top10": [
+    "policies/达人合作风险与合同要点.md",
+    "playbook/美妆类目投放方法论.md",
+    "playbook/类目复盘-美妆.md",
+    "rate_cards/美妆类目达人刊例表.md",
+    "playbook/脚本创作与审核实操.md",
+    "playbook/类目复盘-母婴与3C.md",
+    "policies/客户类型差异与应对.md"
+   ]
+  },
+  {
+   "id": "L2-013",
+   "layer": "L2",
+   "query": "客户压价的时候该怎么应对？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 6,
+   "intruders": [
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/报价体系与成本结构.md",
+    "policies/客户类型差异与应对.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/新人培养与执行标准.md",
+    "playbook/排期管理与延期处理.md"
+   ],
+   "top10": [
+    "policies/客户沟通与需求澄清实录.md",
+    "playbook/报价体系与成本结构.md",
+    "policies/客户类型差异与应对.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/新人培养与执行标准.md",
+    "playbook/排期管理与延期处理.md"
+   ]
+  },
+  {
+   "id": "L2-016",
+   "layer": "L2",
+   "query": "服务费到底谁掏、掏几个点？",
+   "truth_rank": 4,
+   "n_labels": 1,
+   "new_doc_in_top10": 6,
+   "intruders": [
+    "playbook/报价体系与成本结构.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "policies/项目立项与资源分配.md",
+    "policies/达人合作风险与合同要点.md",
+    "playbook/类目复盘-母婴与3C.md",
+    "playbook/类目复盘-服饰游戏与汽车.md"
+   ],
+   "top10": [
+    "playbook/报价体系与成本结构.md",
+    "policies/客户沟通与需求澄清实录.md",
+    "policies/项目立项与资源分配.md",
+    "policies/抖音星图下单与结算规则.md",
+    "imports/1499af0c8d.md",
+    "rate_cards/教育培训类目达人刊例表.md",
+    "policies/达人合作风险与合同要点.md",
+    "playbook/类目复盘-母婴与3C.md",
+    "playbook/类目复盘-服饰游戏与汽车.md"
+   ]
+  },
+  {
+   "id": "L2-019",
+   "layer": "L2",
+   "query": "第一次合作能给多少让价空间？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "playbook/议价过程实录与判断依据.md",
+    "playbook/直播投放与坑位管理.md",
+    "playbook/报价体系与成本结构.md",
+    "policies/达人合作风险与合同要点.md",
+    "policies/新人培养与执行标准.md"
+   ],
+   "top10": [
+    "playbook/议价过程实录与判断依据.md",
+    "policies/巨量星图达人合作常见问题.md",
+    "playbook/直播投放与坑位管理.md",
+    "imports/1499af0c8d.md",
+    "playbook/报价体系与成本结构.md",
+    "policies/达人合作风险与合同要点.md",
+    "policies/新人培养与执行标准.md"
+   ]
+  },
+  {
+   "id": "L2-020",
+   "layer": "L2",
+   "query": "一次打包好几个达人划算吗？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 4,
+   "intruders": [
+    "playbook/报价体系与成本结构.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/达人合作风险与合同要点.md",
+    "playbook/结案复盘与资产沉淀.md"
+   ],
+   "top10": [
+    "playbook/报价体系与成本结构.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/达人合作风险与合同要点.md",
+    "deal_cases/DC20250338_案例.md",
+    "deal_cases/DC20250161_案例.md",
+    "deal_cases/DC20250307_案例.md",
+    "deal_cases/DC20250026_案例.md",
+    "deal_cases/DC20250044_案例.md",
+    "playbook/结案复盘与资产沉淀.md"
+   ]
+  },
+  {
+   "id": "L2-021",
+   "layer": "L2",
+   "query": "只按卖货分成的话怎么分？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "policies/客户类型差异与应对.md",
+    "policies/项目立项与资源分配.md",
+    "playbook/直播投放与坑位管理.md",
+    "playbook/议价过程实录与判断依据.md",
+    "playbook/脚本创作与审核实操.md"
+   ],
+   "top10": [
+    "policies/客户类型差异与应对.md",
+    "policies/巨量星图达人合作常见问题.md",
+    "policies/项目立项与资源分配.md",
+    "playbook/直播投放与坑位管理.md",
+    "imports/1499af0c8d.md",
+    "playbook/议价过程实录与判断依据.md",
+    "playbook/脚本创作与审核实操.md",
+    "deal_cases/DC20250024_案例.md"
+   ]
+  },
+  {
+   "id": "L2-023",
+   "layer": "L2",
+   "query": "多少预算才值得单独立项？",
+   "truth_rank": 3,
+   "n_labels": 1,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "policies/客户沟通与需求澄清实录.md",
+    "policies/项目立项与资源分配.md",
+    "policies/新人培养与执行标准.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/达人合作风险与合同要点.md"
+   ],
+   "top10": [
+    "policies/客户沟通与需求澄清实录.md",
+    "policies/项目立项与资源分配.md",
+    "policies/商单立项与执行SOP.md",
+    "policies/新人培养与执行标准.md",
+    "deal_cases/inflight/DC20250302_跟踪单.md",
+    "deal_cases/inflight/DC20250301_跟踪单.md",
+    "deal_cases/inflight/DC20250151_跟踪单.md",
+    "playbook/议价过程实录与判断依据.md",
+    "policies/达人合作风险与合同要点.md"
+   ]
+  },
+  {
+   "id": "L2-040",
+   "layer": "L2",
+   "query": "纯佣模式平台抽多少？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 2,
+   "intruders": [
+    "playbook/直播投放与坑位管理.md",
+    "playbook/平台生态差异与跨平台投放.md"
+   ],
+   "top10": [
+    "playbook/直播投放与坑位管理.md",
+    "policies/巨量星图达人合作常见问题.md",
+    "imports/1499af0c8d.md",
+    "playbook/平台生态差异与跨平台投放.md",
+    "rate_cards/游戏类目达人刊例表.md",
+    "rate_cards/萌宠类目达人刊例表.md",
+    "rate_cards/其他类目达人刊例表.md",
+    "deal_cases/inflight/DC20250242_跟踪单.md",
+    "policies/抖音星图下单与结算规则.md"
+   ]
+  },
+  {
+   "id": "L2-058",
+   "layer": "L2",
+   "query": "想找 我是富贵 合作，大概要准备多少预算？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 3,
+   "intruders": [
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/直播投放与坑位管理.md"
+   ],
+   "top10": [
+    "deal_cases/inflight/DC20250206_跟踪单.md",
+    "deal_cases/inflight/DC20250369_跟踪单.md",
+    "deal_cases/inflight/DC20250084_跟踪单.md",
+    "deal_cases/inflight/DC20250067_跟踪单.md",
+    "deal_cases/inflight/DC20250104_跟踪单.md",
+    "deal_cases/DC20250026_案例.md",
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/达人库维护与标签体系.md",
+    "deal_cases/DC20250307_案例.md",
+    "playbook/直播投放与坑位管理.md"
+   ]
+  },
+  {
+   "id": "L2-063",
+   "layer": "L2",
+   "query": "想找 呦！大侠 合作，大概要准备多少预算？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 3,
+   "intruders": [
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/直播投放与坑位管理.md",
+    "playbook/达人库维护与标签体系.md"
+   ],
+   "top10": [
+    "deal_cases/inflight/DC20250369_跟踪单.md",
+    "deal_cases/inflight/DC20250088_跟踪单.md",
+    "deal_cases/inflight/DC20250104_跟踪单.md",
+    "deal_cases/inflight/DC20250067_跟踪单.md",
+    "deal_cases/inflight/DC20250166_跟踪单.md",
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/直播投放与坑位管理.md",
+    "deal_cases/DC20250307_案例.md",
+    "playbook/达人库维护与标签体系.md"
+   ]
+  },
+  {
+   "id": "L2-075",
+   "layer": "L2",
+   "query": "达观视界 接单的话数据撑得住吗？",
+   "truth_rank": 2,
+   "n_labels": 1,
+   "new_doc_in_top10": 1,
+   "intruders": [
+    "playbook/达人评估的经验判断.md"
+   ],
+   "top10": [
+    "playbook/达人评估的经验判断.md",
+    "rate_cards/旅行类目达人刊例表.md",
+    "deal_cases/inflight/DC20250367_跟踪单.md",
+    "deal_cases/DC20250165_案例.md",
+    "deal_cases/DC20250240_案例.md",
+    "deal_cases/DC20250212_案例.md",
+    "deal_cases/DC20250171_案例.md",
+    "deal_cases/DC20250344_案例.md",
+    "deal_cases/DC20250147_案例.md",
+    "deal_cases/DC20250334_案例.md"
+   ]
+  },
+  {
+   "id": "L2-078",
+   "layer": "L2",
+   "query": "想找 大圆子 合作，大概要准备多少预算？",
+   "truth_rank": 1,
+   "n_labels": 2,
+   "new_doc_in_top10": 3,
+   "intruders": [
+    "playbook/投放目标与达人结构匹配.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/直播投放与坑位管理.md"
+   ],
+   "top10": [
+    "deal_cases/inflight/DC20250242_跟踪单.md",
+    "deal_cases/inflight/DC20250166_跟踪单.md",
+    "deal_cases/inflight/DC20250125_跟踪单.md",
+    "deal_cases/inflight/DC20250198_跟踪单.md",
+    "deal_cases/inflight/DC20250067_跟踪单.md",
+    "deal_cases/inflight/DC20250104_跟踪单.md",
+    "playbook/投放目标与达人结构匹配.md",
+    "deal_cases/DC20250307_案例.md",
+    "playbook/达人库维护与标签体系.md",
+    "playbook/直播投放与坑位管理.md"
+   ]
+  },
+  {
+   "id": "L2-090",
+   "layer": "L2",
+   "query": "佳佳的家 接单的话数据撑得住吗？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 1,
+   "intruders": [
+    "playbook/达人评估的经验判断.md"
+   ],
+   "top10": [
+    "playbook/达人评估的经验判断.md",
+    "deal_cases/inflight/DC20250055_跟踪单.md",
+    "rate_cards/艺术文化类目达人刊例表.md",
+    "deal_cases/DC20250015_案例.md",
+    "deal_cases/inflight/DC20250304_跟踪单.md",
+    "deal_cases/DC20250300_案例.md",
+    "deal_cases/DC20250022_案例.md",
+    "deal_cases/DC20250307_案例.md",
+    "deal_cases/DC20250215_案例.md"
+   ]
+  },
+  {
+   "id": "L2-091",
+   "layer": "L2",
+   "query": "有没有 嗨氏 这个号的报价资料？",
+   "truth_rank": null,
+   "n_labels": 1,
+   "new_doc_in_top10": 4,
+   "intruders": [
+    "playbook/报价体系与成本结构.md",
+    "policies/商单事故复盘汇编.md",
+    "policies/项目立项与资源分配.md",
+    "policies/新人培养与执行标准.md"
+   ],
+   "top10": [
+    "deal_cases/inflight/DC20250382_跟踪单.md",
+    "deal_cases/inflight/DC20250173_跟踪单.md",
+    "deal_cases/inflight/DC20250374_跟踪单.md",
+    "deal_cases/inflight/DC20250243_跟踪单.md",
+    "deal_cases/inflight/DC20250062_跟踪单.md",
+    "deal_cases/inflight/DC20250373_跟踪单.md",
+    "playbook/报价体系与成本结构.md",
+    "policies/商单事故复盘汇编.md",
+    "policies/项目立项与资源分配.md",
+    "policies/新人培养与执行标准.md"
+   ]
+  },
+  {
+   "id": "L3-019",
+   "layer": "L3",
+   "query": "二次元这边有没有上十万的大项目？",
+   "truth_rank": 5,
+   "n_labels": 8,
+   "new_doc_in_top10": 1,
+   "intruders": [
+    "policies/新人培养与执行标准.md"
+   ],
+   "top10": [
+    "deal_cases/DC20250397_案例.md",
+    "deal_cases/DC20250387_案例.md",
+    "rate_cards/二次元类目达人刊例表.md",
+    "deal_cases/inflight/DC20250253_跟踪单.md",
+    "deal_cases/inflight/DC20250067_跟踪单.md",
+    "deal_cases/inflight/DC20250261_跟踪单.md",
+    "deal_cases/inflight/DC20250195_跟踪单.md",
+    "policies/新人培养与执行标准.md"
+   ]
+  },
+  {
+   "id": "L3-027",
+   "layer": "L3",
+   "query": "二次元类目在抖音上种草带货的单子列一下？",
+   "truth_rank": 2,
+   "n_labels": 3,
+   "new_doc_in_top10": 0,
+   "intruders": [],
+   "top10": [
+    "rate_cards/二次元类目达人刊例表.md",
+    "deal_cases/inflight/DC20250380_跟踪单.md",
+    "deal_cases/inflight/DC20250313_跟踪单.md",
+    "deal_cases/inflight/DC20250195_跟踪单.md",
+    "deal_cases/inflight/DC20250253_跟踪单.md",
+    "deal_cases/inflight/DC20250040_跟踪单.md",
+    "deal_cases/inflight/DC20250261_跟踪单.md",
+    "deal_cases/inflight/DC20250033_跟踪单.md"
+   ]
+  },
+  {
+   "id": "L3-040",
+   "layer": "L3",
+   "query": "家电这条线在途项目的清单给我一份。",
+   "truth_rank": 2,
+   "n_labels": 10,
+   "new_doc_in_top10": 0,
+   "intruders": [],
+   "top10": [
+    "deal_cases/inflight/DC20250055_跟踪单.md",
+    "deal_cases/inflight/DC20250359_跟踪单.md",
+    "deal_cases/inflight/DC20250047_跟踪单.md",
+    "deal_cases/inflight/DC20250157_跟踪单.md",
+    "deal_cases/inflight/DC20250045_跟踪单.md",
+    "deal_cases/inflight/DC20250353_跟踪单.md",
+    "deal_cases/inflight/DC20250145_跟踪单.md",
+    "deal_cases/inflight/DC20250146_跟踪单.md",
+    "deal_cases/inflight/DC20250248_跟踪单.md",
+    "deal_cases/inflight/DC20250109_跟踪单.md"
+   ]
+  },
+  {
+   "id": "L3-078",
+   "layer": "L3",
+   "query": "想看看服饰做完了的项目清单，能列出来吗？",
+   "truth_rank": 3,
+   "n_labels": 2,
+   "new_doc_in_top10": 5,
+   "intruders": [
+    "policies/项目立项与资源分配.md",
+    "policies/新人培养与执行标准.md",
+    "playbook/类目复盘-服饰游戏与汽车.md",
+    "policies/达人合作风险与合同要点.md",
+    "policies/客户沟通与需求澄清实录.md"
+   ],
+   "top10": [
+    "policies/项目立项与资源分配.md",
+    "policies/新人培养与执行标准.md",
+    "deal_cases/DC20250321_案例.md",
+    "deal_cases/DC20250030_案例.md",
+    "playbook/类目复盘-服饰游戏与汽车.md",
+    "deal_cases/DC20250212_案例.md",
+    "policies/达人合作风险与合同要点.md",
+    "policies/客户沟通与需求澄清实录.md"
+   ]
+  },
+  {
+   "id": "L3-079",
+   "layer": "L3",
+   "query": "科技数码类目里预算规模靠前的项目是哪几个？",
+   "truth_rank": 4,
+   "n_labels": 5,
+   "new_doc_in_top10": 0,
+   "intruders": [],
+   "top10": [
+    "deal_cases/DC20250281_案例.md",
+    "rate_cards/科技数码类目达人刊例表.md",
+    "deal_cases/inflight/DC20250133_跟踪单.md",
+    "deal_cases/inflight/DC20250326_跟踪单.md",
+    "deal_cases/inflight/DC20250243_跟踪单.md",
+    "deal_cases/inflight/DC20250182_跟踪单.md",
+    "deal_cases/inflight/DC20250210_跟踪单.md",
+    "deal_cases/inflight/DC20250074_跟踪单.md",
+    "deal_cases/inflight/DC20250339_跟踪单.md",
+    "deal_cases/inflight/DC20250031_跟踪单.md"
+   ]
+  }
+ ],
+ "note": "语料扩充后首位命中丢失的归因；判断该修语料还是修检索",
+ "script_sha": "e87e8d3d5fbf",
+ "script_name": "diagnose_corpus_intrusion.py",
+ "script_label": "corpus-intrusion"
+}

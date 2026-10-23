@@ -1,0 +1,23 @@
+掉下来 26 题｜新命中 10 题
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\ADMINI~1\AppData\Local\Temp\jieba.cache
+Loading model cost 0.982 seconds.
+Prefix dict has been built successfully.
+  已跑 5/26
+  已跑 10/26
+  已跑 15/26
+  已跑 20/26
+  已跑 25/26
+
+=== 归因结果 ===
+  掉下来的 26 题中：
+    真值仍在 top-10 内：15 题（被挤到首位之外）
+    真值已掉出 top-10：11 题
+    top-10 含新叙述性语料：21 题
+    平均新语料占位：3.27 / 10
+
+=== 分层 ===
+  L1: 6 题｜新语料占位 4 题｜真值仍在 top10 2 题
+  L2: 15 题｜新语料占位 15 题｜真值仍在 top10 8 题
+  L3: 5 题｜新语料占位 2 题｜真值仍在 top10 5 题
+已落盘 diagnose_corpus_intrusion.json（脚本 sha e87e8d3d5fbf）
