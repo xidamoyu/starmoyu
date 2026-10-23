@@ -1,0 +1,3577 @@
+{
+ "eval_set_version": "v6-2026-10-23",
+ "corpus_scale": {
+  "chunks": 1809,
+  "documents": 434,
+  "kol": 14289,
+  "deals": 400
+ },
+ "scoring_note": "文档级标注：direct=直接回答（计 1 分），assist=辅助参考（计 0.5 分）。L4 分「干净拒答」与「边界拒答」两类分别统计。",
+ "difficulty_definition": "L1=精确查找（语料明写）；L2=语义改写（口语/昵称/指代）；L3=多约束聚合（真值 2-10 篇）；L4=否定与边界（拒答）",
+ "design_note": "真值全部由语料正文派生：单真值题必须唯一命中 1 篇，聚合题真值上限 10 篇以保证 Recall@10 可达 1；同层任意两题题干字符三元组相似度 < 0.85；单一问法模式占比不超过 25%。",
+ "generation": {
+  "seed": 20261023,
+  "quota": {
+   "L1": 70,
+   "L2": 100,
+   "L3": 80,
+   "L4": 50
+  },
+  "dup_jaccard": 0.85,
+  "pattern_share_max": 0.25,
+  "pattern_counts": {
+   "P_howlong": 1,
+   "P_maxnum": 1,
+   "P_fee": 1,
+   "P_days": 1,
+   "P_nodes": 1,
+   "P_uprate": 1,
+   "P_threshold": 1,
+   "P_benefit": 1,
+   "P_range": 1,
+   "P_discount": 1,
+   "P_split": 1,
+   "P_lead": 1,
+   "P_gate": 1,
+   "P_alloc": 1,
+   "P_window": 1,
+   "P_deadline": 1,
+   "P_action": 1,
+   "P_principles": 1,
+   "P_weights": 1,
+   "P_exclude": 1,
+   "P_funnel": 1,
+   "P_prefer": 1,
+   "P_kpi": 1,
+   "P_benchmark": 1,
+   "P_parts": 1,
+   "P_priority": 1,
+   "P_nick_price": 7,
+   "P_nick_fans": 7,
+   "P_nick_play": 6,
+   "P_nick_cpm": 6,
+   "P_nick_rate": 6,
+   "P_nick_rating": 6,
+   "P_nick_cat": 6,
+   "Q_price_nego": 1,
+   "Q_koc": 1,
+   "Q_peak": 1,
+   "Q_rebate": 1,
+   "Q_delay": 1,
+   "Q_special": 1,
+   "Q_banned": 1,
+   "Q_fake": 1,
+   "Q_overdue": 1,
+   "Q_beyond_fans": 1,
+   "Q_claim": 1,
+   "Q_forecast": 1,
+   "Q_counter": 1,
+   "Q_rhythm": 1,
+   "Q_resp": 1,
+   "Q_fee_who": 1,
+   "Q_price_change": 1,
+   "Q_tier_line": 1,
+   "Q_first": 1,
+   "Q_bundle": 1,
+   "Q_commission": 1,
+   "Q_slot": 1,
+   "Q_budget_gate": 1,
+   "Q_splitting": 1,
+   "Q_filing": 1,
+   "Q_underperform": 1,
+   "Q_match": 1,
+   "Q_weights": 1,
+   "Q_veto": 1,
+   "Q_funnel": 1,
+   "Q_premium": 1,
+   "Q_kpi": 1,
+   "Q_benchmark": 1,
+   "Q_proposal": 1,
+   "Q_concede": 1,
+   "Q_callback": 1,
+   "Q_custom": 1,
+   "Q_s_tier": 1,
+   "Q_repeat": 1,
+   "Q_pure_gmv": 1,
+   "Q_roi_base": 1,
+   "P_nick_who": 12,
+   "P_nick_ask": 12,
+   "P_nick_worth": 12,
+   "P_nick_brief": 12,
+   "P_nick_alt": 11,
+   "C_case": 5,
+   "B_live": 7,
+   "C_cgp": 15,
+   "B_all": 12,
+   "C_cgpl": 15,
+   "C_cglive": 9,
+   "C_lost": 2,
+   "C_big": 4,
+   "C_live": 5,
+   "X_ps": 2,
+   "B_case": 1,
+   "Y_cross2": 1,
+   "B_lost": 2,
+   "R_clean_price": 11,
+   "R_clean_process": 6,
+   "R_clean_settle": 4,
+   "R_clean_rule": 4,
+   "R_bound_process": 9,
+   "R_bound_finance": 5,
+   "R_bound_legal": 6,
+   "R_bound_ops": 5
+  },
+  "dropped": {
+   "L3_类目条件越界": 32,
+   "问法骨架超限": 1
+  }
+ },
+ "layer_counts": {
+  "L1": 70,
+  "L2": 100,
+  "L3": 80,
+  "L4": 50
+ },
+ "items": [
+  {
+   "id": "L1-001",
+   "difficulty": "L1",
+   "query": "星图订单创建后达人多少小时内必须确认接单？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_howlong",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "订单创建后 48 小时内确认"
+  },
+  {
+   "id": "L1-002",
+   "difficulty": "L1",
+   "query": "定向邀约模式下单次最多能邀约多少位达人？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_maxnum",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "定向邀约单次最多 20 位"
+  },
+  {
+   "id": "L1-003",
+   "difficulty": "L1",
+   "query": "平台服务费向广告主和达人侧各收取多少？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_fee",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "广告主 5%、达人侧 10%"
+  },
+  {
+   "id": "L1-004",
+   "difficulty": "L1",
+   "query": "达人报价调整需要提前多少天生效？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_days",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "报价调整提前 7 个自然日"
+  },
+  {
+   "id": "L1-005",
+   "difficulty": "L1",
+   "query": "内容发布后的数据回传有哪几个时间节点？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_nodes",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "24 小时/7 天/30 天"
+  },
+  {
+   "id": "L1-006",
+   "difficulty": "L1",
+   "query": "定制内容在标准刊例基础上上浮多少？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "P_uprate",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "定制内容上浮 20%-50%"
+  },
+  {
+   "id": "L1-007",
+   "difficulty": "L1",
+   "query": "达人粉丝量的头部、腰部、尾部分界线是多少？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_threshold",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "头部 500 万以上/腰部 50-500 万/尾部 50 万以下"
+  },
+  {
+   "id": "L1-008",
+   "difficulty": "L1",
+   "query": "S 级达人能享受什么待遇？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_benefit",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "优先档期、寄样与脚本共创"
+  },
+  {
+   "id": "L1-009",
+   "difficulty": "L1",
+   "query": "首次合作报价通常是刊例的什么区间？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_range",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "首次 85%-100%，复购 70%-85%"
+  },
+  {
+   "id": "L1-010",
+   "difficulty": "L1",
+   "query": "打包多位达人一般能争取到多少折扣？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_discount",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "3 位以上打包 10%-20%"
+  },
+  {
+   "id": "L1-011",
+   "difficulty": "L1",
+   "query": "纯佣金模式下达人分成比例是多少？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_split",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "GMV 的 15%-30%"
+  },
+  {
+   "id": "L1-012",
+   "difficulty": "L1",
+   "query": "头部达人的档期通常需要提前多久锁定？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "P_lead",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "提前 20-30 天"
+  },
+  {
+   "id": "L1-013",
+   "difficulty": "L1",
+   "query": "商单立项的预算门槛是多少？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_gate",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "预算 ≥ 10 万或年框客户"
+  },
+  {
+   "id": "L1-014",
+   "difficulty": "L1",
+   "query": "预算分配里达人费用、内容制作、机动的占比各是多少？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_alloc",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "达人 75%-85%/内容 5%-10%/机动 5%-15%"
+  },
+  {
+   "id": "L1-015",
+   "difficulty": "L1",
+   "query": "三十天标准周期里哪一段用来做报价谈判和档期锁定？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_window",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "D4-D7"
+  },
+  {
+   "id": "L1-016",
+   "difficulty": "L1",
+   "query": "结案后几个工作日内要完成归档？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_deadline",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "5 个工作日内"
+  },
+  {
+   "id": "L1-017",
+   "difficulty": "L1",
+   "query": "ROI 低于立项基准的商单在结案时要做什么？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_action",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "结案报告中说明原因与改进项"
+  },
+  {
+   "id": "L1-018",
+   "difficulty": "L1",
+   "query": "达人匹配的四条优先原则分别是什么？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "P_principles",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "类目匹配度/人群重合度/性价比/履约稳定性"
+  },
+  {
+   "id": "L1-019",
+   "difficulty": "L1",
+   "query": "五维评估模型各维度的权重是多少？",
+   "labels": {
+    "playbook/达人筛选评估框架.md": "direct"
+   },
+   "pattern": "P_weights",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "类目 25%/人群 25%/内容 20%/性价比 20%/履约 10%"
+  },
+  {
+   "id": "L1-020",
+   "difficulty": "L1",
+   "query": "达人筛选的硬性排除项有哪些？",
+   "labels": {
+    "playbook/达人筛选评估框架.md": "direct"
+   },
+   "pattern": "P_exclude",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "90 天刷量违规一票否决等"
+  },
+  {
+   "id": "L1-021",
+   "difficulty": "L1",
+   "query": "美妆投放推荐什么样的达人漏斗组合？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "P_funnel",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "1 头部 + 3-5 腰部 + 5-10 尾部"
+  },
+  {
+   "id": "L1-022",
+   "difficulty": "L1",
+   "query": "高客单精华类产品优先选哪类达人？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "P_prefer",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "成分党、配方师类达人"
+  },
+  {
+   "id": "L1-023",
+   "difficulty": "L1",
+   "query": "美妆类目 CPM 和互动率的参考区间是多少？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "P_kpi",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "CPM 25-60 元、互动率 2%-5%"
+  },
+  {
+   "id": "L1-024",
+   "difficulty": "L1",
+   "query": "腰部达人和头部达人的 ROI 基准分别是多少？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "P_benchmark",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "腰部 ≥1.2，头部 0.8"
+  },
+  {
+   "id": "L1-025",
+   "difficulty": "L1",
+   "query": "标准提案包含哪几个部分？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "P_parts",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "需求理解→…→风险提示 七部分"
+  },
+  {
+   "id": "L1-026",
+   "difficulty": "L1",
+   "query": "面对客户压价，话术上优先让什么、其次让什么？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "P_priority",
+   "truth_rule": "政策/方法论文档明写条文",
+   "note": "先让内容权益，其次让价格"
+  },
+  {
+   "id": "L1-027",
+   "difficulty": "L1",
+   "query": "猫喵教大祭司🐱 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 112.0w｜刊例 33500｜均播 52.3w｜CPM ¥58｜互动 5.72%｜已挂靠"
+  },
+  {
+   "id": "L1-028",
+   "difficulty": "L1",
+   "query": "小羊同学 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活家居｜尾部｜粉丝 19.0w｜刊例 18000｜均播 8.7w｜CPM ¥32｜互动 3.35%｜未挂靠"
+  },
+  {
+   "id": "L1-029",
+   "difficulty": "L1",
+   "query": "徐小小的金毛 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 103.9w｜刊例 22000｜均播 51.7w｜CPM ¥72｜互动 3.36%｜-"
+  },
+  {
+   "id": "L1-030",
+   "difficulty": "L1",
+   "query": "张石头 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250101_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250177_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "颜值达人｜腰部｜粉丝 66.5w｜刊例 20000｜均播 17.4w｜CPM ¥52｜互动 4.12%｜已挂靠"
+  },
+  {
+   "id": "L1-031",
+   "difficulty": "L1",
+   "query": "英勇投食手 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/美食类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "美食｜腰部｜粉丝 362.5w｜刊例 80000｜均播 114.1w｜CPM ¥44｜互动 3.61%｜-"
+  },
+  {
+   "id": "L1-032",
+   "difficulty": "L1",
+   "query": "秦妈妈的一家 的合作评级是什么？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活家居｜腰部｜粉丝 218.0w｜刊例 40000｜均播 104.3w｜CPM ¥50｜互动 5.72%｜未挂靠"
+  },
+  {
+   "id": "L1-033",
+   "difficulty": "L1",
+   "query": "王辣辣（很辣） 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "颜值达人｜koc｜粉丝 Nonew｜刊例 53300｜均播 107.6w｜CPM ¥38｜互动 2.28%｜-"
+  },
+  {
+   "id": "L1-034",
+   "difficulty": "L1",
+   "query": "奶糖爱装修 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活家居｜尾部｜粉丝 16.0w｜刊例 7000｜均播 5.7w｜CPM ¥38｜互动 4.13%｜未挂靠"
+  },
+  {
+   "id": "L1-035",
+   "difficulty": "L1",
+   "query": "才才Cary 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "游戏｜腰部｜粉丝 234.0w｜刊例 30000｜均播 97.7w｜CPM ¥41｜互动 5.13%｜-"
+  },
+  {
+   "id": "L1-036",
+   "difficulty": "L1",
+   "query": "十闲闲 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/时尚类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "时尚｜腰部｜粉丝 61.8w｜刊例 45000｜均播 15.5w｜CPM ¥53｜互动 3.80%｜-"
+  },
+  {
+   "id": "L1-037",
+   "difficulty": "L1",
+   "query": "小饼遇见猫 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 216.2w｜刊例 29800｜均播 74.9w｜CPM ¥61｜互动 5.08%｜已挂靠"
+  },
+  {
+   "id": "L1-038",
+   "difficulty": "L1",
+   "query": "小法斗球球 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 92.2w｜刊例 20000｜均播 24.6w｜CPM ¥69｜互动 3.86%｜已挂靠"
+  },
+  {
+   "id": "L1-039",
+   "difficulty": "L1",
+   "query": "一心向上的小苗 的合作评级是什么？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活｜腰部｜粉丝 112.4w｜刊例 50000｜均播 53.5w｜CPM ¥60｜互动 5.30%｜-"
+  },
+  {
+   "id": "L1-040",
+   "difficulty": "L1",
+   "query": "妙哇花和嫩阿哥的哥哥 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活｜头部｜粉丝 824.6w｜刊例 68000｜均播 220.0w｜CPM ¥53｜互动 2.27%｜-"
+  },
+  {
+   "id": "L1-041",
+   "difficulty": "L1",
+   "query": "虫儿的家 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活家居｜koc｜粉丝 Nonew｜刊例 13800｜均播 35.5w｜CPM ¥46｜互动 2.59%｜-"
+  },
+  {
+   "id": "L1-042",
+   "difficulty": "L1",
+   "query": "西西 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/时尚类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250131_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250329_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "时尚｜尾部｜粉丝 30.7w｜刊例 16300｜均播 14.0w｜CPM ¥45｜互动 4.97%｜-"
+  },
+  {
+   "id": "L1-043",
+   "difficulty": "L1",
+   "query": "我是富贵 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 164.2w｜刊例 36900｜均播 45.7w｜CPM ¥41｜互动 5.78%｜已挂靠"
+  },
+  {
+   "id": "L1-044",
+   "difficulty": "L1",
+   "query": "冲哥电影 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "影视娱乐｜koc｜粉丝 Nonew｜刊例 11925｜均播 45.8w｜CPM ¥23｜互动 2.08%｜-"
+  },
+  {
+   "id": "L1-045",
+   "difficulty": "L1",
+   "query": "百搭小花卷 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活｜腰部｜粉丝 166.3w｜刊例 50000｜均播 42.7w｜CPM ¥47｜互动 4.85%｜已挂靠"
+  },
+  {
+   "id": "L1-046",
+   "difficulty": "L1",
+   "query": "DDsss912（非本人） 的合作评级是什么？",
+   "labels": {
+    "rate_cards/剧情搞笑类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "剧情搞笑｜腰部｜粉丝 422.0w｜刊例 98000｜均播 147.1w｜CPM ¥60｜互动 5.45%｜-"
+  },
+  {
+   "id": "L1-047",
+   "difficulty": "L1",
+   "query": "董润祺 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "影视娱乐｜尾部｜粉丝 39.0w｜刊例 10000｜均播 12.1w｜CPM ¥68｜互动 2.72%｜-"
+  },
+  {
+   "id": "L1-048",
+   "difficulty": "L1",
+   "query": "呦！大侠 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活家居｜尾部｜粉丝 16.0w｜刊例 50000｜均播 4.2w｜CPM ¥31｜互动 3.91%｜未挂靠"
+  },
+  {
+   "id": "L1-049",
+   "difficulty": "L1",
+   "query": "于哲🚗 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/汽车类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "汽车｜腰部｜粉丝 89.0w｜刊例 55000｜均播 42.6w｜CPM ¥32｜互动 3.51%｜已挂靠"
+  },
+  {
+   "id": "L1-050",
+   "difficulty": "L1",
+   "query": "梧桐带你忆童年 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "二次元｜尾部｜粉丝 17.8w｜刊例 3400｜均播 5.6w｜CPM ¥63｜互动 4.30%｜已挂靠"
+  },
+  {
+   "id": "L1-051",
+   "difficulty": "L1",
+   "query": "饭团房车游 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/母婴亲子类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "母婴亲子｜尾部｜粉丝 21.9w｜刊例 11200｜均播 8.2w｜CPM ¥56｜互动 4.33%｜-"
+  },
+  {
+   "id": "L1-052",
+   "difficulty": "L1",
+   "query": "哈里路亚 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/运动健身类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "运动健身｜koc｜粉丝 Nonew｜刊例 60000｜均播 113.4w｜CPM ¥38｜互动 2.15%｜-"
+  },
+  {
+   "id": "L1-053",
+   "difficulty": "L1",
+   "query": "隔壁大哥与小李 的合作评级是什么？",
+   "labels": {
+    "rate_cards/剧情搞笑类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "剧情搞笑｜腰部｜粉丝 446.0w｜刊例 52000｜均播 138.6w｜CPM ¥62｜互动 3.64%｜-"
+  },
+  {
+   "id": "L1-054",
+   "difficulty": "L1",
+   "query": "杭州班长 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/旅行类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "旅行｜腰部｜粉丝 362.3w｜刊例 69800｜均播 163.9w｜CPM ¥60｜互动 4.93%｜已挂靠"
+  },
+  {
+   "id": "L1-055",
+   "difficulty": "L1",
+   "query": "肖小小🌻 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/三农类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "三农｜尾部｜粉丝 22.3w｜刊例 18000｜均播 9.4w｜CPM ¥42｜互动 5.46%｜-"
+  },
+  {
+   "id": "L1-056",
+   "difficulty": "L1",
+   "query": "黑马动画 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "二次元｜koc｜粉丝 Nonew｜刊例 12100｜均播 38.3w｜CPM ¥35｜互动 2.80%｜-"
+  },
+  {
+   "id": "L1-057",
+   "difficulty": "L1",
+   "query": "杨铁环🎣 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/运动健身类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "运动健身｜腰部｜粉丝 67.0w｜刊例 90000｜均播 24.0w｜CPM ¥38｜互动 4.85%｜已挂靠"
+  },
+  {
+   "id": "L1-058",
+   "difficulty": "L1",
+   "query": "晚安姐姐（每晚6点直播） 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "游戏｜头部｜粉丝 587.0w｜刊例 36600｜均播 212.8w｜CPM ¥51｜互动 2.14%｜-"
+  },
+  {
+   "id": "L1-059",
+   "difficulty": "L1",
+   "query": "招财是只猫、 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct",
+    "deal_cases/DC20250297_案例.md": "assist"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "萌宠｜腰部｜粉丝 166.6w｜刊例 22000｜均播 44.9w｜CPM ¥50｜互动 3.01%｜-"
+  },
+  {
+   "id": "L1-060",
+   "difficulty": "L1",
+   "query": "达观视界 的合作评级是什么？",
+   "labels": {
+    "rate_cards/旅行类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "旅行｜koc｜粉丝 Nonew｜刊例 19743｜均播 37.0w｜CPM ¥29｜互动 1.75%｜-"
+  },
+  {
+   "id": "L1-061",
+   "difficulty": "L1",
+   "query": "方飞老师 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/其他类目达人刊例表.md": "direct",
+    "deal_cases/DC20250024_案例.md": "assist",
+    "deal_cases/inflight/DC20250196_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250345_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250382_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "其他｜头部｜粉丝 881.1w｜刊例 159700｜均播 253.1w｜CPM ¥60｜互动 2.96%｜已挂靠"
+  },
+  {
+   "id": "L1-062",
+   "difficulty": "L1",
+   "query": "安徽阿秀 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/情感类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "情感｜尾部｜粉丝 39.1w｜刊例 12700｜均播 15.2w｜CPM ¥60｜互动 2.55%｜-"
+  },
+  {
+   "id": "L1-063",
+   "difficulty": "L1",
+   "query": "大圆子 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250242_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "生活｜头部｜粉丝 1344.6w｜刊例 159000｜均播 498.3w｜CPM ¥69｜互动 3.04%｜未挂靠"
+  },
+  {
+   "id": "L1-064",
+   "difficulty": "L1",
+   "query": "阿鸡 的平均播放能跑到什么水平？",
+   "labels": {
+    "rate_cards/美食类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_play",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "美食｜腰部｜粉丝 467.0w｜刊例 100000｜均播 171.5w｜CPM ¥66｜互动 3.58%｜-"
+  },
+  {
+   "id": "L1-065",
+   "difficulty": "L1",
+   "query": "老牛的Vlog 的 CPM 是多少？",
+   "labels": {
+    "rate_cards/才艺技能类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cpm",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "才艺技能｜koc｜粉丝 Nonew｜刊例 65800｜均播 285.2w｜CPM ¥62｜互动 2.37%｜-"
+  },
+  {
+   "id": "L1-066",
+   "difficulty": "L1",
+   "query": "芈八子（第五人格） 的互动率表现怎么样？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rate",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "游戏｜腰部｜粉丝 207.0w｜刊例 49600｜均播 85.1w｜CPM ¥68｜互动 5.08%｜-"
+  },
+  {
+   "id": "L1-067",
+   "difficulty": "L1",
+   "query": "柠好不好 的合作评级是什么？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_rating",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "二次元｜koc｜粉丝 Nonew｜刊例 42000｜均播 123.4w｜CPM ¥51｜互动 1.95%｜-"
+  },
+  {
+   "id": "L1-068",
+   "difficulty": "L1",
+   "query": "周喜喜 主攻哪个细分方向？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_cat",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "影视娱乐｜koc｜粉丝 Nonew｜刊例 7200｜均播 21.1w｜CPM ¥43｜互动 2.07%｜-"
+  },
+  {
+   "id": "L1-069",
+   "difficulty": "L1",
+   "query": "黑眼圈小公猪 的 21-60 秒刊例价是报多少？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct",
+    "deal_cases/DC20250015_案例.md": "assist",
+    "deal_cases/inflight/DC20250254_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_price",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "颜值达人｜尾部｜粉丝 25.5w｜刊例 13000｜均播 8.9w｜CPM ¥60｜互动 5.13%｜-"
+  },
+  {
+   "id": "L1-070",
+   "difficulty": "L1",
+   "query": "小佛爷说 粉丝多少、属于哪一档量级？",
+   "labels": {
+    "rate_cards/财经投资类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_fans",
+   "truth_rule": "刊例表单达人行，昵称全语料唯一（真值必然唯一命中）",
+   "note": "财经投资｜koc｜粉丝 Nonew｜刊例 14700｜均播 41.8w｜CPM ¥46｜互动 2.37%｜-"
+  },
+  {
+   "id": "L2-001",
+   "difficulty": "L2",
+   "query": "腰部达人谈价一般能压下来多少？",
+   "labels": {
+    "imports/1499af0c8d.md": "direct"
+   },
+   "pattern": "Q_price_nego",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-002",
+   "difficulty": "L2",
+   "query": "KOC 合作要注意什么、怎么报价？",
+   "labels": {
+    "imports/1499af0c8d.md": "direct"
+   },
+   "pattern": "Q_koc",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-003",
+   "difficulty": "L2",
+   "query": "大促前头部达人档期约不上怎么处理？",
+   "labels": {
+    "imports/1499af0c8d.md": "direct"
+   },
+   "pattern": "Q_peak",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-004",
+   "difficulty": "L2",
+   "query": "品牌方年框返点一般什么行情？",
+   "labels": {
+    "imports/1499af0c8d.md": "direct"
+   },
+   "pattern": "Q_rebate",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-005",
+   "difficulty": "L2",
+   "query": "达人延期发布要怎么扣钱？",
+   "labels": {
+    "imports/1499af0c8d.md": "direct"
+   },
+   "pattern": "Q_delay",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-006",
+   "difficulty": "L2",
+   "query": "医美、保健这类特殊品类投放要注意什么？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_special",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-007",
+   "difficulty": "L2",
+   "query": "广告里哪些词是绝对不能用的？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_banned",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-008",
+   "difficulty": "L2",
+   "query": "怎么判断达人数据有没有注水？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_fake",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-009",
+   "difficulty": "L2",
+   "query": "广告主拖着不结款会有什么后果？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_overdue",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-010",
+   "difficulty": "L2",
+   "query": "选达人的时候除了粉丝量还要看什么？",
+   "labels": {
+    "playbook/达人筛选评估框架.md": "direct"
+   },
+   "pattern": "Q_beyond_fans",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-011",
+   "difficulty": "L2",
+   "query": "美妆内容里能不能直接说美白祛斑？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Q_claim",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-012",
+   "difficulty": "L2",
+   "query": "做效果预估的时候依据从哪来？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "Q_forecast",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-013",
+   "difficulty": "L2",
+   "query": "客户压价的时候该怎么应对？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "Q_counter",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-014",
+   "difficulty": "L2",
+   "query": "提案里怎么排执行节奏？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "Q_rhythm",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-015",
+   "difficulty": "L2",
+   "query": "星图那边下单以后多久之内达人要回应？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_resp",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-016",
+   "difficulty": "L2",
+   "query": "服务费到底谁掏、掏几个点？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_fee_who",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-017",
+   "difficulty": "L2",
+   "query": "报价想改动的话得提前多久打招呼？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_price_change",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-018",
+   "difficulty": "L2",
+   "query": "粉丝多少算头部、多少算腰尾部？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_tier_line",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-019",
+   "difficulty": "L2",
+   "query": "第一次合作能给多少让价空间？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_first",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-020",
+   "difficulty": "L2",
+   "query": "一次打包好几个达人划算吗？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_bundle",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-021",
+   "difficulty": "L2",
+   "query": "只按卖货分成的话怎么分？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_commission",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-022",
+   "difficulty": "L2",
+   "query": "大号档期要提前多久去占？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_slot",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-023",
+   "difficulty": "L2",
+   "query": "多少预算才值得单独立项？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_budget_gate",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-024",
+   "difficulty": "L2",
+   "query": "一个项目的钱怎么在达人、内容、备用金之间分？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_splitting",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-025",
+   "difficulty": "L2",
+   "query": "结案材料多久之内必须归好档？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_filing",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-026",
+   "difficulty": "L2",
+   "query": "效果没达标结案的时候要写点什么？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_underperform",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-027",
+   "difficulty": "L2",
+   "query": "挑达人优先看哪几条？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_match",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-028",
+   "difficulty": "L2",
+   "query": "评估达人那套模型各项占多少分？",
+   "labels": {
+    "playbook/达人筛选评估框架.md": "direct"
+   },
+   "pattern": "Q_weights",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-029",
+   "difficulty": "L2",
+   "query": "哪些达人是一票否决的？",
+   "labels": {
+    "playbook/达人筛选评估框架.md": "direct"
+   },
+   "pattern": "Q_veto",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-030",
+   "difficulty": "L2",
+   "query": "美妆投放一般配几个头部几个腰部？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Q_funnel",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-031",
+   "difficulty": "L2",
+   "query": "卖贵价精华该找什么样的博主？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Q_premium",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-032",
+   "difficulty": "L2",
+   "query": "美妆的 CPM 和互动率正常在什么水平？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Q_kpi",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-033",
+   "difficulty": "L2",
+   "query": "腰部和头部的投产比基准差多少？",
+   "labels": {
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Q_benchmark",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-034",
+   "difficulty": "L2",
+   "query": "一份标准提案要写哪几块？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "Q_proposal",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-035",
+   "difficulty": "L2",
+   "query": "客户砍价先让哪一步？",
+   "labels": {
+    "playbook/提案与报价话术要点.md": "direct"
+   },
+   "pattern": "Q_concede",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-036",
+   "difficulty": "L2",
+   "query": "数据什么时候回传、回传几次？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_callback",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-037",
+   "difficulty": "L2",
+   "query": "定制内容要加钱吗，加多少？",
+   "labels": {
+    "policies/抖音星图下单与结算规则.md": "direct"
+   },
+   "pattern": "Q_custom",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-038",
+   "difficulty": "L2",
+   "query": "达人等级是怎么分的？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_s_tier",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-039",
+   "difficulty": "L2",
+   "query": "合作过的再合作有没有优惠？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_repeat",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-040",
+   "difficulty": "L2",
+   "query": "纯佣模式平台抽多少？",
+   "labels": {
+    "policies/巨量星图达人合作常见问题.md": "direct"
+   },
+   "pattern": "Q_pure_gmv",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-041",
+   "difficulty": "L2",
+   "query": "这单要达到什么标准才算不亏？",
+   "labels": {
+    "policies/商单立项与执行SOP.md": "direct"
+   },
+   "pattern": "Q_roi_base",
+   "truth_rule": "口语表达 → 条文，与文档用词字面零重合",
+   "note": ""
+  },
+  {
+   "id": "L2-042",
+   "difficulty": "L2",
+   "query": "猫喵教大祭司🐱 现在什么价位？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜33500"
+  },
+  {
+   "id": "L2-043",
+   "difficulty": "L2",
+   "query": "想找 小羊同学 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜尾部｜18000"
+  },
+  {
+   "id": "L2-044",
+   "difficulty": "L2",
+   "query": "徐小小的金毛 报的价合理吗？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜22000"
+  },
+  {
+   "id": "L2-045",
+   "difficulty": "L2",
+   "query": "张石头 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250101_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250177_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "颜值达人｜腰部｜20000"
+  },
+  {
+   "id": "L2-046",
+   "difficulty": "L2",
+   "query": "有没有 英勇投食手 这个号的报价资料？",
+   "labels": {
+    "rate_cards/美食类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "美食｜腰部｜80000"
+  },
+  {
+   "id": "L2-047",
+   "difficulty": "L2",
+   "query": "秦妈妈的一家 现在什么价位？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜腰部｜40000"
+  },
+  {
+   "id": "L2-048",
+   "difficulty": "L2",
+   "query": "想找 王辣辣（很辣） 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "颜值达人｜koc｜53300"
+  },
+  {
+   "id": "L2-049",
+   "difficulty": "L2",
+   "query": "奶糖爱装修 报的价合理吗？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜尾部｜7000"
+  },
+  {
+   "id": "L2-050",
+   "difficulty": "L2",
+   "query": "才才Cary 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜腰部｜30000"
+  },
+  {
+   "id": "L2-051",
+   "difficulty": "L2",
+   "query": "有没有 十闲闲 这个号的报价资料？",
+   "labels": {
+    "rate_cards/时尚类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "时尚｜腰部｜45000"
+  },
+  {
+   "id": "L2-052",
+   "difficulty": "L2",
+   "query": "小饼遇见猫 现在什么价位？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜29800"
+  },
+  {
+   "id": "L2-053",
+   "difficulty": "L2",
+   "query": "想找 小法斗球球 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜20000"
+  },
+  {
+   "id": "L2-054",
+   "difficulty": "L2",
+   "query": "一心向上的小苗 报的价合理吗？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活｜腰部｜50000"
+  },
+  {
+   "id": "L2-055",
+   "difficulty": "L2",
+   "query": "妙哇花和嫩阿哥的哥哥 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活｜头部｜68000"
+  },
+  {
+   "id": "L2-056",
+   "difficulty": "L2",
+   "query": "有没有 虫儿的家 这个号的报价资料？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜koc｜13800"
+  },
+  {
+   "id": "L2-057",
+   "difficulty": "L2",
+   "query": "西西 现在什么价位？",
+   "labels": {
+    "rate_cards/时尚类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250131_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250329_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "时尚｜尾部｜16300"
+  },
+  {
+   "id": "L2-058",
+   "difficulty": "L2",
+   "query": "想找 我是富贵 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜36900"
+  },
+  {
+   "id": "L2-059",
+   "difficulty": "L2",
+   "query": "冲哥电影 报的价合理吗？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "影视娱乐｜koc｜11925"
+  },
+  {
+   "id": "L2-060",
+   "difficulty": "L2",
+   "query": "百搭小花卷 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活｜腰部｜50000"
+  },
+  {
+   "id": "L2-061",
+   "difficulty": "L2",
+   "query": "有没有 DDsss912（非本人） 这个号的报价资料？",
+   "labels": {
+    "rate_cards/剧情搞笑类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "剧情搞笑｜腰部｜98000"
+  },
+  {
+   "id": "L2-062",
+   "difficulty": "L2",
+   "query": "董润祺 现在什么价位？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "影视娱乐｜尾部｜10000"
+  },
+  {
+   "id": "L2-063",
+   "difficulty": "L2",
+   "query": "想找 呦！大侠 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜尾部｜50000"
+  },
+  {
+   "id": "L2-064",
+   "difficulty": "L2",
+   "query": "于哲🚗 报的价合理吗？",
+   "labels": {
+    "rate_cards/汽车类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "汽车｜腰部｜55000"
+  },
+  {
+   "id": "L2-065",
+   "difficulty": "L2",
+   "query": "梧桐带你忆童年 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "二次元｜尾部｜3400"
+  },
+  {
+   "id": "L2-066",
+   "difficulty": "L2",
+   "query": "有没有 饭团房车游 这个号的报价资料？",
+   "labels": {
+    "rate_cards/母婴亲子类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "母婴亲子｜尾部｜11200"
+  },
+  {
+   "id": "L2-067",
+   "difficulty": "L2",
+   "query": "哈里路亚 现在什么价位？",
+   "labels": {
+    "rate_cards/运动健身类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "运动健身｜koc｜60000"
+  },
+  {
+   "id": "L2-068",
+   "difficulty": "L2",
+   "query": "想找 隔壁大哥与小李 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/剧情搞笑类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "剧情搞笑｜腰部｜52000"
+  },
+  {
+   "id": "L2-069",
+   "difficulty": "L2",
+   "query": "杭州班长 报的价合理吗？",
+   "labels": {
+    "rate_cards/旅行类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "旅行｜腰部｜69800"
+  },
+  {
+   "id": "L2-070",
+   "difficulty": "L2",
+   "query": "肖小小🌻 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/三农类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "三农｜尾部｜18000"
+  },
+  {
+   "id": "L2-071",
+   "difficulty": "L2",
+   "query": "有没有 黑马动画 这个号的报价资料？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "二次元｜koc｜12100"
+  },
+  {
+   "id": "L2-072",
+   "difficulty": "L2",
+   "query": "杨铁环🎣 现在什么价位？",
+   "labels": {
+    "rate_cards/运动健身类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "运动健身｜腰部｜90000"
+  },
+  {
+   "id": "L2-073",
+   "difficulty": "L2",
+   "query": "想找 晚安姐姐（每晚6点直播） 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜头部｜36600"
+  },
+  {
+   "id": "L2-074",
+   "difficulty": "L2",
+   "query": "招财是只猫、 报的价合理吗？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct",
+    "deal_cases/DC20250297_案例.md": "assist"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜22000"
+  },
+  {
+   "id": "L2-075",
+   "difficulty": "L2",
+   "query": "达观视界 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/旅行类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "旅行｜koc｜19743"
+  },
+  {
+   "id": "L2-076",
+   "difficulty": "L2",
+   "query": "有没有 方飞老师 这个号的报价资料？",
+   "labels": {
+    "rate_cards/其他类目达人刊例表.md": "direct",
+    "deal_cases/DC20250024_案例.md": "assist",
+    "deal_cases/inflight/DC20250196_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250345_跟踪单.md": "assist",
+    "deal_cases/inflight/DC20250382_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "其他｜头部｜159700"
+  },
+  {
+   "id": "L2-077",
+   "difficulty": "L2",
+   "query": "安徽阿秀 现在什么价位？",
+   "labels": {
+    "rate_cards/情感类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "情感｜尾部｜12700"
+  },
+  {
+   "id": "L2-078",
+   "difficulty": "L2",
+   "query": "想找 大圆子 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/生活类目达人刊例表.md": "direct",
+    "deal_cases/inflight/DC20250242_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活｜头部｜159000"
+  },
+  {
+   "id": "L2-079",
+   "difficulty": "L2",
+   "query": "阿鸡 报的价合理吗？",
+   "labels": {
+    "rate_cards/美食类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "美食｜腰部｜100000"
+  },
+  {
+   "id": "L2-080",
+   "difficulty": "L2",
+   "query": "老牛的Vlog 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/才艺技能类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "才艺技能｜koc｜65800"
+  },
+  {
+   "id": "L2-081",
+   "difficulty": "L2",
+   "query": "有没有 芈八子（第五人格） 这个号的报价资料？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜腰部｜49600"
+  },
+  {
+   "id": "L2-082",
+   "difficulty": "L2",
+   "query": "柠好不好 现在什么价位？",
+   "labels": {
+    "rate_cards/二次元类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "二次元｜koc｜42000"
+  },
+  {
+   "id": "L2-083",
+   "difficulty": "L2",
+   "query": "想找 周喜喜 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "影视娱乐｜koc｜7200"
+  },
+  {
+   "id": "L2-084",
+   "difficulty": "L2",
+   "query": "黑眼圈小公猪 报的价合理吗？",
+   "labels": {
+    "rate_cards/颜值达人类目达人刊例表.md": "direct",
+    "deal_cases/DC20250015_案例.md": "assist",
+    "deal_cases/inflight/DC20250254_跟踪单.md": "assist"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "颜值达人｜尾部｜13000"
+  },
+  {
+   "id": "L2-085",
+   "difficulty": "L2",
+   "query": "小佛爷说 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/财经投资类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "财经投资｜koc｜14700"
+  },
+  {
+   "id": "L2-086",
+   "difficulty": "L2",
+   "query": "有没有 五花肉总裁 这个号的报价资料？",
+   "labels": {
+    "rate_cards/舞蹈类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "舞蹈｜头部｜60000"
+  },
+  {
+   "id": "L2-087",
+   "difficulty": "L2",
+   "query": "三个肥宅没活干 现在什么价位？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜尾部｜30000"
+  },
+  {
+   "id": "L2-088",
+   "difficulty": "L2",
+   "query": "想找 32分钟 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜腰部｜35000"
+  },
+  {
+   "id": "L2-089",
+   "difficulty": "L2",
+   "query": "猫森璐 报的价合理吗？",
+   "labels": {
+    "rate_cards/旅行类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "旅行｜尾部｜17000"
+  },
+  {
+   "id": "L2-090",
+   "difficulty": "L2",
+   "query": "佳佳的家 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/三农类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "三农｜尾部｜12000"
+  },
+  {
+   "id": "L2-091",
+   "difficulty": "L2",
+   "query": "有没有 嗨氏 这个号的报价资料？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜腰部｜25000"
+  },
+  {
+   "id": "L2-092",
+   "difficulty": "L2",
+   "query": "爆笑喷车 现在什么价位？",
+   "labels": {
+    "rate_cards/汽车类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "汽车｜腰部｜13000"
+  },
+  {
+   "id": "L2-093",
+   "difficulty": "L2",
+   "query": "想找 玮成 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/情感类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "情感｜尾部｜22000"
+  },
+  {
+   "id": "L2-094",
+   "difficulty": "L2",
+   "query": "老皮 报的价合理吗？",
+   "labels": {
+    "rate_cards/游戏类目达人刊例表.md": "direct",
+    "deal_cases/DC20250030_案例.md": "assist"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "游戏｜头部｜25000"
+  },
+  {
+   "id": "L2-095",
+   "difficulty": "L2",
+   "query": "段越清 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/随拍类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "随拍｜koc｜13000"
+  },
+  {
+   "id": "L2-096",
+   "difficulty": "L2",
+   "query": "有没有 阿甘评测 这个号的报价资料？",
+   "labels": {
+    "rate_cards/生活家居类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_alt",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "生活家居｜腰部｜35000"
+  },
+  {
+   "id": "L2-097",
+   "difficulty": "L2",
+   "query": "二宝罐罐 现在什么价位？",
+   "labels": {
+    "rate_cards/萌宠类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_who",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "萌宠｜腰部｜13000"
+  },
+  {
+   "id": "L2-098",
+   "difficulty": "L2",
+   "query": "想找 浑水报告 合作，大概要准备多少预算？",
+   "labels": {
+    "rate_cards/教育培训类目达人刊例表.md": "direct",
+    "deal_cases/DC20250005_案例.md": "assist"
+   },
+   "pattern": "P_nick_ask",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "教育培训｜koc｜41300"
+  },
+  {
+   "id": "L2-099",
+   "difficulty": "L2",
+   "query": "果果音乐街 报的价合理吗？",
+   "labels": {
+    "rate_cards/影视娱乐类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_worth",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "影视娱乐｜腰部｜17200"
+  },
+  {
+   "id": "L2-100",
+   "difficulty": "L2",
+   "query": "王恒屹 接单的话数据撑得住吗？",
+   "labels": {
+    "rate_cards/母婴亲子类目达人刊例表.md": "direct"
+   },
+   "pattern": "P_nick_brief",
+   "truth_rule": "口语问价 → 刊例表，题干不含类目名",
+   "note": "母婴亲子｜腰部｜24000"
+  },
+  {
+   "id": "L3-001",
+   "difficulty": "L3",
+   "query": "情感领域我们做过哪些已经交付的项目？",
+   "labels": {
+    "deal_cases/DC20250186_案例.md": "direct",
+    "deal_cases/DC20250233_案例.md": "direct"
+   },
+   "pattern": "C_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "情感｜C_case｜2 篇"
+  },
+  {
+   "id": "L3-002",
+   "difficulty": "L3",
+   "query": "谷堂目前在进行中的项目有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250051_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250384_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "谷堂｜B_live｜2 篇"
+  },
+  {
+   "id": "L3-003",
+   "difficulty": "L3",
+   "query": "快手小店手上没跑完的单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250049_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250069_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250185_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250303_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "快手小店｜B_live｜4 篇"
+  },
+  {
+   "id": "L3-004",
+   "difficulty": "L3",
+   "query": "电商类目做推新品的商单有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250069_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250185_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250283_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "电商×新品推广｜3 篇"
+  },
+  {
+   "id": "L3-005",
+   "difficulty": "L3",
+   "query": "雅坊跟我们都做过什么项目？",
+   "labels": {
+    "deal_cases/DC20250386_案例.md": "direct",
+    "deal_cases/inflight/DC20250046_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250103_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250301_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "雅坊｜B_all｜4 篇"
+  },
+  {
+   "id": "L3-006",
+   "difficulty": "L3",
+   "query": "汽车在抖音渠道做品牌曝光的合作有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250274_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250275_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "汽车×品牌曝光×抖音｜2 篇"
+  },
+  {
+   "id": "L3-007",
+   "difficulty": "L3",
+   "query": "王小卤的合作记录帮我调出来。",
+   "labels": {
+    "deal_cases/DC20250296_案例.md": "direct",
+    "deal_cases/inflight/DC20250078_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250198_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250289_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250322_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "王小卤｜B_all｜5 篇"
+  },
+  {
+   "id": "L3-008",
+   "difficulty": "L3",
+   "query": "投抖音的美妆推新品项目有哪些？",
+   "labels": {
+    "deal_cases/DC20250154_案例.md": "direct",
+    "deal_cases/inflight/DC20250093_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250120_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250128_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250174_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250188_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250257_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250357_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "美妆×新品推广×抖音｜8 篇"
+  },
+  {
+   "id": "L3-009",
+   "difficulty": "L3",
+   "query": "测评类目还在跑、目标是种草带货的有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250213_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250346_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "测评×种草带货×在途｜2 篇"
+  },
+  {
+   "id": "L3-010",
+   "difficulty": "L3",
+   "query": "电商类目今年丢过哪些单？",
+   "labels": {
+    "deal_cases/inflight/DC20250242_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250283_跟踪单.md": "direct"
+   },
+   "pattern": "C_lost",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "电商｜C_lost｜2 篇"
+  },
+  {
+   "id": "L3-011",
+   "difficulty": "L3",
+   "query": "时尚这边以品牌曝光为目的的项目有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250034_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250170_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250191_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250227_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "时尚×品牌曝光｜4 篇"
+  },
+  {
+   "id": "L3-012",
+   "difficulty": "L3",
+   "query": "口播类目在抖音上种草带货的单子列一下？",
+   "labels": {
+    "deal_cases/DC20250022_案例.md": "direct",
+    "deal_cases/inflight/DC20250039_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250201_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "口播×种草带货×抖音｜3 篇"
+  },
+  {
+   "id": "L3-013",
+   "difficulty": "L3",
+   "query": "二次元类目配合口碑测评的目标做过什么单子？",
+   "labels": {
+    "deal_cases/DC20250387_案例.md": "direct",
+    "deal_cases/DC20250397_案例.md": "direct",
+    "deal_cases/inflight/DC20250040_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250104_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250372_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "二次元×口碑测评｜5 篇"
+  },
+  {
+   "id": "L3-014",
+   "difficulty": "L3",
+   "query": "测评那边投抖音做口碑测评的都有哪些单子？",
+   "labels": {
+    "deal_cases/inflight/DC20250098_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250214_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "测评×口碑测评×抖音｜2 篇"
+  },
+  {
+   "id": "L3-015",
+   "difficulty": "L3",
+   "query": "波司登在我们这边投过什么？",
+   "labels": {
+    "deal_cases/DC20250030_案例.md": "direct",
+    "deal_cases/DC20250321_案例.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "波司登｜B_all｜2 篇"
+  },
+  {
+   "id": "L3-016",
+   "difficulty": "L3",
+   "query": "雅记手上没跑完的单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250153_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250204_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "雅记｜B_live｜2 篇"
+  },
+  {
+   "id": "L3-017",
+   "difficulty": "L3",
+   "query": "科技数码那边品牌曝光方向都投过哪几个单？",
+   "labels": {
+    "deal_cases/inflight/DC20250031_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250138_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250235_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250326_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250339_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "科技数码×品牌曝光｜5 篇"
+  },
+  {
+   "id": "L3-018",
+   "difficulty": "L3",
+   "query": "情感类目里预算规模靠前的项目是哪几个？",
+   "labels": {
+    "deal_cases/DC20250186_案例.md": "direct",
+    "deal_cases/inflight/DC20250148_跟踪单.md": "direct"
+   },
+   "pattern": "C_big",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "情感｜C_big｜2 篇"
+  },
+  {
+   "id": "L3-019",
+   "difficulty": "L3",
+   "query": "二次元这边有没有上十万的大项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250033_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250040_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250067_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250104_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250195_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250261_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250313_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250372_跟踪单.md": "direct"
+   },
+   "pattern": "C_big",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "二次元｜C_big｜8 篇"
+  },
+  {
+   "id": "L3-020",
+   "difficulty": "L3",
+   "query": "个护那边投哔哩哔哩做品牌曝光的都有哪些单子？",
+   "labels": {
+    "deal_cases/inflight/DC20250091_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250192_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "个护×品牌曝光×哔哩哔哩｜2 篇"
+  },
+  {
+   "id": "L3-021",
+   "difficulty": "L3",
+   "query": "家居这边种草带货的在途单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250197_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250333_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "家居×种草带货×在途｜2 篇"
+  },
+  {
+   "id": "L3-022",
+   "difficulty": "L3",
+   "query": "剧情搞笑方向现在进行中的合作有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250122_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250219_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250220_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250302_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250312_跟踪单.md": "direct"
+   },
+   "pattern": "C_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "剧情搞笑｜C_live｜5 篇"
+  },
+  {
+   "id": "L3-023",
+   "difficulty": "L3",
+   "query": "溪家跟我们都做过什么项目？",
+   "labels": {
+    "deal_cases/DC20250079_案例.md": "direct",
+    "deal_cases/DC20250245_案例.md": "direct",
+    "deal_cases/DC20250251_案例.md": "direct",
+    "deal_cases/inflight/DC20250021_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250115_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250249_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250269_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "溪家｜B_all｜7 篇"
+  },
+  {
+   "id": "L3-024",
+   "difficulty": "L3",
+   "query": "科技数码类目小红书渠道的品牌曝光单子给我看看。",
+   "labels": {
+    "deal_cases/inflight/DC20250031_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250235_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250339_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "科技数码×品牌曝光×小红书｜3 篇"
+  },
+  {
+   "id": "L3-025",
+   "difficulty": "L3",
+   "query": "测评这边口碑测评的在途单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250098_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250214_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "测评×口碑测评×在途｜2 篇"
+  },
+  {
+   "id": "L3-026",
+   "difficulty": "L3",
+   "query": "教育培训类目配合推新品的目标做过什么单子？",
+   "labels": {
+    "deal_cases/DC20250005_案例.md": "direct",
+    "deal_cases/inflight/DC20250059_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250320_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250342_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250350_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "教育培训×新品推广｜5 篇"
+  },
+  {
+   "id": "L3-027",
+   "difficulty": "L3",
+   "query": "二次元类目在抖音上种草带货的单子列一下？",
+   "labels": {
+    "deal_cases/inflight/DC20250253_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250313_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250380_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "二次元×种草带货×抖音｜3 篇"
+  },
+  {
+   "id": "L3-028",
+   "difficulty": "L3",
+   "query": "教育培训类目抖音渠道的种草带货单子给我看看。",
+   "labels": {
+    "deal_cases/inflight/DC20250008_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250010_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "教育培训×种草带货×抖音｜2 篇"
+  },
+  {
+   "id": "L3-029",
+   "difficulty": "L3",
+   "query": "食品那边口碑测评方向都投过哪几个单？",
+   "labels": {
+    "deal_cases/inflight/DC20250043_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250379_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "食品×口碑测评｜2 篇"
+  },
+  {
+   "id": "L3-030",
+   "difficulty": "L3",
+   "query": "美家的合作记录帮我调出来。",
+   "labels": {
+    "deal_cases/DC20250161_案例.md": "direct",
+    "deal_cases/inflight/DC20250012_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250144_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "美家｜B_all｜3 篇"
+  },
+  {
+   "id": "L3-031",
+   "difficulty": "L3",
+   "query": "剧情搞笑这条线没谈成的都有哪几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250111_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250173_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250211_跟踪单.md": "direct"
+   },
+   "pattern": "C_lost",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "剧情搞笑｜C_lost｜3 篇"
+  },
+  {
+   "id": "L3-032",
+   "difficulty": "L3",
+   "query": "才艺领域我们做过哪些已经交付的项目？",
+   "labels": {
+    "deal_cases/DC20250215_案例.md": "direct",
+    "deal_cases/DC20250300_案例.md": "direct"
+   },
+   "pattern": "C_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "才艺｜C_case｜2 篇"
+  },
+  {
+   "id": "L3-033",
+   "difficulty": "L3",
+   "query": "蔻社整体合作情况汇总一下？",
+   "labels": {
+    "deal_cases/inflight/DC20250100_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250156_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250228_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250274_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "蔻社｜B_all｜4 篇"
+  },
+  {
+   "id": "L3-034",
+   "difficulty": "L3",
+   "query": "岚岛这个品牌一共合作过哪些单子？",
+   "labels": {
+    "deal_cases/DC20250377_案例.md": "direct",
+    "deal_cases/inflight/DC20250042_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250129_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "岚岛｜B_all｜3 篇"
+  },
+  {
+   "id": "L3-035",
+   "difficulty": "L3",
+   "query": "运动健身类目品牌曝光方向上尚未收尾的项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250121_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250269_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "运动健身×品牌曝光×在途｜2 篇"
+  },
+  {
+   "id": "L3-036",
+   "difficulty": "L3",
+   "query": "影视娱乐类目推新品类的合作都包括哪些？",
+   "labels": {
+    "deal_cases/DC20250165_案例.md": "direct",
+    "deal_cases/inflight/DC20250064_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250080_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250231_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250277_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250388_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "影视娱乐×新品推广｜6 篇"
+  },
+  {
+   "id": "L3-037",
+   "difficulty": "L3",
+   "query": "教育培训类目种草带货类的合作都包括哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250008_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250010_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "教育培训×种草带货｜2 篇"
+  },
+  {
+   "id": "L3-038",
+   "difficulty": "L3",
+   "query": "美妆类目口碑测评方向上尚未收尾的项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250056_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250066_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250084_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250237_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250268_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250315_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250337_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250391_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250399_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "美妆×口碑测评×在途｜9 篇"
+  },
+  {
+   "id": "L3-039",
+   "difficulty": "L3",
+   "query": "小红书这边刚聊完需求的单子有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250049_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250065_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250151_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250164_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250315_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250339_跟踪单.md": "direct"
+   },
+   "pattern": "X_ps",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "小红书×需求沟通｜6 篇"
+  },
+  {
+   "id": "L3-040",
+   "difficulty": "L3",
+   "query": "家电这条线在途项目的清单给我一份。",
+   "labels": {
+    "deal_cases/inflight/DC20250045_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250047_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250109_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250145_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250146_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250157_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250248_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250353_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250359_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250385_跟踪单.md": "direct"
+   },
+   "pattern": "C_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "家电｜C_live｜10 篇"
+  },
+  {
+   "id": "L3-041",
+   "difficulty": "L3",
+   "query": "艺术文化还有哪些品牌曝光的单子没做完？",
+   "labels": {
+    "deal_cases/inflight/DC20250199_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250225_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "艺术文化×品牌曝光×在途｜2 篇"
+  },
+  {
+   "id": "L3-042",
+   "difficulty": "L3",
+   "query": "测评类目推新品项目现在进行中的有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250097_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250218_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "测评×新品推广×在途｜2 篇"
+  },
+  {
+   "id": "L3-043",
+   "difficulty": "L3",
+   "query": "可复美交付完成的案例给我列一下。",
+   "labels": {
+    "deal_cases/DC20250112_案例.md": "direct",
+    "deal_cases/DC20250378_案例.md": "direct"
+   },
+   "pattern": "B_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "可复美｜B_case｜2 篇"
+  },
+  {
+   "id": "L3-044",
+   "difficulty": "L3",
+   "query": "家电类目做口碑测评的商单有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250047_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250109_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250359_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "家电×口碑测评｜3 篇"
+  },
+  {
+   "id": "L3-045",
+   "difficulty": "L3",
+   "query": "禾岛还有哪些单子没交付？",
+   "labels": {
+    "deal_cases/inflight/DC20250132_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250139_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250158_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250225_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250241_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "禾岛｜B_live｜5 篇"
+  },
+  {
+   "id": "L3-046",
+   "difficulty": "L3",
+   "query": "云岛跟我们都做过什么项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250097_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250102_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250181_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250213_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250218_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250346_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "云岛｜B_all｜6 篇"
+  },
+  {
+   "id": "L3-047",
+   "difficulty": "L3",
+   "query": "给一个彩妆品牌写方案，历史案例和类目打法两部分资料帮我拉齐。",
+   "labels": {
+    "rate_cards/美妆类目达人刊例表.md": "direct",
+    "playbook/美妆类目投放方法论.md": "direct"
+   },
+   "pattern": "Y_cross2",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "跨文档类型"
+  },
+  {
+   "id": "L3-048",
+   "difficulty": "L3",
+   "query": "月家跟我们都做过什么项目？",
+   "labels": {
+    "deal_cases/DC20250015_案例.md": "direct",
+    "deal_cases/inflight/DC20250101_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250254_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "月家｜B_all｜3 篇"
+  },
+  {
+   "id": "L3-049",
+   "difficulty": "L3",
+   "query": "手上有哪些艺术文化的结案复盘可以用？",
+   "labels": {
+    "deal_cases/DC20250041_案例.md": "direct",
+    "deal_cases/DC20250265_案例.md": "direct"
+   },
+   "pattern": "C_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "艺术文化｜C_case｜2 篇"
+  },
+  {
+   "id": "L3-050",
+   "difficulty": "L3",
+   "query": "风屋在我们这边投过什么？",
+   "labels": {
+    "deal_cases/DC20250327_案例.md": "direct",
+    "deal_cases/inflight/DC20250062_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250074_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250229_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250235_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250243_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250373_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "风屋｜B_all｜7 篇"
+  },
+  {
+   "id": "L3-051",
+   "difficulty": "L3",
+   "query": "情感这边口碑测评的在途单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250011_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250117_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250305_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "情感×口碑测评×在途｜3 篇"
+  },
+  {
+   "id": "L3-052",
+   "difficulty": "L3",
+   "query": "时尚在抖音渠道做品牌曝光的合作有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250034_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250170_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250191_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250227_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "时尚×品牌曝光×抖音｜4 篇"
+  },
+  {
+   "id": "L3-053",
+   "difficulty": "L3",
+   "query": "口播方向现在进行中的合作有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250051_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250201_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250309_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250384_跟踪单.md": "direct"
+   },
+   "pattern": "C_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "口播｜C_live｜4 篇"
+  },
+  {
+   "id": "L3-054",
+   "difficulty": "L3",
+   "query": "情感类目配合口碑测评的目标做过什么单子？",
+   "labels": {
+    "deal_cases/inflight/DC20250011_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250117_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250305_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "情感×口碑测评｜3 篇"
+  },
+  {
+   "id": "L3-055",
+   "difficulty": "L3",
+   "query": "生活类目小红书渠道的口碑测评单子给我看看。",
+   "labels": {
+    "deal_cases/inflight/DC20250053_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250383_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "生活×口碑测评×小红书｜2 篇"
+  },
+  {
+   "id": "L3-056",
+   "difficulty": "L3",
+   "query": "教育培训类目里投抖音、做推新品的是哪几个项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250059_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250342_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "教育培训×新品推广×抖音｜2 篇"
+  },
+  {
+   "id": "L3-057",
+   "difficulty": "L3",
+   "query": "才艺类目品牌曝光类的合作都包括哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250125_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250166_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "才艺×品牌曝光｜2 篇"
+  },
+  {
+   "id": "L3-058",
+   "difficulty": "L3",
+   "query": "眼下颜值有几单还在推进？",
+   "labels": {
+    "deal_cases/inflight/DC20250101_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250177_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250254_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250310_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250354_跟踪单.md": "direct"
+   },
+   "pattern": "C_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "颜值｜C_live｜5 篇"
+  },
+  {
+   "id": "L3-059",
+   "difficulty": "L3",
+   "query": "想看看教育培训做完了的项目清单，能列出来吗？",
+   "labels": {
+    "deal_cases/DC20250005_案例.md": "direct",
+    "deal_cases/DC20250330_案例.md": "direct"
+   },
+   "pattern": "C_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "教育培训｜C_case｜2 篇"
+  },
+  {
+   "id": "L3-060",
+   "difficulty": "L3",
+   "query": "汽车类目在抖音上推新品的单子列一下？",
+   "labels": {
+    "deal_cases/DC20250266_案例.md": "direct",
+    "deal_cases/DC20250306_案例.md": "direct",
+    "deal_cases/DC20250341_案例.md": "direct",
+    "deal_cases/inflight/DC20250194_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "汽车×新品推广×抖音｜4 篇"
+  },
+  {
+   "id": "L3-061",
+   "difficulty": "L3",
+   "query": "王小卤眼下压着几个未完成的项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250078_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250198_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250289_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250322_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "王小卤｜B_live｜4 篇"
+  },
+  {
+   "id": "L3-062",
+   "difficulty": "L3",
+   "query": "慕家手上没跑完的单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250117_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250148_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250279_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250299_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "慕家｜B_live｜4 篇"
+  },
+  {
+   "id": "L3-063",
+   "difficulty": "L3",
+   "query": "晴社手上没跑完的单子有几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250063_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250093_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250114_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250125_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250285_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250315_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250323_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250337_跟踪单.md": "direct"
+   },
+   "pattern": "B_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "晴社｜B_live｜8 篇"
+  },
+  {
+   "id": "L3-064",
+   "difficulty": "L3",
+   "query": "游戏这边以口碑测评为目的的项目有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250116_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250271_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250294_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "游戏×口碑测评｜3 篇"
+  },
+  {
+   "id": "L3-065",
+   "difficulty": "L3",
+   "query": "小红书这边已经结案的单子有哪些？",
+   "labels": {
+    "deal_cases/DC20250001_案例.md": "direct",
+    "deal_cases/DC20250005_案例.md": "direct",
+    "deal_cases/DC20250036_案例.md": "direct",
+    "deal_cases/DC20250112_案例.md": "direct",
+    "deal_cases/DC20250245_案例.md": "direct",
+    "deal_cases/DC20250296_案例.md": "direct",
+    "deal_cases/DC20250371_案例.md": "direct",
+    "deal_cases/DC20250377_案例.md": "direct"
+   },
+   "pattern": "X_ps",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "小红书×结案｜8 篇"
+  },
+  {
+   "id": "L3-066",
+   "difficulty": "L3",
+   "query": "泉坊未签约的合作是哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250127_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250134_跟踪单.md": "direct"
+   },
+   "pattern": "B_lost",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "泉坊｜B_lost｜2 篇"
+  },
+  {
+   "id": "L3-067",
+   "difficulty": "L3",
+   "query": "母婴类目配合推新品的目标做过什么单子？",
+   "labels": {
+    "deal_cases/inflight/DC20250276_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250361_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "母婴×新品推广｜2 篇"
+  },
+  {
+   "id": "L3-068",
+   "difficulty": "L3",
+   "query": "萌宠类目里投哔哩哔哩、做推新品的是哪几个项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250295_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250298_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "萌宠×新品推广×哔哩哔哩｜2 篇"
+  },
+  {
+   "id": "L3-069",
+   "difficulty": "L3",
+   "query": "时尚在抖音渠道做口碑测评的合作有哪些？",
+   "labels": {
+    "deal_cases/DC20250278_案例.md": "direct",
+    "deal_cases/inflight/DC20250130_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250152_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250264_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "时尚×口碑测评×抖音｜4 篇"
+  },
+  {
+   "id": "L3-070",
+   "difficulty": "L3",
+   "query": "木集哪些项目最后没成？",
+   "labels": {
+    "deal_cases/inflight/DC20250038_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250096_跟踪单.md": "direct"
+   },
+   "pattern": "B_lost",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "木集｜B_lost｜2 篇"
+  },
+  {
+   "id": "L3-071",
+   "difficulty": "L3",
+   "query": "艺术文化方向金额比较高的单子列一下。",
+   "labels": {
+    "deal_cases/inflight/DC20250132_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250158_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250199_跟踪单.md": "direct"
+   },
+   "pattern": "C_big",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "艺术文化｜C_big｜3 篇"
+  },
+  {
+   "id": "L3-072",
+   "difficulty": "L3",
+   "query": "妍屋的合作记录帮我调出来。",
+   "labels": {
+    "deal_cases/inflight/DC20250011_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250032_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250175_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "妍屋｜B_all｜3 篇"
+  },
+  {
+   "id": "L3-073",
+   "difficulty": "L3",
+   "query": "戴可思的合作记录帮我调出来。",
+   "labels": {
+    "deal_cases/DC20250024_案例.md": "direct",
+    "deal_cases/inflight/DC20250288_跟踪单.md": "direct"
+   },
+   "pattern": "B_all",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "戴可思｜B_all｜2 篇"
+  },
+  {
+   "id": "L3-074",
+   "difficulty": "L3",
+   "query": "三农类目推新品方向上尚未收尾的项目？",
+   "labels": {
+    "deal_cases/inflight/DC20250023_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250087_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250118_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250287_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250393_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250400_跟踪单.md": "direct"
+   },
+   "pattern": "C_cglive",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "三农×新品推广×在途｜6 篇"
+  },
+  {
+   "id": "L3-075",
+   "difficulty": "L3",
+   "query": "情感这条线现在手上还有哪些在途单子？",
+   "labels": {
+    "deal_cases/inflight/DC20250011_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250032_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250117_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250148_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250175_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250279_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250299_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250305_跟踪单.md": "direct"
+   },
+   "pattern": "C_live",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "情感｜C_live｜8 篇"
+  },
+  {
+   "id": "L3-076",
+   "difficulty": "L3",
+   "query": "跟食品做品牌曝光相关的商单帮我列一下。",
+   "labels": {
+    "deal_cases/DC20250258_案例.md": "direct",
+    "deal_cases/inflight/DC20250082_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250198_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250322_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "食品×品牌曝光｜4 篇"
+  },
+  {
+   "id": "L3-077",
+   "difficulty": "L3",
+   "query": "母婴在小红书渠道做品牌曝光的合作有哪些？",
+   "labels": {
+    "deal_cases/inflight/DC20250284_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250329_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgpl",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "母婴×品牌曝光×小红书｜2 篇"
+  },
+  {
+   "id": "L3-078",
+   "difficulty": "L3",
+   "query": "想看看服饰做完了的项目清单，能列出来吗？",
+   "labels": {
+    "deal_cases/DC20250030_案例.md": "direct",
+    "deal_cases/DC20250321_案例.md": "direct"
+   },
+   "pattern": "C_case",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "服饰｜C_case｜2 篇"
+  },
+  {
+   "id": "L3-079",
+   "difficulty": "L3",
+   "query": "科技数码类目里预算规模靠前的项目是哪几个？",
+   "labels": {
+    "deal_cases/inflight/DC20250031_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250138_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250263_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250326_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250373_跟踪单.md": "direct"
+   },
+   "pattern": "C_big",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "科技数码｜C_big｜5 篇"
+  },
+  {
+   "id": "L3-080",
+   "difficulty": "L3",
+   "query": "剧情搞笑这边以种草带货为目的的项目有哪些？",
+   "labels": {
+    "deal_cases/DC20250234_案例.md": "direct",
+    "deal_cases/inflight/DC20250111_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250219_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250302_跟踪单.md": "direct",
+    "deal_cases/inflight/DC20250312_跟踪单.md": "direct"
+   },
+   "pattern": "C_cgp",
+   "truth_rule": "多维聚合，真值 2-10 篇（Recall@10 上限为 1）",
+   "note": "剧情搞笑×种草带货｜5 篇"
+  },
+  {
+   "id": "L4-001",
+   "difficulty": "L4",
+   "query": "拼多多店铺的达人带货佣金政策是什么？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-002",
+   "difficulty": "L4",
+   "query": "京东自营品牌的达人合作流程怎么走？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-003",
+   "difficulty": "L4",
+   "query": "微信视频号达人互选平台的报价规则？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-004",
+   "difficulty": "L4",
+   "query": "TikTok 海外达人合作的结算方式？",
+   "labels": {},
+   "pattern": "R_clean_settle",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-005",
+   "difficulty": "L4",
+   "query": "快手磁力聚星平台的达人报价表？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-006",
+   "difficulty": "L4",
+   "query": "小红书蒲公英平台的服务费比例是多少？",
+   "labels": {},
+   "pattern": "R_clean_rule",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-007",
+   "difficulty": "L4",
+   "query": "虚拟主播的合作报价在哪个文档里？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-008",
+   "difficulty": "L4",
+   "query": "数字人直播在星图上怎么下单？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-009",
+   "difficulty": "L4",
+   "query": "私域流量和社群运营的方法论文档有吗？",
+   "labels": {},
+   "pattern": "R_clean_rule",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-010",
+   "difficulty": "L4",
+   "query": "B 站花火平台的接单门槛是多少？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-011",
+   "difficulty": "L4",
+   "query": "微博微任务的下单流程是怎样的？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-012",
+   "difficulty": "L4",
+   "query": "淘宝逛逛达人的结算周期是多久？",
+   "labels": {},
+   "pattern": "R_clean_settle",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-013",
+   "difficulty": "L4",
+   "query": "知乎知任务平台的返点政策？",
+   "labels": {},
+   "pattern": "R_clean_settle",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-014",
+   "difficulty": "L4",
+   "query": "得物达人合作怎么报价？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-015",
+   "difficulty": "L4",
+   "query": "抖音团购达人怎么结算佣金？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-016",
+   "difficulty": "L4",
+   "query": "视频号小店的保证金是多少？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-017",
+   "difficulty": "L4",
+   "query": "小红书笔记的薯条投放怎么算钱？",
+   "labels": {},
+   "pattern": "R_clean_rule",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-018",
+   "difficulty": "L4",
+   "query": "快手粉条的价格体系是什么？",
+   "labels": {},
+   "pattern": "R_clean_rule",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-019",
+   "difficulty": "L4",
+   "query": "淘宝直播的坑位费一般多少？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-020",
+   "difficulty": "L4",
+   "query": "亚马逊影响者计划怎么报名？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-021",
+   "difficulty": "L4",
+   "query": "美团达人的探店合作报价？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-022",
+   "difficulty": "L4",
+   "query": "大众点评笔记的达人招募规则？",
+   "labels": {},
+   "pattern": "R_clean_process",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-023",
+   "difficulty": "L4",
+   "query": "Instagram 达人合作的付款周期？",
+   "labels": {},
+   "pattern": "R_clean_settle",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-024",
+   "difficulty": "L4",
+   "query": "YouTube 品牌植入的报价规范？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-025",
+   "difficulty": "L4",
+   "query": "跨境电商的达人佣金税则怎么算？",
+   "labels": {},
+   "pattern": "R_clean_price",
+   "truth_rule": "语料零相关内容，正确行为=完整拒答",
+   "note": "平台/业态在语料中不存在"
+  },
+  {
+   "id": "L4-026",
+   "difficulty": "L4",
+   "query": "明星艺人的代言报价怎么看？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-027",
+   "difficulty": "L4",
+   "query": "品牌自播间怎么和达人矩阵配合？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-028",
+   "difficulty": "L4",
+   "query": "坑位费加佣金的模式你们怎么核算？",
+   "labels": {},
+   "pattern": "R_bound_finance",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-029",
+   "difficulty": "L4",
+   "query": "达人的税务代扣代缴是怎么处理的？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-030",
+   "difficulty": "L4",
+   "query": "年货节期间达人档期怎么锁？",
+   "labels": {},
+   "pattern": "R_bound_ops",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-031",
+   "difficulty": "L4",
+   "query": "医美类目在星图上投放需要什么特殊资质？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-032",
+   "difficulty": "L4",
+   "query": "达人账号被平台限流了该怎么补救？",
+   "labels": {},
+   "pattern": "R_bound_ops",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-033",
+   "difficulty": "L4",
+   "query": "跨境保税仓发货的商单怎么结算？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-034",
+   "difficulty": "L4",
+   "query": "品牌方要求对赌销量的话怎么设计条款？",
+   "labels": {},
+   "pattern": "R_bound_finance",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-035",
+   "difficulty": "L4",
+   "query": "达人经纪公司的分成怎么走账？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-036",
+   "difficulty": "L4",
+   "query": "直播场次的实时数据怎么回传？",
+   "labels": {},
+   "pattern": "R_bound_ops",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-037",
+   "difficulty": "L4",
+   "query": "达人临时爽约的违约金怎么定？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-038",
+   "difficulty": "L4",
+   "query": "海外达人寄样的关税谁承担？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-039",
+   "difficulty": "L4",
+   "query": "商单内容被平台下架了怎么申诉？",
+   "labels": {},
+   "pattern": "R_bound_ops",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-040",
+   "difficulty": "L4",
+   "query": "品牌方想买断达人肖像权怎么定价？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-041",
+   "difficulty": "L4",
+   "query": "多平台同期投放的排期怎么协调？",
+   "labels": {},
+   "pattern": "R_bound_ops",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-042",
+   "difficulty": "L4",
+   "query": "达人矩阵的粉丝重叠度怎么去重计算？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-043",
+   "difficulty": "L4",
+   "query": "内容二次剪辑授权怎么谈？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-044",
+   "difficulty": "L4",
+   "query": "品牌方要求独家排他条款怎么处理？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-045",
+   "difficulty": "L4",
+   "query": "达人直播和短视频的预算怎么分配？",
+   "labels": {},
+   "pattern": "R_bound_finance",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-046",
+   "difficulty": "L4",
+   "query": "退货率高的类目怎么核算实际 ROI？",
+   "labels": {},
+   "pattern": "R_bound_finance",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-047",
+   "difficulty": "L4",
+   "query": "预付和尾款的账期一般怎么定？",
+   "labels": {},
+   "pattern": "R_bound_finance",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-048",
+   "difficulty": "L4",
+   "query": "达人口碑危机公关的处理流程？",
+   "labels": {},
+   "pattern": "R_bound_process",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-049",
+   "difficulty": "L4",
+   "query": "商单内容的知识产权归谁？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  },
+  {
+   "id": "L4-050",
+   "difficulty": "L4",
+   "query": "平台规则变更导致内容违规谁担责？",
+   "labels": {},
+   "pattern": "R_bound_legal",
+   "truth_rule": "语料有相邻知识，正确行为=部分回答+明确说明缺失",
+   "note": "可引用相邻条文但不足以完整回答，禁止编造"
+  }
+ ]
+}
