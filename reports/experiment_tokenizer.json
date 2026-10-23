@@ -1,5 +1,5 @@
 {
- "run_date": "2026-10-23 16:38:10",
+ "run_date": "2026-10-23 18:21:49",
  "eval_set": "v6-2026-10-23",
  "corpus_chunks": 1809,
  "n_items": 250,
@@ -10176,5 +10176,8 @@
     "layer": "L3"
    }
   ]
- }
+ },
+ "script_sha": "f9f75fb7a6f3",
+ "script_name": "experiment_tokenizer.py",
+ "script_label": "tokenizer"
 }

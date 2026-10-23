@@ -35,6 +35,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from starmoyu.retriever import Retriever, STOP  # noqa: E402
+from experiment_result_io import save_result  # noqa: E402
 from eval_v5_retrieval import metrics_for_ranked  # noqa: E402
 
 EVAL = ROOT / "reports" / "eval_set_v6.json"
@@ -181,14 +182,14 @@ def main() -> None:
                 agg[L][k] = round(sum(x[k] for x in sub) / len(sub), 4) if sub else 0.0
         results[cfg] = {"matrix": agg, "per_item": rows}
 
-    OUT.write_text(json.dumps({
+    save_result(OUT, {
         "run_date": time.strftime("%Y-%m-%d %H:%M:%S"),
         "eval_set": es["eval_set_version"], "corpus_chunks": len(r.chunks),
         "n_items": len(items), "nicks_extracted": len(nicks),
         "note": "分词方案对比，BM25 单路 + 文档级输出，不含融合与重排序",
         "results": {k: {"matrix": v["matrix"]} for k, v in results.items()},
         "per_item_detail": {k: v["per_item"] for k, v in results.items()},
-    }, ensure_ascii=False, indent=1), encoding="utf-8")
+    }, __file__, label="tokenizer")
 
     print("\n=== 分词方案对比（BM25 单路，不含重排序）===")
     for cfg in cfgs:
