@@ -1,0 +1,76 @@
+{
+ "run_date": "2026-10-23 18:49:42",
+ "docs": 6,
+ "docs_ok": 6,
+ "new_chunks": 33,
+ "total_seconds": 61.7,
+ "note": "叙述性语料增量入库，散文体复盘与实录，非条目式清单",
+ "rows": [
+  {
+   "source_file": "playbook/类目复盘-美妆.md",
+   "title": "美妆类目投放复盘笔记",
+   "sections": 5,
+   "chars": 1383,
+   "ok": true,
+   "chunks": 5,
+   "parents": 5,
+   "error": null,
+   "seconds": 12.3
+  },
+  {
+   "source_file": "playbook/议价过程实录与判断依据.md",
+   "title": "议价过程实录与判断依据",
+   "sections": 5,
+   "chars": 1234,
+   "ok": true,
+   "chunks": 5,
+   "parents": 5,
+   "error": null,
+   "seconds": 6.5
+  },
+  {
+   "source_file": "playbook/类目复盘-母婴与3C.md",
+   "title": "类目复盘：母婴与 3C 数码",
+   "sections": 5,
+   "chars": 1528,
+   "ok": true,
+   "chunks": 5,
+   "parents": 5,
+   "error": null,
+   "seconds": 10.6
+  },
+  {
+   "source_file": "playbook/达人评估的经验判断.md",
+   "title": "达人评估中那些数据看不出来的东西",
+   "sections": 6,
+   "chars": 1541,
+   "ok": true,
+   "chunks": 6,
+   "parents": 6,
+   "error": null,
+   "seconds": 10.8
+  },
+  {
+   "source_file": "policies/商单事故复盘汇编.md",
+   "title": "商单事故复盘汇编",
+   "sections": 6,
+   "chars": 1621,
+   "ok": true,
+   "chunks": 6,
+   "parents": 6,
+   "error": null,
+   "seconds": 10.9
+  },
+  {
+   "source_file": "policies/客户沟通与需求澄清实录.md",
+   "title": "客户沟通与需求澄清实录",
+   "sections": 6,
+   "chars": 1511,
+   "ok": true,
+   "chunks": 6,
+   "parents": 6,
+   "error": null,
+   "seconds": 10.6
+  }
+ ]
+}
